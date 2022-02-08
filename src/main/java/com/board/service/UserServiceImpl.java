@@ -25,8 +25,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteUser(String userId) {
-		mapper.deleteUser(userId);
+	public boolean deleteUser(String userId) {
+		return mapper.deleteUser(userId) == 1;
 	}
 
 }

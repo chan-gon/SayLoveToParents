@@ -8,5 +8,5 @@ public interface UserService {
 
 	int isExistUserId(String userId);
 
-	void deleteUser(String userId);
+	boolean deleteUser(String userId);
 }
