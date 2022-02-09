@@ -8,6 +8,8 @@ public interface UserMapper {
 	
 	int isExistUserId(String userId);
 	
+	int isExistUserEmail(String userEmail);
+	
 	int deleteUser(String userId);
 
 }

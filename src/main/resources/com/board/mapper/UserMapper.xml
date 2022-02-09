@@ -13,6 +13,10 @@
 		SELECT COUNT(user_id) FROM site_user WHERE user_id = #{userId}
 	</select>
 	
+	<select id="isExistUserEmail" parameterType="String" resultType="int">
+		SELECT COUNT(user_email) FROM site_user WHERE user_email = #{userEmail}
+	</select>
+	
 	<delete id="deleteUser">
 		DELETE FROM site_user WHERE user_id = #{userId}
 	</delete>

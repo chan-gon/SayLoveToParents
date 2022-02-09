@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-	
+
 	private UserMapper mapper;
 
 	@Override
@@ -19,9 +19,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int isExistUserId(String userId) {
+	public boolean isExistUserId(String userId) {
 		int cnt = mapper.isExistUserId(userId);
-		return cnt;
+		return cnt > 0;
+	}
+
+	@Override
+	public boolean isExistUserEmail(String userEmail) {
+		int cnt = mapper.isExistUserEmail(userEmail);
+		return cnt > 0;
 	}
 
 	@Override

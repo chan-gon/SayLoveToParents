@@ -40,8 +40,7 @@ public class UserServiceTest {
 	
 	@Test
 	public void 아이디_중복_확인_테스트() {
-		int cnt = service.isExistUserId("test");
-		assertTrue(cnt > 0);
+		assertTrue(service.isExistUserId("test"));
 	}
 
 }
