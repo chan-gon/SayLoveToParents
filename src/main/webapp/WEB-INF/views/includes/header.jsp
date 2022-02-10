@@ -54,7 +54,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">중고거래사이트</a>
+                <a class="navbar-brand" href="/">중고거래사이트</a>
             </div>
             <!-- /.navbar-header -->
 

@@ -1,5 +1,6 @@
 package com.board.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -37,13 +38,13 @@ public class UserControllerTest {
 	private MockMvc mockMvc;
 
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
 	}
-
+	
 	@Test
 	public void 사용자_생성_테스트() throws Exception {
-		mockMvc.perform(post("/users/remove").param("userId", "test"));
+		mockMvc.perform(delete("/users/test")).andExpect(status().isOk()).andDo(print());
 		
 		UserVO user = new UserVO();
 		user.setUserId("test");
