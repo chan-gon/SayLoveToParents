@@ -76,10 +76,10 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
 
-	// 값 초기화
-	idCheckInit();
+	// 아이디/이메일 중복체크 실행 여부 확인값 초기화
+	validCheckInit();
 	
-	function idCheckInit() {
+	function validCheckInit() {
 		if (document.getElementById("idCheckResult").value == "1") {
 			document.getElementById("idCheckResult").value = "0";
 		}
