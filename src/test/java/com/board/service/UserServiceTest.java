@@ -2,13 +2,16 @@ package com.board.service;
 
 import static org.junit.Assert.*;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import com.board.domain.UserVO;
+import com.board.exception.EmailAlreadyExistsException;
+import com.board.exception.UserAlreadyExistsException;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -20,6 +23,9 @@ public class UserServiceTest {
 
 	@Setter(onMethod_ = {@Autowired})
 	private UserService service;
+	
+	@Rule
+	public ExpectedException eex = ExpectedException.none();
 	
 	@Test
 	public void 사용자_생성_테스트() {
@@ -40,7 +46,16 @@ public class UserServiceTest {
 	
 	@Test
 	public void 아이디_중복_확인_테스트() {
-		assertTrue(service.isExistUserId("test"));
+		eex.expect(UserAlreadyExistsException.class);
+		eex.expectMessage("(test)는 이미 존재하는 아이디입니다.");
+		service.isExistUserId("test");
+	}
+	
+	@Test
+	public void 이메일_중복_확인_테스트() {
+		eex.expect(EmailAlreadyExistsException.class);
+		eex.expectMessage("(tomato@naver.com)는 이미 존재하는 이메일입니다.");
+		service.isExistUserEmail("tomato@naver.com");
 	}
 
 }

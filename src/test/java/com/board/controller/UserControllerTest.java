@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
@@ -16,7 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -56,16 +54,15 @@ public class UserControllerTest {
 		
 		String jsonStr = new Gson().toJson(user);
 		
-		mockMvc.perform(post("/users/signup")
+		mockMvc.perform(post("/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonStr))
-				.andExpect(status().is(200));
+				.andExpect(status().isCreated());
 	}
 	
 	@Test
 	public void 아이디_종복_확인_테스트() throws Exception {
-		mockMvc.perform(get("/users/signup-id-check")
-				.param("userId", "test")
+		mockMvc.perform(get("/users/id/test")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
@@ -73,11 +70,10 @@ public class UserControllerTest {
 	
 	@Test
 	public void 이메일_중복_확인_테스트() throws Exception {
-		mockMvc.perform(get("/users/email-check")
-				.param("userEmail", "tomato@naver.com")
+		mockMvc.perform(get("/users/email/tomato@naver.com")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(content().string("true"));
+				.andExpect(status().isOk());
 	}
 	
 }

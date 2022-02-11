@@ -23,7 +23,7 @@
                                     <input type="hidden" id="idCheckResult" value="0">
                                     <input type="hidden" id="emailCheckResult" value="0">
                                         <div class="form-group input-group">
-                                            <input class="form-control" placeholder="아이디" type="text" id="userId" name="userId">
+                                            <input class="form-control" placeholder="아이디" type="text" id="userId" name="userId" autofocus>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-default" type="button" id="checkUserId"><i class="fa fa-search"></i>
                                                 </button>
@@ -151,6 +151,7 @@
 					return false;
 				}
 				
+				// 회원가입
 				if (isSignable == true) {
 					var formData = {
 							userId : $('#userId').val(),
@@ -163,7 +164,7 @@
 						
 					$.ajax({
 						type: "post",
-						url: "/users/signup",
+						url: "/users",
 						data: JSON.stringify(formData),
 						contentType: "application/json; charset=utf-8",
 						success: function(data) {
@@ -188,21 +189,18 @@
 			}
 			$.ajax({
 				type: "get",
-				url: "/users/signup-id-check",
-				data: {"userId" : userId},
-				dataType: "json", // 요청 후 응답받는 타입을 json으로 설정해야 XMLDocument 타입으로 되돌아오지 않는다.
+				url: "/users/id/" + userId,
+				// 요청에 대한 리스폰스 타입을 json으로 설정해야 XMLDocument 타입으로 되돌아오지 않는다.
+				// 리스폰스 타입이 json이 아니고 Http Status 형태이기 때문에 dataType 설정이 필요 없음
+				//dataType: "json", 
 				contentType: "application/json; charset=utf-8",
 				success: function(data) {
-					if (data == true) {
-						alert("이미 사용중인 아이디.");
-						return;
-					} else {
-						alert("사용할 수 있는 아이디.");
-						$('#idCheckResult').val("1");
-					}
+					// Http Status 200에 대해서는 success로 이동
+						alert("사용 가능한 아이디.");
 				},
 				error: function(e) {
-					alert(e);
+					// Controller 설정에 따라 Http Status 409는 여기로
+					alert("이미 존재하는 아이디.");
 				}
 			});
 		});
@@ -216,21 +214,13 @@
 			}
 			$.ajax({
 				type: "get",
-				url: "/users/email-check",
-				data: {"userEmail" : userEmail},
-				dataType: "json", // 요청 후 응답받는 타입을 json으로 설정해야 XMLDocument 타입으로 되돌아오지 않는다.
+				url: "/users/email/" + userEmail,
 				contentType: "application/json; charset=utf-8",
 				success: function(data) {
-					if (data == true) {
-						alert("이미 사용중인 이메일.");
-						return;
-					} else {
-						alert("사용할 수 있는 이메일.");
-						$('#emailCheckResult').val("1");
-					}
+					alert("사용 가능한 이메일.");
 				},
 				error: function(e) {
-					alert(e);
+					alert("이미 존재하는 이메일.");
 				}
 			});
 		});

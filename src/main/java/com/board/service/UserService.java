@@ -6,9 +6,11 @@ public interface UserService {
 
 	void signUpUser(UserVO user);
 
-	boolean isExistUserId(String userId);
+	void isExistUserId(String userId);
 	
-	boolean isExistUserEmail(String userEmail);
+	void isExistUserEmail(String userEmail);
 
-	boolean deleteUser(String userId);
+	void deleteUser(String userId);
+	
+	String findUserId(UserVO user);
 }
