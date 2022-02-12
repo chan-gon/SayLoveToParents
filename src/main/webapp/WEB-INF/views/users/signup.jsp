@@ -169,7 +169,7 @@
 						contentType: "application/json; charset=utf-8",
 						success: function(data) {
 							alert("회원가입 완료");
-							location.href = data;
+							location.href="/";
 						},
 						error: function(e) {
 							alert(e);
@@ -197,6 +197,7 @@
 				success: function(data) {
 					// Http Status 200에 대해서는 success로 이동
 						alert("사용 가능한 아이디.");
+						$('#idCheckResult').val("1");
 				},
 				error: function(e) {
 					// Controller 설정에 따라 Http Status 409는 여기로
@@ -218,6 +219,7 @@
 				contentType: "application/json; charset=utf-8",
 				success: function(data) {
 					alert("사용 가능한 이메일.");
+					$('#emailCheckResult').val("1");
 				},
 				error: function(e) {
 					alert("이미 존재하는 이메일.");

@@ -1,5 +1,6 @@
 package com.board.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,6 @@ import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.service.UserService;
-import com.board.util.HttpResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -37,7 +37,7 @@ public class UserController {
 	@PostMapping("")
 	public ResponseEntity<Void> signUpUser(@RequestBody UserVO user) {
 		service.signUpUser(user);
-		return HttpResponse.RESPONSE_CREATED;
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 
 	@GetMapping("/id/{userId}")
@@ -46,21 +46,20 @@ public class UserController {
 		try {
 			service.isExistUserId(userId);
 		} catch (UserAlreadyExistsException e) {
-			return HttpResponse.RESPONSE_CONFLICT;
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		return HttpResponse.RESPONES_OK;
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
-	@GetMapping("/email/{userEmail}")
+	@GetMapping("/email/{userEmail:.*}")
 	public ResponseEntity<Void> checkUserEmail(@PathVariable("userEmail") String userEmail) {
 		
 		try {
-			
 			service.isExistUserEmail(userEmail);
 		} catch (EmailAlreadyExistsException e) {
-			return HttpResponse.RESPONSE_CONFLICT;
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		return HttpResponse.RESPONES_OK;
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	@GetMapping("/signup")
@@ -73,9 +72,9 @@ public class UserController {
 		
 		try {
 			service.deleteUser(userId);
-			return HttpResponse.RESPONES_OK;
+			return new ResponseEntity<String>(userId + "님 탈퇴완료",HttpStatus.OK);
 		} catch (InvalidValueException ive) {
-			return HttpResponse.RESPONSE_BAD_REQUEST;
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
