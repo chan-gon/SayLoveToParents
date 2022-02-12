@@ -293,6 +293,7 @@
                                 </div>
                                 <button type="button" id="submitBtn" class="btn btn-lg btn-success btn-block">로그인</button>
                             </fieldset>
+                            <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }" />
                         </form>
                     </div>
                 </div>

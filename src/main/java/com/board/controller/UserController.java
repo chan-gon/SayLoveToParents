@@ -19,6 +19,7 @@ import com.board.service.UserService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import oracle.jdbc.proxy.annotation.Post;
 
 /*
  * @RestController
@@ -77,6 +78,7 @@ public class UserController {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	
 	
 	@GetMapping("/login")
 	public ModelAndView loginForm() {
