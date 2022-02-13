@@ -18,8 +18,6 @@ import com.board.exception.UserAlreadyExistsException;
 import com.board.service.UserService;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j;
-import oracle.jdbc.proxy.annotation.Post;
 
 /*
  * @RestController
@@ -30,7 +28,6 @@ import oracle.jdbc.proxy.annotation.Post;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
-@Log4j
 public class UserController {
 
 	private UserService service;
@@ -63,11 +60,6 @@ public class UserController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
-	@GetMapping("/signup")
-	public ModelAndView signUpForm() {
-		return new ModelAndView("users/signup");
-	}
-
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) {
 		
@@ -79,6 +71,10 @@ public class UserController {
 		}
 	}
 	
+	@GetMapping("/signup")
+	public ModelAndView signUpForm() {
+		return new ModelAndView("users/signup");
+	}
 	
 	@GetMapping("/login")
 	public ModelAndView loginForm() {

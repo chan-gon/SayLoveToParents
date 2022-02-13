@@ -15,5 +15,7 @@ public class UserVO {
 	private String userAddr;
 	private Date userRegDate;
 	private Date userDropDate;
+	private String userAuth;
+	private int userEnabled;
 
 }

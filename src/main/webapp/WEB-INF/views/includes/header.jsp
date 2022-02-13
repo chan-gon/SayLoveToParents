@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -261,9 +263,26 @@
                         <li><a href="/users/signup"><i class="fa fa-user-plus fa-fw"></i>회원가입</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="/users/login"><i class="fa fa-sign-in fa-fw"></i>로그인</a>
-                        </li>
-                    </ul>
+                        
+                        <!-- 사용자가 Anonymous 상태인 경우 출력 -->
+                        <sec:authorize access="isAnonymous()">
+	                        <li><a href="/users/login"><i class="fa fa-sign-in fa-fw"></i>로그인</a>
+	                        </li>
+                        </sec:authorize>
+                        
+                        <!-- 사용자가 인증 되었을 때 출력 -->
+                        <sec:authorize access="isAuthenticated()">
+	                        <li><a href="#" onclick="document.getElementById('logout-form').submit();"><i class="fa fa-sign-in fa-fw"></i>로그아웃</a>
+	                        </li>
+                        </sec:authorize>
+					</ul>
+					
+					<!-- 로그아웃 폼 -->
+						<form id="logout-form" action='<c:url value='/users/logout'/>' method="POST">
+							<input name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
+						</form>
+					<!-- End of 로그아웃 폼 -->
+					
                     <!-- /.dropdown-user -->
                 </li>
                 <!-- /.dropdown -->

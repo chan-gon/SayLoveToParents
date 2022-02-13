@@ -1,5 +1,7 @@
 package com.board.service;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.board.domain.UserVO;
@@ -15,9 +17,16 @@ import lombok.AllArgsConstructor;
 public class UserServiceImpl implements UserService {
 
 	private UserMapper mapper;
+	
+	@Bean
+	BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
 	@Override
 	public void signUpUser(UserVO user) {
+		String encodedPwd = bCryptPasswordEncoder().encode(user.getUserPwd());
+		user.setUserPwd(encodedPwd);
 		mapper.signUpUser(user);
 	}
 

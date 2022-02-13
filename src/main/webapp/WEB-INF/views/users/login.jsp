@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -277,9 +278,13 @@
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Login</h3>
+                        <c:set var="errorMsg" value="${errorMsg }" />
+                        <c:if test="${not empty errorMsg}">
+                        	<p style="color:red"><c:out value="${errorMsg }"></c:out></p>
+                        </c:if>
                     </div>
                     <div class="panel-body">
-                        <form role="form" id="loginForm" method="post">
+                        <form role="form" name="loginForm" action="/users/login" method="post" onsubmit="return checkInput()">
                             <fieldset>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="아이디" id="userId" name="userId" type="text" autofocus>
@@ -291,7 +296,7 @@
 	                                <button class="btn btn-block" id="idInquiry" type="button">아이디찾기</button>
 	                                <button class="btn btn-block" id="pwdInquiry" type="button">비밀번호찾기</button>
                                 </div>
-                                <button type="button" id="submitBtn" class="btn btn-lg btn-success btn-block">로그인</button>
+                                <button type="submit" class="btn btn-lg btn-success btn-block">로그인</button>
                             </fieldset>
                             <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }" />
                         </form>
@@ -304,21 +309,24 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
     
+    	function checkInput() {
+			
+			if (loginForm.userId.value == "") {
+				alert("아이디 입력하세요.");
+				loginForm.userId.focus();
+				return false;
+			}
+			else if (loginForm.userPwd.value == "") {
+				alert("비밀번호 입력하세요.");
+				loginForm.userId.focus();
+				return false;
+			}
+			else {
+				return true;
+			}
+    	}
+    
     	$(function() {
-    		$('#submitBtn').click(function() {
-				var elementArr = [
-					document.querySelector('#userId'),
-					document.querySelector('#userPwd')
-				];
-				
-				elementArr.forEach(function(inputTag) {
-					if (inputTag.value == null || inputTag.value == "") {
-						alert(inputTag.placeholder + " 입력하세요.");
-						return;
-					}
-				});
-    		});
-    		
     		// 아이디 찾기
     		$('#idInquiry').click(function() {
     			window.open("/users/login/idinquiry-input");
