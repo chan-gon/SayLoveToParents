@@ -256,7 +256,7 @@
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i>개인정보 수정</a>
+                        <li><a href="/test/start"><i class="fa fa-user fa-fw"></i>개인정보 수정</a>
                         </li>
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i>내상점</a>
                         </li>
@@ -278,8 +278,8 @@
 					</ul>
 					
 					<!-- 로그아웃 폼 -->
-						<form id="logout-form" action='<c:url value='/users/logout'/>' method="POST">
-							<input name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
+						<form id="logout-form" action='<c:url value='/logout'/>' method="POST">
+							<sec:csrfInput/>
 						</form>
 					<!-- End of 로그아웃 폼 -->
 					

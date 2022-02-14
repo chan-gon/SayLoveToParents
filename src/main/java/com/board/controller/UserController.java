@@ -51,7 +51,7 @@ public class UserController {
 
 	@GetMapping("/email/{userEmail:.*}")
 	public ResponseEntity<Void> checkUserEmail(@PathVariable("userEmail") String userEmail) {
-		
+
 		try {
 			service.isExistUserEmail(userEmail);
 		} catch (EmailAlreadyExistsException e) {
@@ -62,22 +62,27 @@ public class UserController {
 
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) {
-		
+
 		try {
 			service.deleteUser(userId);
-			return new ResponseEntity<String>(userId + "님 탈퇴완료",HttpStatus.OK);
+			return new ResponseEntity<String>(userId + "님 탈퇴완료", HttpStatus.OK);
 		} catch (InvalidValueException ive) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping("/signup")
 	public ModelAndView signUpForm() {
 		return new ModelAndView("users/signup");
 	}
 	
+	@PostMapping("/login")
+	public ModelAndView loginFormPost() {
+		return new ModelAndView("users/login");
+	} 
+
 	@GetMapping("/login")
-	public ModelAndView loginForm() {
+	public ModelAndView loginFormGet() {
 		return new ModelAndView("users/login");
 	}
 
@@ -90,7 +95,7 @@ public class UserController {
 	public ModelAndView pwdInquiry() {
 		return new ModelAndView("login/pwdInquiry");
 	}
-	
+
 	@GetMapping("/idinquiry")
 	public String findUserId(@RequestBody UserVO user) {
 		service.findUserId(user);
