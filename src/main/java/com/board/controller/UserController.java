@@ -20,9 +20,10 @@ import com.board.service.UserService;
 import lombok.AllArgsConstructor;
 
 /*
- * @RestController
-   - @Controller에 @ResponseBody가 추가된 어노테이션
-   - @RequestMapping 메소드를 처리할 때 @ResponseBody가 기본적으로 붙으면서 처리
+  	@RestController @Controller에 @ResponseBody까지 합쳐진것입니다.
+    주로 Http response로 view가 아닌 문자열과 JSON등을 보낼때 사용합니다.
+    @RequestMapping 어노테이션은 URL을 컨트롤러의 클래스나 메서드와 매핑할 때 사용하는 스프링 프레임워크의 어노테이션입니다.
+    @RequestBody는 HTTP 요청 body를 자바 객체로 변환합니다.
  */
 
 @RestController
@@ -31,8 +32,12 @@ import lombok.AllArgsConstructor;
 public class UserController {
 
 	private UserService service;
+	
+	/*
+	 * 주요 기능 처리
+	 */
 
-	@PostMapping("")
+	@PostMapping
 	public ResponseEntity<Void> signUpUser(@RequestBody UserVO user) {
 		service.signUpUser(user);
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -70,7 +75,16 @@ public class UserController {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
+	@GetMapping("/idinquiry")
+	public String findUserId(@RequestBody UserVO user) {
+		service.findUserId(user);
+		return "";
+	}
+	
+	/*
+	 * 페이지 이동 처리
+	 */
 	@GetMapping("/signup")
 	public ModelAndView signUpForm() {
 		return new ModelAndView("users/signup");
@@ -94,12 +108,6 @@ public class UserController {
 	@GetMapping("/pwdinquiry-input")
 	public ModelAndView pwdInquiry() {
 		return new ModelAndView("login/pwdInquiry");
-	}
-
-	@GetMapping("/idinquiry")
-	public String findUserId(@RequestBody UserVO user) {
-		service.findUserId(user);
-		return "";
 	}
 
 }

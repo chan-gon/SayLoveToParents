@@ -32,12 +32,12 @@ public class UserServiceTest {
 	@Test
 	public void A_사용자_생성_테스트() {
 		UserVO user = new UserVO();
-		user.setUserId("test");
-		user.setUserPwd("1234");
-		user.setUserName("김토마토");
-		user.setUserEmail("tomato@naver.com");
+		user.setUserId("aa");
+		user.setUserPwd("aa");
+		user.setUserName("aa");
+		user.setUserEmail("aa@naver.com");
 		user.setUserPhone("010-7979-7979");
-		user.setUserAddr("서울시 동대문구");
+		user.setUserAddr("대구 광역시 북구");
 
 		service.signUpUser(user);
 

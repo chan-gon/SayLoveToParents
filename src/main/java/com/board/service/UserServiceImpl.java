@@ -1,7 +1,5 @@
 package com.board.service;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.board.domain.UserVO;
@@ -9,6 +7,7 @@ import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.mapper.UserMapper;
+import com.board.utils.PasswordEncryptor;
 
 import lombok.AllArgsConstructor;
 
@@ -18,14 +17,9 @@ public class UserServiceImpl implements UserService {
 
 	private UserMapper mapper;
 	
-	@Bean
-	BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
 	@Override
 	public void signUpUser(UserVO user) {
-		String encodedPwd = bCryptPasswordEncoder().encode(user.getUserPwd());
+		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
 		user.setUserPwd(encodedPwd);
 		mapper.signUpUser(user);
 	}
