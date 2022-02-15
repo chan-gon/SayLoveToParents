@@ -86,10 +86,12 @@ public class UserControllerTest {
 	
 	@Test
 	public void 아이디_찾기_테스트() throws Exception {
-		mockMvc.perform(post("/users/idinquiry")
-			   .contentType(MediaType.APPLICATION_JSON)
-			   .accept(MediaType.APPLICATION_JSON))
-		.andDo(print());
+		mockMvc.perform(get("/users/id-inquiry")
+				.param("userName", "aa")
+				.param("userPhone", "01012341234")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isOk());
 	}
 	
 }

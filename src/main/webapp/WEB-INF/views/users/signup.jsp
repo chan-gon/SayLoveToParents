@@ -115,7 +115,7 @@
 					if (inputTag.value == null || inputTag.value == "") {
 						alert(inputTag.placeholder + " 입력하세요.");
 						isSignable = false;
-						return;
+						return false;
 					}
 				});
 				
@@ -137,8 +137,6 @@
 					return false;
 				}
 				
-				isSignable = true;
-				
 				if ($('#idCheckResult').val() == "0") {
 					alert("아이디 중복체크를 반드시 해주세요.");
 					isSignable = false;
@@ -150,6 +148,8 @@
 					isSignable = false;
 					return false;
 				}
+				
+				isSignable = true;
 				
 				// 회원가입
 				if (isSignable == true) {

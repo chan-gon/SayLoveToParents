@@ -1,7 +1,11 @@
 package com.board.controller;
 
+import java.util.Random;
+
+import org.apache.commons.mail.SimpleEmail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.board.domain.UserVO;
 import com.board.exception.EmailAlreadyExistsException;
@@ -80,8 +85,8 @@ public class UserController {
 	}
 	
 	@GetMapping(value = "/id-inquiry", produces = "application/text; charset=UTF-8")
-	public ResponseEntity<String> findUserId(@RequestParam("userName") String userName) {
-		String userId = service.findUserId(userName);
+	public ResponseEntity<String> findUserId(@RequestParam("userName") String userName, @RequestParam("userPhone") String userPhone) {
+		String userId = service.findUserId(userName, userPhone);
 		String responseMsg = null;
 		if (userId == null) {
 			responseMsg = "존재하지 않는 사용자";
@@ -89,6 +94,38 @@ public class UserController {
 		}
 		responseMsg = userName + "님의 아이디는 " + userId + "입니다.";
 		return new ResponseEntity<String>(responseMsg,HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/send-cert-email", produces = "application/text; charset=UTF-8")
+	public ResponseEntity<String> sendCertEmail(@RequestParam("userId") String userId, @RequestParam("userEmail") String userEmail) {
+		int cnt = service.checkUserIdEmail(userId, userEmail);
+		if (cnt == 0) {
+			return new ResponseEntity<String>("잘못된 아이디 또는 이메일 주소" ,HttpStatus.CONFLICT);
+		}
+		Random random = new Random();
+        int serti = random.nextInt(888888) + 111111;
+	    String code = "";
+	    
+	    SimpleEmail email = new SimpleEmail();
+	    email.setHostName("smtp.naver.com");
+	    email.setSmtpPort(465);
+	    email.setAuthentication("kamijyo98", "YGKXSW5XEXMP");
+	    
+	    email.setSSLOnConnect(true);
+	    email.setStartTLSEnabled(true);
+	    
+	    try {
+	    	email.setFrom("kamijyo98@naver.com", "중고거래사이트 관리자", "utf-8");
+	    	email.addTo(userEmail, "회원", "utf-8");
+	    	email.setSubject("비밀번호 재설정을 위한 인증번호 입니다.");
+	    	email.setMsg("[인증번호] "+ serti +" 입니다. \n 인증번호 확인란에 기입해주십시오.");
+	    	email.send();
+	    	code = Integer.toString(serti);
+	    	log.warn("code ======== " + code);
+	    } catch (Exception e) {
+	    	return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.BAD_REQUEST);
+	    }
+		return new ResponseEntity<String>(code ,HttpStatus.OK);
 	}
 	
 	/*
@@ -109,14 +146,19 @@ public class UserController {
 		return new ModelAndView("users/login");
 	}
 
-	@GetMapping("/idinquiry-input")
-	public ModelAndView idInquiry() {
-		return new ModelAndView("login/idInquiry");
+	@GetMapping("/id-inquiry-form")
+	public ModelAndView idInquiryForm() {
+		return new ModelAndView("login/inquiry/idInquiry");
 	}
 
-	@GetMapping("/pwdinquiry-input")
-	public ModelAndView pwdInquiry() {
-		return new ModelAndView("login/pwdInquiry");
+	@GetMapping("/pwd-inquiry-form")
+	public ModelAndView pwdInquiryForm() {
+		return new ModelAndView("login/inquiry/pwdInquiry");
+	}
+	
+	@GetMapping("/pwd")
+	public ModelAndView changeUserPwd() {
+		return new ModelAndView("login/inquiry/pwdChange");
 	}
 
 }

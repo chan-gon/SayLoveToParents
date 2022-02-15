@@ -105,12 +105,12 @@
     	$(function() {
     		// 아이디 찾기
     		$('#idInquiry').click(function() {
-    			window.open("/users/idinquiry-input");
+    			window.open("/users/id-inquiry-form");
     		});
     		
     		// 비밀번호 찾기
 			$('#pwdInquiry').click(function() {
-				window.open("/users/pwdinquiry-input");
+				window.open("/users/pwd-inquiry-form");
     		});
     	});
 		

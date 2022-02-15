@@ -1,5 +1,7 @@
 package com.board.mapper;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.board.domain.UserVO;
 
 public interface UserMapper {
@@ -14,6 +16,10 @@ public interface UserMapper {
 
 	int deleteUser(String userId);
 
-	String findUserId(String userName);
+	String findUserId(@Param("userName") String userName, @Param("userPhone") String userPhone);
+
+	String findUserPwd(@Param("userId") String userId, @Param("userEmail") String userEmail);
+
+	int checkUserIdEmail(@Param("userId") String userId, @Param("userEmail") String userEmail);
 
 }

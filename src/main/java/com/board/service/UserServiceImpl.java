@@ -1,7 +1,5 @@
 package com.board.service;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.board.domain.UserVO;
@@ -12,9 +10,11 @@ import com.board.mapper.UserMapper;
 import com.board.utils.PasswordEncryptor;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 @Service
 @AllArgsConstructor
+@Log4j
 public class UserServiceImpl implements UserService {
 
 	private UserMapper mapper;
@@ -51,8 +51,23 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String findUserId(String userName) {
-		return mapper.findUserId(userName);
+	public String findUserId(String userName, String userPhone) {
+		return mapper.findUserId(userName, userPhone);
+	}
+
+	/*
+	 * Controller의 /send-cert-email 핸들러 전용 함수.
+	 * 기존의 isExistUserId, isExistUserEmail 함수로 구현 가능하지만,
+	 * 해당 함수들은 기존 로직과 연결되어 있어 함수간 관계 파악 후 리팩토링 예정
+	 */
+	@Override
+	public int checkUserIdEmail(String userId, String userEmail) {
+		return mapper.checkUserIdEmail(userId, userEmail);
+	}
+
+	@Override
+	public String findUserPwd(String userName, String userPhone) {
+		return mapper.findUserPwd(userName, userPhone);
 	}
 
 }

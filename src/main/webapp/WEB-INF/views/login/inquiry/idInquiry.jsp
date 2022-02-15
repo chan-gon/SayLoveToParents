@@ -59,6 +59,9 @@
                                 <div class="form-group">
                                     <input class="form-control" placeholder="이름" id="userName" name="userName" type="text" autofocus>
                                 </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="전화번호" id="userPhone" name="userPhone" type="text" autofocus>
+                                </div>
                                 <button type="button" id="submitBtn" class="btn btn-lg btn-success btn-block">아이디찾기</button>
                             </fieldset>
                         </form>
@@ -91,7 +94,7 @@
     
     </script>
 
-<%@ include file="../includes/footer.jsp"%>
+<%@ include file="../../includes/footer.jsp"%>
 
 </body>
 
