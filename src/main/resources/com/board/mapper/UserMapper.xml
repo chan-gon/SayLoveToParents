@@ -32,8 +32,8 @@
 		DELETE FROM site_user WHERE user_id = #{userId}
 	</delete>
 	
-	<select id="findUserId" parameterType="com.board.domain.UserVO" resultType="String">
-		SELECT user_id FROM site_user WHERE user_name = #{userName} AND user_phone = #{userPhone}
+	<select id="findUserId" parameterType="String" resultType="String">
+		SELECT * FROM site_user WHERE user_name = #{userName}
 	</select>
 	
 </mapper>    

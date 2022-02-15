@@ -12,7 +12,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>중고거래사이트</title>
+    <title>로그인</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -105,12 +105,12 @@
     	$(function() {
     		// 아이디 찾기
     		$('#idInquiry').click(function() {
-    			window.open("/users/login/idinquiry-input");
+    			window.open("/users/idinquiry-input");
     		});
     		
     		// 비밀번호 찾기
 			$('#pwdInquiry').click(function() {
-				window.open("/users/login/pwdinquiry-input");
+				window.open("/users/pwdinquiry-input");
     		});
     	});
 		

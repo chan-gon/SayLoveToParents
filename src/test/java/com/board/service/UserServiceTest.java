@@ -1,5 +1,8 @@
 package com.board.service;
 
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,7 +39,7 @@ public class UserServiceTest {
 		user.setUserPwd("aa");
 		user.setUserName("aa");
 		user.setUserEmail("aa@naver.com");
-		user.setUserPhone("010-7979-7979");
+		user.setUserPhone("01079797979");
 		user.setUserAddr("대구 광역시 북구");
 
 		service.signUpUser(user);
@@ -61,6 +64,13 @@ public class UserServiceTest {
 	@Test
 	public void D_회원_탈퇴_테스트() {
 		service.deleteUser("test");
+	}
+	
+	@Test
+	public void 아이디_찾기_테스트() {
+		String id = service.findUserId("aa");
+		log.warn("id = " + id);
+		assertTrue(id.equals("aa"));
 	}
 
 }

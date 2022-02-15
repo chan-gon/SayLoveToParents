@@ -1,5 +1,7 @@
 package com.board.service;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.board.domain.UserVO;
@@ -49,9 +51,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String findUserId(UserVO user) {
-		// TODO Auto-generated method stub
-		return null;
+	public String findUserId(String userName) {
+		return mapper.findUserId(userName);
 	}
 
 }

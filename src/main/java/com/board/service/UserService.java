@@ -12,5 +12,5 @@ public interface UserService {
 
 	void deleteUser(String userId);
 	
-	String findUserId(UserVO user);
+	String findUserId(String userName);
 }

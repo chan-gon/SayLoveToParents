@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,6 +19,7 @@ import com.board.exception.UserAlreadyExistsException;
 import com.board.service.UserService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 /*
   	@RestController @Controller에 @ResponseBody까지 합쳐진것입니다.
@@ -29,6 +31,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
+@Log4j
 public class UserController {
 
 	private UserService service;
@@ -64,7 +67,7 @@ public class UserController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-
+	
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) {
 
@@ -76,10 +79,16 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping("/idinquiry")
-	public String findUserId(@RequestBody UserVO user) {
-		service.findUserId(user);
-		return "";
+	@GetMapping(value = "/id-inquiry", produces = "application/text; charset=UTF-8")
+	public ResponseEntity<String> findUserId(@RequestParam("userName") String userName) {
+		String userId = service.findUserId(userName);
+		String responseMsg = null;
+		if (userId == null) {
+			responseMsg = "존재하지 않는 사용자";
+			return new ResponseEntity<String>(responseMsg,HttpStatus.CONFLICT);
+		}
+		responseMsg = userName + "님의 아이디는 " + userId + "입니다.";
+		return new ResponseEntity<String>(responseMsg,HttpStatus.OK);
 	}
 	
 	/*
