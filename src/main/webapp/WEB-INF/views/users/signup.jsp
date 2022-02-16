@@ -115,7 +115,7 @@
 					if (inputTag.value == null || inputTag.value == "") {
 						alert(inputTag.placeholder + " 입력하세요.");
 						isSignable = false;
-						return;
+						return false;
 					}
 				});
 				
@@ -137,8 +137,6 @@
 					return false;
 				}
 				
-				isSignable = true;
-				
 				if ($('#idCheckResult').val() == "0") {
 					alert("아이디 중복체크를 반드시 해주세요.");
 					isSignable = false;
@@ -150,6 +148,8 @@
 					isSignable = false;
 					return false;
 				}
+				
+				isSignable = true;
 				
 				// 회원가입
 				if (isSignable == true) {
@@ -189,7 +189,7 @@
 			}
 			$.ajax({
 				type: "get",
-				url: "/users/id/" + userId,
+				url: "/users/signup/" + userId,
 				// 요청에 대한 리스폰스 타입을 json으로 설정해야 XMLDocument 타입으로 되돌아오지 않는다.
 				// 리스폰스 타입이 json이 아니고 Http Status 형태이기 때문에 dataType 설정이 필요 없음
 				//dataType: "json", 
@@ -215,7 +215,7 @@
 			}
 			$.ajax({
 				type: "get",
-				url: "/users/email/" + userEmail,
+				url: "/users/signup/" + userEmail,
 				contentType: "application/json; charset=utf-8",
 				success: function(data) {
 					alert("사용 가능한 이메일.");

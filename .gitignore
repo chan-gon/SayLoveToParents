@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,eclipse,maven
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,eclipse,maven
 
+# apache commons email api 관련 개인정보
+src/main/webapp/WEB-INF/message/
+
 ### Eclipse ###
 .metadata
 bin/

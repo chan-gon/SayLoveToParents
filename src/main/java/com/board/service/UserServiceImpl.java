@@ -1,7 +1,5 @@
 package com.board.service;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.board.domain.UserVO;
@@ -9,23 +7,21 @@ import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.mapper.UserMapper;
+import com.board.utils.PasswordEncryptor;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 @Service
 @AllArgsConstructor
+@Log4j
 public class UserServiceImpl implements UserService {
 
 	private UserMapper mapper;
 	
-	@Bean
-	BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
 	@Override
 	public void signUpUser(UserVO user) {
-		String encodedPwd = bCryptPasswordEncoder().encode(user.getUserPwd());
+		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
 		user.setUserPwd(encodedPwd);
 		mapper.signUpUser(user);
 	}
@@ -55,9 +51,30 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String findUserId(UserVO user) {
-		// TODO Auto-generated method stub
-		return null;
+	public String findUserId(String userName, String userPhone) {
+		return mapper.findUserId(userName, userPhone);
+	}
+
+	/*
+	 * Controller의 /help/pwd/email 핸들러 전용 함수.
+	 * 기존의 isExistUserId, isExistUserEmail 함수로 구현 가능하지만,
+	 * 해당 함수들은 기존 로직과 연결되어 있어 함수간 관계 파악 후 리팩토링 예정
+	 */
+	@Override
+	public int checkUserIdEmail(String userId, String userEmail) {
+		return mapper.checkUserIdEmail(userId, userEmail);
+	}
+
+	@Override
+	public String findUserPwd(String userName, String userPhone) {
+		return mapper.findUserPwd(userName, userPhone);
+	}
+
+	@Override
+	public void changeUserPwd(UserVO user) {
+		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
+		user.setUserPwd(encodedPwd);
+		mapper.changeUserPwd(user);
 	}
 
 }

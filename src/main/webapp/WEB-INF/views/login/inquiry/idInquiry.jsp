@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>로그인</title>
+    <title>아이디찾기</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -53,27 +52,17 @@
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Login</h3>
-                        <c:if test="${not empty errormsg}">
-                        	<font color="red">
-	                        	<p><c:out value="${errormsg }"/></p>
-                        	</font>
-                        </c:if>
                     </div>
                     <div class="panel-body">
-                        <form role="form" name="FormLogin" action="/loginProcess" method="POST" onsubmit="return checkInput()">
-                        <sec:csrfInput/>
+                        <form role="form" method="post" id="inputForm">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="아이디" id="userId" name="userId" type="text" autofocus>
+                                    <input class="form-control" placeholder="이름" id="userName" name="userName" type="text" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="비밀번호" id="userPwd" name="userPwd" type="password">
+                                    <input class="form-control" placeholder="전화번호" id="userPhone" name="userPhone" type="text" autofocus>
                                 </div>
-                                <div class="form-group">
-	                                <button class="btn btn-block" id="idInquiry" type="button">아이디찾기</button>
-	                                <button class="btn btn-block" id="pwdInquiry" type="button">비밀번호찾기</button>
-                                </div>
-                                <button type="submit" class="btn btn-lg btn-success btn-block">로그인</button>
+                                <button type="button" id="submitBtn" class="btn btn-lg btn-success btn-block">아이디찾기</button>
                             </fieldset>
                         </form>
                     </div>
@@ -85,38 +74,29 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
     
-    	function checkInput() {
-			
-			if (FormLogin.userId.value == "") {
-				alert("아이디 입력하세요.");
-				FormLogin.userId.focus();
-				return false;
-			}
-			else if (FormLogin.userPwd.value == "") {
-				alert("비밀번호 입력하세요.");
-				FormLogin.userId.focus();
-				return false;
-			}
-			else {
-				return true;
-			}
-    	}
-    
     	$(function() {
-    		// 아이디 찾기
-    		$('#idInquiry').click(function() {
-    			window.open("/users/help/id");
-    		});
     		
-    		// 비밀번호 찾기
-			$('#pwdInquiry').click(function() {
-				window.open("/users/help/pwd");
+    		$('#submitBtn').on('click',function() {
+    			var userName = $('#userName').val();
+    			var userPhone = $('#userPhone').val();
+    			$.ajax({
+    				type: "post",
+    				url: "/users/help/id",
+    				data: JSON.stringify({"userName" : userName, "userPhone" : userPhone}),
+    				contentType: "application/json; charset=UTF-8",
+    				success: function(data) {
+    					alert(data);
+    				},
+    				error: function(e) {
+    					alert(e.responseText);
+    				}
+    			});
     		});
     	});
-		
+    
     </script>
 
-<%@ include file="../includes/footer.jsp"%>
+<%@ include file="../../includes/footer.jsp"%>
 
 </body>
 

@@ -15,6 +15,7 @@
         <property name="basenames">
             <list>
                 <value>/WEB-INF/message/security</value>
+                <value>/WEB-INF/message/email</value>
             </list>
         </property>       
     </bean>

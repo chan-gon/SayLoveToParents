@@ -32,8 +32,16 @@
 		DELETE FROM site_user WHERE user_id = #{userId}
 	</delete>
 	
-	<select id="findUserId" parameterType="com.board.domain.UserVO" resultType="String">
+	<select id="findUserId" parameterType="Map" resultType="String">
 		SELECT user_id FROM site_user WHERE user_name = #{userName} AND user_phone = #{userPhone}
 	</select>
+	
+	<select id="checkUserIdEmail" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM site_user WHERE user_id = #{userId} AND user_email = #{userEmail}
+	</select>
+	
+	<update id="changeUserPwd">
+		UPDATE site_user SET user_pwd = #{userPwd} WHERE user_id = #{userId}
+	</update>
 	
 </mapper>    
