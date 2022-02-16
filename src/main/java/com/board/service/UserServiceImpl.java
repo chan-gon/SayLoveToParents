@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/*
-	 * Controller의 /send-cert-email 핸들러 전용 함수.
+	 * Controller의 /help/pwd/email 핸들러 전용 함수.
 	 * 기존의 isExistUserId, isExistUserEmail 함수로 구현 가능하지만,
 	 * 해당 함수들은 기존 로직과 연결되어 있어 함수간 관계 파악 후 리팩토링 예정
 	 */

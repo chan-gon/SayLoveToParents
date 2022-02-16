@@ -54,7 +54,7 @@
                         <h3 class="panel-title">Login</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" method="get" id="inputForm">
+                        <form role="form" method="post" id="inputForm">
                             <fieldset>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="이름" id="userName" name="userName" type="text" autofocus>
@@ -77,16 +77,18 @@
     	$(function() {
     		
     		$('#submitBtn').on('click',function() {
+    			var userName = $('#userName').val();
+    			var userPhone = $('#userPhone').val();
     			$.ajax({
-    				type: "get",
-    				url: "/users/id-inquiry",
-    				data: $('#inputForm').serialize(),
+    				type: "post",
+    				url: "/users/help/id",
+    				data: JSON.stringify({"userName" : userName, "userPhone" : userPhone}),
     				contentType: "application/json; charset=UTF-8",
     				success: function(data) {
     					alert(data);
     				},
     				error: function(e) {
-    					alert("Error");
+    					alert(e.responseText);
     				}
     			});
     		});

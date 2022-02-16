@@ -63,7 +63,7 @@ public class UserControllerTest {
 	
 	@Test
 	public void B_아이디_종복_확인_테스트() throws Exception {
-		mockMvc.perform(get("/users/id/test")
+		mockMvc.perform(get("/users/signup/test")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isConflict());
@@ -71,7 +71,7 @@ public class UserControllerTest {
 	
 	@Test
 	public void C_이메일_중복_확인_테스트() throws Exception {
-		mockMvc.perform(get("/users/email/tomato@naver.com")
+		mockMvc.perform(get("/users/signup/tomato@naver.com")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
@@ -86,10 +86,15 @@ public class UserControllerTest {
 	
 	@Test
 	public void 아이디_찾기_테스트() throws Exception {
-		mockMvc.perform(get("/users/id-inquiry")
-				.param("userName", "aa")
-				.param("userPhone", "01012341234")
-				.contentType(MediaType.APPLICATION_JSON))
+		UserVO user = new UserVO();
+		user.setUserName("Kim");
+		user.setUserPhone("01079797979");
+		
+		String jsonStr = new Gson().toJson(user);
+		
+		mockMvc.perform(post("/users/help/id")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStr))
 				.andDo(print())
 				.andExpect(status().isOk());
 	}

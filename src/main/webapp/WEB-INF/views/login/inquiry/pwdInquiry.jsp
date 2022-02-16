@@ -98,7 +98,7 @@
     			if (isSubmittable == true) {
     				$.ajax({
     					type: "get",
-    					url: "/users/send-cert-email?userId=" + userId + "&userEmail=" + userEmail,
+    					url: "/users/help/pwd/email?userId=" + userId + "&userEmail=" + userEmail,
     					success: function(data) {
     						alert("인증번호 전송 완료. 인증번호 입력 후 인증을 누르세요.");
     						code = data;
@@ -135,7 +135,7 @@
     		
     		$('#changePwdBtn').click(function() {
     			var userId = $('#userId').val();
-    			location.href = "/users/pwd/" + userId;
+    			location.href = "/users/help/pwd/" + userId;
     		});
     	});
     

@@ -67,8 +67,8 @@ public class UserServiceTest {
 	
 	@Test
 	public void 아이디_찾기_테스트() {
-		String id = service.findUserId("aa", "01012341234");
-		assertTrue(id.equals("aa"));
+		String id = service.findUserId("Kim", "01079797979");
+		assertTrue(id.equals("test"));
 	}
 
 }

@@ -5,7 +5,6 @@ import java.util.Random;
 import org.apache.commons.mail.SimpleEmail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +21,7 @@ import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.service.UserService;
+import com.board.utils.EmailUtils;
 import com.board.utils.MessageUtils;
 
 import lombok.AllArgsConstructor;
@@ -52,7 +52,7 @@ public class UserController {
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 
-	@GetMapping("/id/{userId}")
+	@GetMapping("/signup/{userId}")
 	public ResponseEntity<Void> checkUserId(@PathVariable("userId") String userId) throws Exception {
 
 		try {
@@ -63,7 +63,7 @@ public class UserController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
-	@GetMapping("/email/{userEmail:.*}")
+	@GetMapping("/signup/{userEmail:.*}")
 	public ResponseEntity<Void> checkUserEmail(@PathVariable("userEmail") String userEmail) {
 
 		try {
@@ -85,47 +85,32 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping(value = "/id-inquiry", produces = "application/text; charset=UTF-8")
-	public ResponseEntity<String> findUserId(@RequestParam("userName") String userName, @RequestParam("userPhone") String userPhone) {
-		String userId = service.findUserId(userName, userPhone);
+	@PostMapping(value = "/help/id", produces = "application/text; charset=UTF-8")
+	public ResponseEntity<String> findUserId(@RequestBody UserVO user) {
+		String userId = service.findUserId(user.getUserName(), user.getUserPhone());
 		String responseMsg = null;
 		if (userId == null) {
 			responseMsg = "존재하지 않는 사용자";
 			return new ResponseEntity<String>(responseMsg,HttpStatus.CONFLICT);
 		}
-		responseMsg = userName + "님의 아이디는 " + userId + "입니다.";
+		responseMsg = user.getUserName() + "님의 아이디는 " + userId + "입니다.";
 		return new ResponseEntity<String>(responseMsg,HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/send-cert-email", produces = "application/text; charset=UTF-8")
+	@GetMapping(value = "/help/pwd/email", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> sendCertEmail(@RequestParam("userId") String userId, @RequestParam("userEmail") String userEmail) {
+		
 		int cnt = service.checkUserIdEmail(userId, userEmail);
 		if (cnt == 0) {
 			return new ResponseEntity<String>("잘못된 아이디 또는 이메일 주소" ,HttpStatus.CONFLICT);
 		}
 		Random random = new Random();
-        int serti = random.nextInt(888888) + 111111;
+        int certNum = random.nextInt(888888) + 111111;
 	    String code = "";
 	    
-	    String userName = MessageUtils.getMessage("email.setAuthUserName");
-	    String userPwd = MessageUtils.getMessage("email.setAuthUserPwd");
-	    String setFromEmail = MessageUtils.getMessage("email.setFromEmail");
-	    
-	    SimpleEmail email = new SimpleEmail();
-	    email.setHostName("smtp.naver.com");
-	    email.setSmtpPort(465);
-	    email.setAuthentication(userName, userPwd);
-	    
-	    email.setSSLOnConnect(true);
-	    email.setStartTLSEnabled(true);
-	    
 	    try {
-	    	email.setFrom(setFromEmail, "중고거래사이트 관리자", "utf-8");
-	    	email.addTo(userEmail, "회원", "utf-8");
-	    	email.setSubject("비밀번호 재설정을 위한 인증번호 입니다.");
-	    	email.setMsg("[인증번호] "+ serti +" 입니다. \n 인증번호 확인란에 기입해주십시오.");
-	    	email.send();
-	    	code = Integer.toString(serti);
+	    	EmailUtils.sendEmail(userEmail, certNum);
+	    	code = Integer.toString(certNum);
 	    	log.warn("code ======== " + code);
 	    } catch (Exception e) {
 	    	return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.BAD_REQUEST);
@@ -133,7 +118,7 @@ public class UserController {
 		return new ResponseEntity<String>(code ,HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/pwd-change/{userId}", produces = "application/text; charset=UTF-8")
+	@PostMapping(value = "/help/pwd/{userId}", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> pwdChange(@RequestBody UserVO user, @PathVariable("userId") String userId) {
 		try {
 			user.setUserId(userId);
@@ -162,17 +147,17 @@ public class UserController {
 		return new ModelAndView("users/login");
 	}
 
-	@GetMapping("/id-inquiry-form")
+	@GetMapping("/help/id")
 	public ModelAndView idInquiryForm() {
 		return new ModelAndView("login/inquiry/idInquiry");
 	}
 
-	@GetMapping("/pwd-inquiry-form")
+	@GetMapping("/help/pwd")
 	public ModelAndView pwdInquiryForm() {
 		return new ModelAndView("login/inquiry/pwdInquiry");
 	}
 	
-	@GetMapping("/pwd/{userId}")
+	@GetMapping("/help/pwd/{userId}")
 	public ModelAndView pwdChangeForm(@PathVariable("userId") String userId, RedirectAttributes rttr) {
 		ModelAndView mv = new ModelAndView();
 		rttr.addAttribute("userId", userId);

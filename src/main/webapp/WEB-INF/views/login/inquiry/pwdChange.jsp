@@ -74,7 +74,7 @@
     			var newPwd = $('#newPwd').val();
     			$.ajax({
     				type: "post",
-    				url: "/users/pwd-change/" + userId,
+    				url: "/users/help/pwd/" + userId,
     			    contentType: 'application/json', 
     				data: JSON.stringify({'userPwd' : newPwd}),
     				success: function(data) {
