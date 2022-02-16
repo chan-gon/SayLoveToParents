@@ -18,4 +18,6 @@ public interface UserService {
 	
 	int checkUserIdEmail(String userId, String userEmail);
 	
+	void changeUserPwd(UserVO user);
+	
 }

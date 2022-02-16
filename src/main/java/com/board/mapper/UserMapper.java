@@ -21,5 +21,7 @@ public interface UserMapper {
 	String findUserPwd(@Param("userId") String userId, @Param("userEmail") String userEmail);
 
 	int checkUserIdEmail(@Param("userId") String userId, @Param("userEmail") String userEmail);
+	
+	void changeUserPwd(UserVO user);
 
 }

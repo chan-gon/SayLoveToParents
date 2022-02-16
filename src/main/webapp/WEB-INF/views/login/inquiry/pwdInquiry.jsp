@@ -126,7 +126,7 @@
     				return false;
     			}
     			if (certNum == code) {
-    				alert("인증번호가 일치합니다. 버튼을 눌러 비밀번호를 확인하세요.");
+    				alert("인증번호가 일치합니다. 비밀번호를 변경하세요.");
     				$('#changePwdBtn').attr("disabled", false);
     				$('#certNum').attr("disabled", true);
 					$('#checkCertNum').attr("disabled", true);
@@ -134,7 +134,8 @@
     		});
     		
     		$('#changePwdBtn').click(function() {
-    			location.href = "/users/pwd";
+    			var userId = $('#userId').val();
+    			location.href = "/users/pwd/" + userId;
     		});
     	});
     

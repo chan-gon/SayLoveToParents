@@ -70,4 +70,11 @@ public class UserServiceImpl implements UserService {
 		return mapper.findUserPwd(userName, userPhone);
 	}
 
+	@Override
+	public void changeUserPwd(UserVO user) {
+		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
+		user.setUserPwd(encodedPwd);
+		mapper.changeUserPwd(user);
+	}
+
 }

@@ -36,9 +36,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		return new UsernamePasswordAuthenticationToken(username, password, user.getAuthorities());
 	}
 
+	/*
+	 * authenticate 메소드의 리턴 객체 타입이 유효한 타입인지 메소드.
+	 * AuthenticationProvider 인터페이스의 실제 구현체가 Spring Security에서 규정한 타입이 맞는지 확인하고, true를 반환해야 
+	 * 최종적으로 인증에 성공한다. 
+	 * null 값이거나 잘못된 타입을 반환했을 경우 인증 실패로 간주한다.
+	 */
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return true;
+		// Spring Security가 요구하는 UsernamePasswordAuthenticationToken 타입이 맞는지 확인
+		return authentication.equals(UsernamePasswordAuthenticationToken.class);
 	}
 
 }

@@ -40,8 +40,8 @@
 		SELECT COUNT(*) FROM site_user WHERE user_id = #{userId} AND user_email = #{userEmail}
 	</select>
 	
-	<select id="findUserPwd" parameterType="Map" resultType="String">
-		SELECT user_pwd FROM site_user WHERE user_id = #{userId} AND user_email = #{userEmail}
-	</select>
+	<update id="changeUserPwd">
+		UPDATE site_user SET user_pwd = #{userPwd} WHERE user_id = #{userId}
+	</update>
 	
 </mapper>    

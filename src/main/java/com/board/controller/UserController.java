@@ -22,6 +22,7 @@ import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.service.UserService;
+import com.board.utils.MessageUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -106,16 +107,20 @@ public class UserController {
         int serti = random.nextInt(888888) + 111111;
 	    String code = "";
 	    
+	    String userName = MessageUtils.getMessage("email.setAuthUserName");
+	    String userPwd = MessageUtils.getMessage("email.setAuthUserPwd");
+	    String setFromEmail = MessageUtils.getMessage("email.setFromEmail");
+	    
 	    SimpleEmail email = new SimpleEmail();
 	    email.setHostName("smtp.naver.com");
 	    email.setSmtpPort(465);
-	    email.setAuthentication("kamijyo98", "YGKXSW5XEXMP");
+	    email.setAuthentication(userName, userPwd);
 	    
 	    email.setSSLOnConnect(true);
 	    email.setStartTLSEnabled(true);
 	    
 	    try {
-	    	email.setFrom("kamijyo98@naver.com", "중고거래사이트 관리자", "utf-8");
+	    	email.setFrom(setFromEmail, "중고거래사이트 관리자", "utf-8");
 	    	email.addTo(userEmail, "회원", "utf-8");
 	    	email.setSubject("비밀번호 재설정을 위한 인증번호 입니다.");
 	    	email.setMsg("[인증번호] "+ serti +" 입니다. \n 인증번호 확인란에 기입해주십시오.");
@@ -126,6 +131,17 @@ public class UserController {
 	    	return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.BAD_REQUEST);
 	    }
 		return new ResponseEntity<String>(code ,HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/pwd-change/{userId}", produces = "application/text; charset=UTF-8")
+	public ResponseEntity<String> pwdChange(@RequestBody UserVO user, @PathVariable("userId") String userId) {
+		try {
+			user.setUserId(userId);
+			service.changeUserPwd(user);
+			return new ResponseEntity<String>("비밀번호 변경 완료" ,HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	/*
@@ -156,9 +172,12 @@ public class UserController {
 		return new ModelAndView("login/inquiry/pwdInquiry");
 	}
 	
-	@GetMapping("/pwd")
-	public ModelAndView changeUserPwd() {
-		return new ModelAndView("login/inquiry/pwdChange");
+	@GetMapping("/pwd/{userId}")
+	public ModelAndView pwdChangeForm(@PathVariable("userId") String userId, RedirectAttributes rttr) {
+		ModelAndView mv = new ModelAndView();
+		rttr.addAttribute("userId", userId);
+		mv.setViewName("/login/inquiry/pwdChange");
+		return mv;
 	}
 
 }

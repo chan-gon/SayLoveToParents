@@ -42,17 +42,20 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">비밀번호 조회 결과</h3>
+                        <h3 class="panel-title">비밀번호 변경</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" method="post" id="inputForm" action="/users/pwd-change">
+                        <form role="form" method="post" id="inputForm">
                             <fieldset>
-                            	<c:if test="${not empty userPwd}">
-	                            	<div class="form-group">
-	                                    <input class="form-control" value="<c:out value='${userPwd}'/>" disabled="disabled" type="text" style="font-weight : bold ;" />
-	                                </div>
-                            	</c:if>
-                                <button type="button" id="loginBtn" class="btn btn-lg btn-success btn-block">로그인</button>
+                            <c:if test="${not empty userId}">
+                            	<div class="form-group">
+                                    <input class="form-control" id="userId" name="userId" value="<c:out value='${userId}' />" readonly="readonly" >
+                            	</div>
+                            </c:if>
+                            	<div class="form-group">
+                                    <input class="form-control" placeholder="새로운 비밀번호" id="newPwd" name="newPwd" type="password" autofocus>
+                            	</div>
+                                <button type="button" id="changePwdBtn" class="btn btn-lg btn-success btn-block">비밀번호 변경</button>
                                 <button type="button" id="homeBtn" class="btn btn-lg btn-success btn-block">HOME</button>
                             </fieldset>
                         </form>
@@ -66,8 +69,22 @@
     <script type="text/javascript">
     
     	$(function() {
-    		$('#loginBtn').click(function() {
-    			location.href = "/users/login";
+    		$('#changePwdBtn').click(function() {
+    			var userId = $('#userId').val();
+    			var newPwd = $('#newPwd').val();
+    			$.ajax({
+    				type: "post",
+    				url: "/users/pwd-change/" + userId,
+    			    contentType: 'application/json', 
+    				data: JSON.stringify({'userPwd' : newPwd}),
+    				success: function(data) {
+    					alert(data);
+    					location.href = "/";
+    				},
+    				error: function(xhr, status, error) {
+    					alert(error);
+    				}
+    			});
     		});
     		$('#homeBtn').click(function() {
     			location.href = "/";
