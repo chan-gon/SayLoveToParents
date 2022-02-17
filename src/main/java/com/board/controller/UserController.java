@@ -2,7 +2,6 @@ package com.board.controller;
 
 import java.util.Random;
 
-import org.apache.commons.mail.SimpleEmail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +21,6 @@ import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.service.UserService;
 import com.board.utils.EmailUtils;
-import com.board.utils.MessageUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -47,31 +45,35 @@ public class UserController {
 	 */
 
 	@PostMapping
-	public ResponseEntity<Void> signUpUser(@RequestBody UserVO user) {
-		service.signUpUser(user);
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
+	public ResponseEntity<String> signUpUser(@RequestBody UserVO user) {
+		try {
+			service.signUpUser(user);
+		} catch (UserAlreadyExistsException e) {
+			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<String>("회원가입 완료" ,HttpStatus.CREATED);
 	}
 
-	@GetMapping("/signup/{userId}")
-	public ResponseEntity<Void> checkUserId(@PathVariable("userId") String userId) throws Exception {
-
+	@GetMapping("/signup/id")
+	public ResponseEntity<String> checkUserId(@RequestParam("userId") String userId) {
+		log.warn("userId ======== " + userId);
 		try {
 			service.isExistUserId(userId);
 		} catch (UserAlreadyExistsException e) {
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>("이미 존재하는 아이디.", HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>("사용 가능한 아이디.", HttpStatus.OK);
 	}
 
-	@GetMapping("/signup/{userEmail:.*}")
-	public ResponseEntity<Void> checkUserEmail(@PathVariable("userEmail") String userEmail) {
-
+	@GetMapping("/signup/email")	
+	public ResponseEntity<String> checkUserEmail(@RequestParam("userEmail") String userEmail) {
+		log.warn("userEmail ======== " + userEmail);
 		try {
 			service.isExistUserEmail(userEmail);
 		} catch (EmailAlreadyExistsException e) {
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>("이미 존재하는 이메일.", HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>("사용 가능한 이메일.", HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{userId}")
