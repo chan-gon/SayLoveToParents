@@ -167,12 +167,15 @@
 						url: "/users",
 						data: JSON.stringify(formData),
 						contentType: "application/json; charset=utf-8",
+						headers: {
+							Accept: "text/html; charset=utf-8"
+						},
 						success: function(data) {
-							alert("회원가입 완료");
+							alert(data);
 							location.href="/";
 						},
 						error: function(e) {
-							alert(e);
+							alert(e.responseText);
 						}
 					});
 					
@@ -189,19 +192,19 @@
 			}
 			$.ajax({
 				type: "get",
-				url: "/users/signup/" + userId,
-				// 요청에 대한 리스폰스 타입을 json으로 설정해야 XMLDocument 타입으로 되돌아오지 않는다.
-				// 리스폰스 타입이 json이 아니고 Http Status 형태이기 때문에 dataType 설정이 필요 없음
-				//dataType: "json", 
-				contentType: "application/json; charset=utf-8",
+				url: "/users/signup/id",
+				data: {"userId":userId},
+				headers: {
+					Accept: "text/html; charset=utf-8"
+				},
 				success: function(data) {
-					// Http Status 200에 대해서는 success로 이동
-						alert("사용 가능한 아이디.");
+						// Http Status 200에 대해서는 success로 이동
+						alert(data);
 						$('#idCheckResult').val("1");
 				},
 				error: function(e) {
 					// Controller 설정에 따라 Http Status 409는 여기로
-					alert("이미 존재하는 아이디.");
+					alert(e.responseText);
 				}
 			});
 		});
@@ -213,16 +216,24 @@
 				alert("이메일 입력하세요.");
 				return;
 			}
+			var emailCheck = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+			if (!emailCheck.test(userEmail)) {
+				alert("이메일 주소는 @가 포함되어야 합니다.");
+				return;
+			}
 			$.ajax({
 				type: "get",
-				url: "/users/signup/" + userEmail,
-				contentType: "application/json; charset=utf-8",
+				url: "/users/signup/email",
+				data: {"userEmail":userEmail},
+				headers: {
+					Accept: "text/html; charset=utf-8"
+				},
 				success: function(data) {
-					alert("사용 가능한 이메일.");
+					alert(data);
 					$('#emailCheckResult').val("1");
 				},
 				error: function(e) {
-					alert("이미 존재하는 이메일.");
+					alert(e.responseText);
 				}
 			});
 		});
