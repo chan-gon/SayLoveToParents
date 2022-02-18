@@ -47,6 +47,7 @@
 
     <div id="wrapper">
 
+    <button type="button" class="btn btn-primary md-3" id="homeBtn" >HOME</button>
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
@@ -114,6 +115,10 @@
     		});
     	});
 		
+    	$('#homeBtn').css("margin","10px 0 0 10px");
+    	$('#homeBtn').click(function() {
+    		location.href = "/";
+    	});
     </script>
 
 <%@ include file="../includes/footer.jsp"%>

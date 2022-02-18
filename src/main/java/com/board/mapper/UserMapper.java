@@ -7,6 +7,8 @@ import com.board.domain.UserVO;
 public interface UserMapper {
 
 	UserVO getUserInfoById(String userId);
+	
+	UserVO selectByUserId(String userId);
 
 	void signUpUser(UserVO user);
 
@@ -23,5 +25,7 @@ public interface UserMapper {
 	int checkUserIdEmail(@Param("userId") String userId, @Param("userEmail") String userEmail);
 	
 	void changeUserPwd(UserVO user);
+	
+	void changeUserProfile(UserVO user);
 
 }

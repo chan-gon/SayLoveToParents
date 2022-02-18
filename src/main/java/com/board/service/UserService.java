@@ -20,4 +20,7 @@ public interface UserService {
 	
 	void changeUserPwd(UserVO user);
 	
+	UserVO selectByUserId(String userId);
+	
+	void changeUserProfile(UserVO user);
 }
