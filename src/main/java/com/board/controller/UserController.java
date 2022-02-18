@@ -4,6 +4,9 @@ import java.util.Random;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -125,10 +129,20 @@ public class UserController {
 		try {
 			user.setUserId(userId);
 			service.changeUserPwd(user);
-			return new ResponseEntity<String>("비밀번호 변경 완료" ,HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.BAD_REQUEST);
 		}
+		return new ResponseEntity<String>("비밀번호 변경 완료" ,HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/profile", produces = "application/text; charset=UTF-8")
+	public ResponseEntity<String> profileEdit(@RequestBody UserVO user) {
+		try {
+			service.changeUserProfile(user);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요.", HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<String>("수정 완료." ,HttpStatus.OK);
 	}
 	
 	/*
@@ -165,6 +179,20 @@ public class UserController {
 		rttr.addAttribute("userId", userId);
 		mv.setViewName("/login/inquiry/pwdChange");
 		return mv;
+	}
+	
+	@GetMapping("/profile")
+	public ModelAndView profileForm(Model model) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = null;
+		if (principal instanceof UserDetails) {
+		  username = ((UserDetails)principal).getUsername();
+		} else {
+		  username = principal.toString();
+		}
+		log.warn("userId ============== " + username);
+		model.addAttribute("user", service.selectByUserId(username));
+		return new ModelAndView("users/profile");
 	}
 
 }

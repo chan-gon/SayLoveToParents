@@ -256,12 +256,17 @@
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i>개인정보 수정</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>내상점</a>
-                        </li>
-                        <li><a href="/users/signup"><i class="fa fa-user-plus fa-fw"></i>회원가입</a>
-                        </li>
+                    
+	                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>내상점</a>
+	                        </li>
+	                        <li><a href="/users/profile"><i class="fa fa-user fa-fw"></i>회원정보 수정</a>
+	                        </li>
+                        
+                        <sec:authorize access="isAnonymous()">
+	                        <li><a href="/users/signup"><i class="fa fa-user-plus fa-fw"></i>회원가입</a>
+	                        </li>
+                        </sec:authorize>
+                        
                         <li class="divider"></li>
                         
                         <!-- 사용자가 Anonymous 상태인 경우 출력 -->
@@ -270,7 +275,8 @@
 	                        </li>
                         </sec:authorize>
                         
-                        <!-- 사용자가 인증 되었을 때 출력 -->
+                        <!-- End of 사용자가 인증 되었을 때 출력 -->
+                        
                         <sec:authorize access="isAuthenticated()">
 	                        <li><a href="#" onclick="document.getElementById('logout-form').submit();"><i class="fa fa-sign-in fa-fw"></i>로그아웃</a>
 	                        </li>
@@ -278,7 +284,7 @@
 					</ul>
 					
 					<!-- 로그아웃 폼 -->
-						<form id="logout-form" action='<c:url value='/logout'/>' method="POST">
+						<form id="logout-form" action='<c:url value='/logout'/>' method="post">
 							<sec:csrfInput/>
 						</form>
 					<!-- End of 로그아웃 폼 -->

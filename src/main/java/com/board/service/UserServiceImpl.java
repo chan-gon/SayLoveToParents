@@ -77,4 +77,14 @@ public class UserServiceImpl implements UserService {
 		mapper.changeUserPwd(user);
 	}
 
+	@Override
+	public UserVO selectByUserId(String userId) {
+		return mapper.selectByUserId(userId);
+	}
+
+	@Override
+	public void changeUserProfile(UserVO user) {
+		mapper.changeUserProfile(user);
+	}
+
 }
