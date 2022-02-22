@@ -1,11 +1,11 @@
 package com.board.controller;
 
+import java.security.Principal;
 import java.util.Random;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -182,15 +181,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/profile")
-	public ModelAndView profileForm(Model model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String username = null;
-		if (principal instanceof UserDetails) {
-		  username = ((UserDetails)principal).getUsername();
-		} else {
-		  username = principal.toString();
+	public ModelAndView profileForm(Model model, Principal principal) {
+		String username = principal.getName();
+		if (username == null) {
+			throw new AccessDeniedException("접근 권한이 없는 사용자");
 		}
-		log.warn("userId ============== " + username);
 		model.addAttribute("user", service.selectByUserId(username));
 		return new ModelAndView("users/profile");
 	}

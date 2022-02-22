@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.board.domain.UserVO;
 import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.UserAlreadyExistsException;
+import com.board.utils.PasswordEncryptor;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -34,12 +35,12 @@ public class UserServiceTest {
 	@Test
 	public void A_사용자_생성_테스트() {
 		UserVO user = new UserVO();
-		user.setUserId("test");
-		user.setUserPwd("test");
+		user.setUserId("dd");
+		user.setUserPwd("dd");
 		user.setUserName("Kim");
 		user.setUserEmail("ideacaramel@gmail.com");
 		user.setUserPhone("01079797979");
-		user.setUserAddr("대구 광역시 북구");
+		user.setUserAddr("미국 뉴욕 특별시 센트럴파크");
 
 		service.signUpUser(user);
 
@@ -69,6 +70,14 @@ public class UserServiceTest {
 	public void 아이디_찾기_테스트() {
 		String id = service.findUserId("Kim", "01079797979");
 		assertTrue(id.equals("test"));
+	}
+	
+	@Test
+	public void 비밀번호_변경_테스트() {
+		UserVO user = new UserVO();
+		user.setUserId("test");
+		user.setUserPwd("test");
+		service.changeUserPwd(user);
 	}
 
 }

@@ -7,22 +7,16 @@ import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.mapper.UserMapper;
-import com.board.utils.PasswordEncryptor;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j;
 
 @Service
 @AllArgsConstructor
-@Log4j
 public class UserServiceImpl implements UserService {
-
 	private UserMapper mapper;
 	
 	@Override
 	public void signUpUser(UserVO user) {
-		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
-		user.setUserPwd(encodedPwd);
 		mapper.signUpUser(user);
 	}
 
@@ -72,8 +66,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void changeUserPwd(UserVO user) {
-		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
-		user.setUserPwd(encodedPwd);
 		mapper.changeUserPwd(user);
 	}
 
