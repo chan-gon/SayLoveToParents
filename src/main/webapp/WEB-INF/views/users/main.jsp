@@ -2,7 +2,9 @@
     pageEncoding="UTF-8"%>
 
 <%@ include file="../includes/header.jsp" %>
-
+<!-- sidebar -->
+<%@ include file="../includes/sidebar.jsp"%>
+<!-- End of sidebar -->
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">

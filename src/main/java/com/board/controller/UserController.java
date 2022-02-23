@@ -1,7 +1,6 @@
 package com.board.controller;
 
 import java.security.Principal;
-import java.util.Random;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ import com.board.exception.UserAlreadyExistsException;
 import com.board.service.UserService;
 import com.board.utils.EmailUtils;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 /*
@@ -37,14 +36,14 @@ import lombok.extern.log4j.Log4j;
 
 @RestController
 @RequestMapping("/users")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Log4j
 public class UserController {
 
-	private UserService service;
+	private final UserService service;
 	
 	/*
-	 * 주요 기능 처리
+	 * 비즈니스 로직
 	 */
 
 	@PostMapping
@@ -80,19 +79,18 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{userId}")
-	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) {
-
+	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId, @RequestParam("userPwd") String inputPwd, @RequestBody UserVO user) {
 		try {
-			service.deleteUser(userId);
-			return new ResponseEntity<String>(userId + "님 탈퇴완료", HttpStatus.OK);
+			service.deleteUser(inputPwd, user);
 		} catch (InvalidValueException ive) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
+		return new ResponseEntity<String>(userId + "님 탈퇴완료", HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/help/id", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> findUserId(@RequestBody UserVO user) {
-		String userId = service.findUserId(user.getUserName(), user.getUserPhone());
+		String userId = service.getIdByNameAndPhone(user.getUserName(), user.getUserPhone());
 		String responseMsg = null;
 		if (userId == null) {
 			responseMsg = "존재하지 않는 사용자";
@@ -105,15 +103,12 @@ public class UserController {
 	@GetMapping(value = "/help/pwd/email", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> sendCertEmail(@RequestParam("userId") String userId, @RequestParam("userEmail") String userEmail) {
 		
-		int cnt = service.checkUserIdEmail(userId, userEmail);
-		if (cnt == 0) {
-			return new ResponseEntity<String>("잘못된 아이디 또는 이메일 주소" ,HttpStatus.CONFLICT);
-		}
-		Random random = new Random();
-        int certNum = random.nextInt(888888) + 111111;
+        int certNum = EmailUtils.getCertNum();
 	    String code = "";
 	    
 	    try {
+	    	service.checkUserIdEmail(userId, userEmail);
+	    	
 	    	EmailUtils.sendEmail(userEmail, certNum);
 	    	code = Integer.toString(certNum);
 	    	log.warn("code ======== " + code);
@@ -126,7 +121,6 @@ public class UserController {
 	@PostMapping(value = "/help/pwd/{userId}", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> pwdChange(@RequestBody UserVO user, @PathVariable("userId") String userId) {
 		try {
-			user.setUserId(userId);
 			service.changeUserPwd(user);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.BAD_REQUEST);
@@ -164,19 +158,19 @@ public class UserController {
 
 	@GetMapping("/help/id")
 	public ModelAndView idInquiryForm() {
-		return new ModelAndView("login/inquiry/idInquiry");
+		return new ModelAndView("login/idInquiry");
 	}
 
 	@GetMapping("/help/pwd")
 	public ModelAndView pwdInquiryForm() {
-		return new ModelAndView("login/inquiry/pwdInquiry");
+		return new ModelAndView("login/pwdInquiry");
 	}
 	
 	@GetMapping("/help/pwd/{userId}")
 	public ModelAndView pwdChangeForm(@PathVariable("userId") String userId, RedirectAttributes rttr) {
 		ModelAndView mv = new ModelAndView();
 		rttr.addAttribute("userId", userId);
-		mv.setViewName("/login/inquiry/pwdChange");
+		mv.setViewName("/login/pwdChange");
 		return mv;
 	}
 	
@@ -186,7 +180,7 @@ public class UserController {
 		if (username == null) {
 			throw new AccessDeniedException("접근 권한이 없는 사용자");
 		}
-		model.addAttribute("user", service.selectByUserId(username));
+		model.addAttribute("user", service.getUserById(username));
 		return new ModelAndView("users/profile");
 	}
 

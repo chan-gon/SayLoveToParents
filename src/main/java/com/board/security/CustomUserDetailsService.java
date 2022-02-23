@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		UserVO user = mapper.getUserInfoById(username);
+		UserVO user = mapper.getUserById(username);
 
 		if (user == null) {
 			throw new InternalAuthenticationServiceException(username);

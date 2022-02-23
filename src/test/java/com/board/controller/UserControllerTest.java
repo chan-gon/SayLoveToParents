@@ -21,39 +21,46 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.board.domain.UserVO;
+import com.board.utils.PasswordEncryptor;
 import com.google.gson.Gson;
 
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml", "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
-@Log4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserControllerTest {
-
+	
+	private static final String DEFAULT_PWD = "test";
+	
 	@Setter(onMethod_ = { @Autowired })
 	private WebApplicationContext ctx;
 
 	private MockMvc mockMvc;
+	
+	public UserVO testUser;
 
 	@Before
 	public void setup() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
 	}
 	
+	@Before
+	public void setUp() {
+		testUser = UserVO.builder()
+				.userId("test")
+				.userPwd(PasswordEncryptor.encrypt(DEFAULT_PWD))
+				.userName("test")
+				.userEmail("test@gmail.com")
+				.userPhone("01077777777")
+				.userAddr("미국 조지아")
+				.build();
+	}
+	
 	@Test
 	public void A_사용자_생성_테스트() throws Exception {
-		UserVO user = new UserVO();
-		user.setUserId("test");
-		user.setUserPwd("1234");
-		user.setUserName("김토마토");
-		user.setUserEmail("tomato@naver.com");
-		user.setUserPhone("01079797979");
-		user.setUserAddr("서울시 동대문구");
-		
-		String jsonStr = new Gson().toJson(user);
+		String jsonStr = new Gson().toJson(testUser);
 		
 		mockMvc.perform(post("/users")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -63,7 +70,8 @@ public class UserControllerTest {
 	
 	@Test
 	public void B_아이디_종복_확인_테스트() throws Exception {
-		mockMvc.perform(get("/users/signup/test")
+		mockMvc.perform(get("/users/signup/id")
+				.param("userId", testUser.getUserId())
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isConflict());
@@ -71,7 +79,8 @@ public class UserControllerTest {
 	
 	@Test
 	public void C_이메일_중복_확인_테스트() throws Exception {
-		mockMvc.perform(get("/users/signup/tomato@naver.com")
+		mockMvc.perform(get("/users/signup/email")
+				.param("userEmail", testUser.getUserEmail())
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
@@ -79,20 +88,22 @@ public class UserControllerTest {
 	}
 	
 	@Test
-	public void D_회원_탈퇴_테스트() throws Exception {
-		mockMvc.perform(delete("/users/test"))
-		.andExpect(status().isOk());
+	public void D_아이디_찾기_테스트() throws Exception {
+		String jsonStr = new Gson().toJson(testUser);
+		
+		mockMvc.perform(post("/users/help/id")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStr))
+				.andDo(print())
+				.andExpect(status().isOk());
 	}
 	
 	@Test
-	public void 아이디_찾기_테스트() throws Exception {
-		UserVO user = new UserVO();
-		user.setUserName("Kim");
-		user.setUserPhone("01079797979");
+	public void F_사용자_탈퇴_테스트() throws Exception {
+		String jsonStr = new Gson().toJson(testUser);
 		
-		String jsonStr = new Gson().toJson(user);
-		
-		mockMvc.perform(post("/users/help/id")
+		mockMvc.perform(delete("/users/{userId}", testUser.getUserId())
+				.param("userPwd", DEFAULT_PWD)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonStr))
 				.andDo(print())

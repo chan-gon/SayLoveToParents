@@ -7,17 +7,30 @@ import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.mapper.UserMapper;
+import com.board.utils.PasswordEncryptor;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-	private UserMapper mapper;
+	
+	private final UserMapper mapper;
 	
 	@Override
 	public void signUpUser(UserVO user) {
-		mapper.signUpUser(user);
+		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
+		
+		UserVO encryptedUser = UserVO.builder()
+				.userId(user.getUserId())
+				.userPwd(encodedPwd)
+				.userName(user.getUserName())
+				.userEmail(user.getUserEmail())
+				.userPhone(user.getUserPhone())
+				.userAddr(user.getUserAddr())
+				.build();
+		
+		mapper.signUpUser(encryptedUser);
 	}
 
 	@Override
@@ -37,16 +50,23 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteUser(String userId) {
-		int cnt = mapper.deleteUser(userId);
-		if (cnt < 1) {
-			throw new InvalidValueException();
+	public void deleteUser(String inputPwd, UserVO currentUser) {
+		
+		boolean isValidPassword = PasswordEncryptor.isMatch(inputPwd, currentUser.getUserPwd());
+		System.out.println("delete = " + isValidPassword);
+		if (!isValidPassword) {
+			throw new InvalidValueException("올바르지 않은 값입니다. 다시 입력해주세요.");
 		}
+		
+		mapper.deleteUser(currentUser.getUserId());
 	}
 
 	@Override
-	public String findUserId(String userName, String userPhone) {
-		return mapper.findUserId(userName, userPhone);
+	public String getIdByNameAndPhone(String userName, String userPhone) {
+		if (userName == null || userPhone == null) {
+			throw new InvalidValueException("올바르지 않은 값입니다. 다시 입력해주세요.");
+		}
+		return mapper.getIdByNameAndPhone(userName, userPhone);
 	}
 
 	/*
@@ -55,28 +75,34 @@ public class UserServiceImpl implements UserService {
 	 * 해당 함수들은 기존 로직과 연결되어 있어 함수간 관계 파악 후 리팩토링 예정
 	 */
 	@Override
-	public int checkUserIdEmail(String userId, String userEmail) {
-		return mapper.checkUserIdEmail(userId, userEmail);
-	}
-
-	@Override
-	public String findUserPwd(String userName, String userPhone) {
-		return mapper.findUserPwd(userName, userPhone);
+	public void checkUserIdEmail(String userId, String userEmail) {
+		int cnt = mapper.checkUserIdEmail(userId, userEmail);
+		if (cnt == 0) {
+			throw new InvalidValueException("올바르지 않은 값입니다. 다시 입력해주세요.");
+		}
 	}
 
 	@Override
 	public void changeUserPwd(UserVO user) {
-		mapper.changeUserPwd(user);
-	}
+		
+		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
 
-	@Override
-	public UserVO selectByUserId(String userId) {
-		return mapper.selectByUserId(userId);
+		UserVO encryptedUser = UserVO.builder()
+				.userId(user.getUserId())
+				.userPwd(encodedPwd)
+				.build();
+		
+		mapper.changeUserPwd(encryptedUser);
 	}
 
 	@Override
 	public void changeUserProfile(UserVO user) {
 		mapper.changeUserProfile(user);
+	}
+
+	@Override
+	public UserVO getUserById(String userId) {
+		return mapper.getUserById(userId);
 	}
 
 }

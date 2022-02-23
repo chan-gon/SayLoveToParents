@@ -1,5 +1,7 @@
 package com.board.utils;
 
+import java.util.Random;
+
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
@@ -29,7 +31,12 @@ public class EmailUtils {
 		} catch (EmailCannotSendException e) {
 			e.printStackTrace();
 		}
+	}
 
+	public static int getCertNum() {
+		Random random = new Random();
+		int randomNum = random.nextInt(888888) + 111111;
+		return randomNum;
 	}
 
 }

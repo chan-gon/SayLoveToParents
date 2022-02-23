@@ -3,6 +3,8 @@ package com.board.service;
 import com.board.domain.UserVO;
 
 public interface UserService {
+	
+	UserVO getUserById(String userId);
 
 	void signUpUser(UserVO user);
 
@@ -10,17 +12,13 @@ public interface UserService {
 
 	void isExistUserEmail(String userEmail);
 
-	void deleteUser(String userId);
+	void deleteUser(String userPwdm, UserVO user);
 
-	String findUserId(String userName, String userPhone);
+	String getIdByNameAndPhone(String userName, String userPhone);
 
-	String findUserPwd(String userName, String userPhone);
-	
-	int checkUserIdEmail(String userId, String userEmail);
+	void checkUserIdEmail(String userId, String userEmail);
 	
 	void changeUserPwd(UserVO user);
-	
-	UserVO selectByUserId(String userId);
 	
 	void changeUserProfile(UserVO user);
 }
