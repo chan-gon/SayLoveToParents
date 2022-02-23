@@ -47,7 +47,7 @@
 		<security:authentication-provider user-service-ref="customUserDetailsService" >
 			<security:password-encoder ref="bcryptPasswordEncoder" hash="bcrypt" />
 		</security:authentication-provider>
-	
+		
 	</security:authentication-manager>
 	
 	<bean id="customAccessDenied" class="com.board.security.CustomAccessDeniedHandler"></bean>

@@ -3,10 +3,8 @@
 
 <%@ include file="../includes/header.jsp"%>
 
-<div id="wrapper">
 
-        <div id="page-wrapper">
-            <div class="row">
+       <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">회원가입</h1>
                 </div>
@@ -67,10 +65,8 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
-        </div>
         <!-- /#page-wrapper -->
 
-    </div>
     <!-- /#wrapper -->
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
