@@ -2,16 +2,22 @@ package com.board.domain;
 
 import java.util.Date;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@Data
+@Getter
+@Builder
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
 public class ProductVO {
 	
-	private final int prdtNum;
+	private final int prdtId;
 	private final String userId;
-	private final int storeNum;
 	private final String prdtName;
 	private final int prdtPrice;
+	private final String prdtCategory;
 	private final String prdtInfo;
 	private final String prdtCondition;
 	private final String prdtIsTradeable;
@@ -21,6 +27,5 @@ public class ProductVO {
 	private final int prdtLikeCnt;
 	private final String prdtTradeLoc;
 	private final String prdtTradeStatus;
-	private final String prdtCategory;
 
 }

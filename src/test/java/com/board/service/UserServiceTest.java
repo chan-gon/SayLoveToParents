@@ -13,14 +13,13 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TestTransaction;
 
 import com.board.domain.UserVO;
 import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.utils.PasswordEncryptor;
-
-import lombok.Setter;
 
 /*
  * @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,8 +45,8 @@ public class UserServiceTest {
 	private static final String FAKE_EMAIL = "anonymous@naver.com";
 	private static final String DEFAULT_PWD = "test";
 	
-	@Setter(onMethod_ = {@Autowired})
-	private UserService service;
+	@Autowired
+	private UserService userService;
 	
 	@Rule
 	public ExpectedException exceptionRule = ExpectedException.none();
@@ -68,40 +67,41 @@ public class UserServiceTest {
 				.userPhone("01077777777")
 				.userAddr("미국 조지아")
 				.build();
+		
 	}
 	
 	@Test(expected = None.class)
 	public void a_사용자_생성_테스트() {
-		service.signUpUser(testUser);
+		userService.signUpUser(testUser);
 	}
 	
 	@Test(expected = None.class)
 	public void b_아이디_중복_확인_테스트_실패() {
-		service.isExistUserId(FAKE_ID);
+		userService.isExistUserId(FAKE_ID);
 	}
 	
 	@Test
 	public void c_아이디_중복_확인_테스트_성공() {
 		exceptionRule.expect(UserAlreadyExistsException.class);
 		exceptionRule.expectMessage("(" + testUser.getUserId() + ")는 이미 존재하는 아이디입니다.");
-		service.isExistUserId(testUser.getUserId());
+		userService.isExistUserId(testUser.getUserId());
 	}
 	
 	@Test(expected = None.class)
 	public void d_이메일_중복_확인_테스트_실패() {
-		service.isExistUserEmail(FAKE_EMAIL);
+		userService.isExistUserEmail(FAKE_EMAIL);
 	}
 	
 	@Test
 	public void e_이메일_중복_확인_테스트_성공() {
 		exceptionRule.expect(EmailAlreadyExistsException.class);
 		exceptionRule.expectMessage("(" + testUser.getUserEmail() + ")는 이미 존재하는 이메일입니다.");
-		service.isExistUserEmail(testUser.getUserEmail());
+		userService.isExistUserEmail(testUser.getUserEmail());
 	}
 	
 	@Test
 	public void f_아이디_찾기_테스트() {
-		String id = service.getIdByNameAndPhone(testUser.getUserName(), testUser.getUserPhone());
+		String id = userService.getIdByNameAndPhone(testUser.getUserName(), testUser.getUserPhone());
 		assertTrue(id.equals(testUser.getUserId()));
 	}
 	
@@ -111,22 +111,22 @@ public class UserServiceTest {
 				.userId(testUser.getUserId())
 				.userPwd("newPwd")
 				.build();
-		service.changeUserPwd(user);
+		userService.changeUserPwd(user);
 	}
 	
 	@Test
 	public void h_회원_탈퇴_테스트_실패() {
 		
-		UserVO deleteUser = service.getUserById(testUser.getUserId());
+		UserVO deleteUser = userService.getUserById(testUser.getUserId());
 		
 		exceptionRule.expect(InvalidValueException.class);
 		exceptionRule.expectMessage("올바르지 않은 값입니다. 다시 입력해주세요.");
-		service.deleteUser("wrongPwd", deleteUser);
+		userService.deleteUser("wrongPwd", deleteUser);
 	}
 	
 	@Test(expected = None.class)
 	public void i_회원_탈퇴_테스트_성공() {
-		service.deleteUser(DEFAULT_PWD, testUser);
+		userService.deleteUser(DEFAULT_PWD, testUser);
 	}
 	
 }
