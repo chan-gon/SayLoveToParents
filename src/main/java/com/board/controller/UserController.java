@@ -21,6 +21,7 @@ import com.board.domain.UserVO;
 import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
+import com.board.service.StoreService;
 import com.board.service.UserService;
 import com.board.utils.EmailUtils;
 
@@ -40,7 +41,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class UserController {
 
-	private final UserService service;
+	private final UserService userService;
 	
 	/*
 	 * 비즈니스 로직
@@ -49,7 +50,7 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<String> signUpUser(@RequestBody UserVO user) {
 		try {
-			service.signUpUser(user);
+			userService.signUpUser(user);
 		} catch (UserAlreadyExistsException e) {
 			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.CONFLICT);
 		}
@@ -60,7 +61,7 @@ public class UserController {
 	public ResponseEntity<String> checkUserId(@RequestParam("userId") String userId) {
 		log.warn("userId ======== " + userId);
 		try {
-			service.isExistUserId(userId);
+			userService.isExistUserId(userId);
 		} catch (UserAlreadyExistsException e) {
 			return new ResponseEntity<String>("이미 존재하는 아이디.", HttpStatus.CONFLICT);
 		}
@@ -71,7 +72,7 @@ public class UserController {
 	public ResponseEntity<String> checkUserEmail(@RequestParam("userEmail") String userEmail) {
 		log.warn("userEmail ======== " + userEmail);
 		try {
-			service.isExistUserEmail(userEmail);
+			userService.isExistUserEmail(userEmail);
 		} catch (EmailAlreadyExistsException e) {
 			return new ResponseEntity<String>("이미 존재하는 이메일.", HttpStatus.CONFLICT);
 		}
@@ -81,7 +82,7 @@ public class UserController {
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId, @RequestParam("userPwd") String inputPwd, @RequestBody UserVO user) {
 		try {
-			service.deleteUser(inputPwd, user);
+			userService.deleteUser(inputPwd, user);
 		} catch (InvalidValueException ive) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
@@ -90,7 +91,7 @@ public class UserController {
 	
 	@PostMapping(value = "/help/id", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> findUserId(@RequestBody UserVO user) {
-		String userId = service.getIdByNameAndPhone(user.getUserName(), user.getUserPhone());
+		String userId = userService.getIdByNameAndPhone(user.getUserName(), user.getUserPhone());
 		String responseMsg = null;
 		if (userId == null) {
 			responseMsg = "존재하지 않는 사용자";
@@ -107,7 +108,7 @@ public class UserController {
 	    String code = "";
 	    
 	    try {
-	    	service.checkUserIdEmail(userId, userEmail);
+	    	userService.checkUserIdEmail(userId, userEmail);
 	    	
 	    	EmailUtils.sendEmail(userEmail, certNum);
 	    	code = Integer.toString(certNum);
@@ -121,7 +122,7 @@ public class UserController {
 	@PostMapping(value = "/help/pwd/{userId}", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> pwdChange(@RequestBody UserVO user, @PathVariable("userId") String userId) {
 		try {
-			service.changeUserPwd(user);
+			userService.changeUserPwd(user);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.BAD_REQUEST);
 		}
@@ -131,7 +132,7 @@ public class UserController {
 	@PostMapping(value = "/profile", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> profileEdit(@RequestBody UserVO user) {
 		try {
-			service.changeUserProfile(user);
+			userService.changeUserProfile(user);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요.", HttpStatus.CONFLICT);
 		}
@@ -180,7 +181,7 @@ public class UserController {
 		if (username == null) {
 			throw new AccessDeniedException("접근 권한이 없는 사용자");
 		}
-		model.addAttribute("user", service.getUserById(username));
+		model.addAttribute("user", userService.getUserById(username));
 		return new ModelAndView("users/profile");
 	}
 

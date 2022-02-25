@@ -76,7 +76,7 @@
     				type: "post",
     				url: "/users/help/pwd/" + userId,
     			    contentType: 'application/json', 
-    				data: JSON.stringify({'userPwd' : newPwd}),
+    				data: JSON.stringify({'userPwd' : newPwd, 'userId' : userId}),
     				success: function(data) {
     					alert(data);
     					location.href = "/";

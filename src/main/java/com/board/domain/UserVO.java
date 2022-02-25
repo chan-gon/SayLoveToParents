@@ -8,10 +8,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /*
  * @Builder
@@ -20,32 +20,32 @@ import lombok.NoArgsConstructor;
  * @Getter
  * : 각 필드에 대한 접근재 메소드 생성.
  * 
- * @AllArgsConstructor
- * : 모든 필드를 파라미터로 가지는 생성자를 만든다.
+ * @NoArgsConstructor(force = true)
+ * : 파라미터가 없는 기본 생성자를 만든다.
+ *   (force = true) 설정을 통해 final 필드를 기본값(0, false, null)으로 초기화 한다.
  * 
- * @NoArgsConstructor
- * : 파라미터가 없는 기본 생성자를 만든다. 
- * : MyBtis가 자동으로 객체를 생성할 때 기본적으로 파라미터가 없는 생성자가 필요하다.
+ * @RequiredArgsConstructor
+ * : @NonNull 어노테이션 또는 final 키워드가 있는 필드를 파라미터로 가지는 생성자를 만든다.
  */
 
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
 public class UserVO implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
-	private String userId;
-	private String userPwd;
-	private String userName;
-	private String userEmail;
-	private String userPhone;
-	private String userAddr;
-	private Date userRegDate;
-	private Date userDropDate;
-	private String userAuth;
-	private int userEnabled;
+	private final String userId;
+	private final String userPwd;
+	private final String userName;
+	private final String userEmail;
+	private final String userPhone;
+	private final String userAddr;
+	private final Date userRegDate;
+	private final Date userDropDate;
+	private final String userAuth;
+	private final int userEnabled;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
