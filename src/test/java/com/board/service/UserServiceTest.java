@@ -1,24 +1,23 @@
 package com.board.service;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.Test.None;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TestTransaction;
 
 import com.board.domain.UserVO;
 import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
+import com.board.exception.UserNotExistsException;
 import com.board.utils.PasswordEncryptor;
 
 /*
@@ -38,12 +37,12 @@ import com.board.utils.PasswordEncryptor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserServiceTest {
 	
-	private static final String FAKE_ID = "anonymous";
-	private static final String FAKE_EMAIL = "anonymous@naver.com";
-	private static final String DEFAULT_PWD = "test";
+	private static final String TEST_ACNT_ID = "CE4D52B5E6A44D9C828085F2AD3CEE0A";
+	private static final String TEST_PWD = "test";
+	private static final String FAKE_ID = "none";
+	private static final String FAKE_EMAIL = "none@naver.com";
 	
 	@Autowired
 	private UserService userService;
@@ -60,8 +59,9 @@ public class UserServiceTest {
 	@Before
 	public void setUp() {
 		testUser = UserVO.builder()
+				.accountId(TEST_ACNT_ID)
 				.userId("test")
-				.userPwd(PasswordEncryptor.encrypt(DEFAULT_PWD))
+				.userPwd(PasswordEncryptor.encrypt(TEST_PWD))
 				.userName("test")
 				.userEmail("test@gmail.com")
 				.userPhone("01077777777")
@@ -71,42 +71,102 @@ public class UserServiceTest {
 	}
 	
 	@Test(expected = None.class)
-	public void a_사용자_생성_테스트() {
+	public void 회원가입_테스트_성공() {
 		userService.signUpUser(testUser);
 	}
 	
+	@Test
+	public void 회원가입_테스트_실패() {
+		exceptionRule.expect(UserAlreadyExistsException.class);
+		exceptionRule.expectMessage("사용자 중복 에러. 동일한 값을 가진 사용자가 존재합니다.");
+		userService.signUpUser(testUser);
+	}
+	
+	/*
+	 * 중복되는 아이디가 존재하지 않으면 성공
+	 */
 	@Test(expected = None.class)
-	public void b_아이디_중복_확인_테스트_실패() {
+	public void 아이디_중복_확인_테스트_실패() {
 		userService.isExistUserId(FAKE_ID);
 	}
 	
+	/*
+	 * 중복되는 아이디가 존재하면 성공
+	 */
 	@Test
-	public void c_아이디_중복_확인_테스트_성공() {
+	public void 아이디_중복_확인_테스트_성공() {
 		exceptionRule.expect(UserAlreadyExistsException.class);
 		exceptionRule.expectMessage("(" + testUser.getUserId() + ")는 이미 존재하는 아이디입니다.");
 		userService.isExistUserId(testUser.getUserId());
 	}
 	
 	@Test(expected = None.class)
-	public void d_이메일_중복_확인_테스트_실패() {
+	public void 이메일_중복_확인_테스트_실패() {
 		userService.isExistUserEmail(FAKE_EMAIL);
 	}
 	
 	@Test
-	public void e_이메일_중복_확인_테스트_성공() {
+	public void 이메일_중복_확인_테스트_성공() {
 		exceptionRule.expect(EmailAlreadyExistsException.class);
 		exceptionRule.expectMessage("(" + testUser.getUserEmail() + ")는 이미 존재하는 이메일입니다.");
 		userService.isExistUserEmail(testUser.getUserEmail());
 	}
 	
 	@Test
-	public void f_아이디_찾기_테스트() {
-		String id = userService.getIdByNameAndPhone(testUser.getUserName(), testUser.getUserPhone());
-		assertTrue(id.equals(testUser.getUserId()));
+	public void 아이디_찾기_테스트_실패() {
+		exceptionRule.expect(InvalidValueException.class);
+		exceptionRule.expectMessage("올바르지 않은 값입니다. 다시 입력해주세요.");
+		String id = userService.getIdByNameAndPhone(null);
+		assertNull(id);
 	}
 	
 	@Test(expected = None.class)
-	public void g_비밀번호_변경_테스트() {
+	public void 아이디_찾기_테스트_성공() {
+		String id = userService.getIdByNameAndPhone(testUser);
+		assertTrue(id.equals("test"));
+	}
+	
+	@Test
+	public void 비밀번호_변경_테스트_실패() {
+		exceptionRule.expect(UserNotExistsException.class);
+		exceptionRule.expectMessage("존재하지 않는 사용자입니다.");
+		UserVO user = UserVO.builder()
+				.accountId("none")
+				.userId(FAKE_ID)
+				.userPwd("newPwd")
+				.build();
+		userService.changeUserPwd(user);
+	}
+	
+	/*
+	 * 이메일, 전화번호, 주소 입력값 유효성 검증 로직 필요
+	 */
+	@Test
+	public void 프로필_수정_성공() {
+		// 이메일 수정
+		UserVO editUser1 = UserVO.builder()
+				.accountId(TEST_ACNT_ID)
+				.userEmail("edit")
+				.build();
+		userService.changeUserProfile(editUser1);
+		
+		// 전화번호 수정
+		UserVO editUser2 = UserVO.builder()
+				.accountId(TEST_ACNT_ID)
+				.userPhone("edit")
+				.build();
+		userService.changeUserProfile(editUser2);
+		
+		// 주소 수정
+		UserVO editUser3 = UserVO.builder()
+				.accountId(TEST_ACNT_ID)
+				.userAddr("edit")
+				.build();
+		userService.changeUserProfile(editUser3);
+	}
+	
+	@Test(expected = None.class)
+	public void 비밀번호_변경_테스트_성공() {
 		UserVO user = UserVO.builder()
 				.userId(testUser.getUserId())
 				.userPwd("newPwd")
@@ -115,18 +175,16 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void h_회원_탈퇴_테스트_실패() {
-		
-		UserVO deleteUser = userService.getUserById(testUser.getUserId());
-		
+	public void 회원_탈퇴_테스트_실패() {
 		exceptionRule.expect(InvalidValueException.class);
 		exceptionRule.expectMessage("올바르지 않은 값입니다. 다시 입력해주세요.");
+		UserVO deleteUser = userService.getUserById(testUser.getUserId());
 		userService.deleteUser("wrongPwd", deleteUser);
 	}
 	
 	@Test(expected = None.class)
-	public void i_회원_탈퇴_테스트_성공() {
-		userService.deleteUser(DEFAULT_PWD, testUser);
+	public void 회원_탈퇴_테스트_성공() {
+		userService.deleteUser(TEST_PWD, testUser);
 	}
 	
 }

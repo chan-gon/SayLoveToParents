@@ -2,6 +2,10 @@ package com.board.controller;
 
 import java.security.Principal;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.mail.EmailException;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,7 +25,7 @@ import com.board.domain.UserVO;
 import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
-import com.board.service.StoreService;
+import com.board.exception.UserNotExistsException;
 import com.board.service.UserService;
 import com.board.utils.EmailUtils;
 
@@ -42,9 +46,9 @@ import lombok.extern.log4j.Log4j;
 public class UserController {
 
 	private final UserService userService;
-	
+
 	/*
-	 * 비즈니스 로직
+	 * 사용자 요청 처리
 	 */
 
 	@PostMapping
@@ -52,9 +56,9 @@ public class UserController {
 		try {
 			userService.signUpUser(user);
 		} catch (UserAlreadyExistsException e) {
-			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.CONFLICT);
+			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요.", HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<String>("회원가입 완료" ,HttpStatus.CREATED);
+		return new ResponseEntity<String>("회원가입 완료", HttpStatus.CREATED);
 	}
 
 	@GetMapping("/signup/id")
@@ -68,7 +72,7 @@ public class UserController {
 		return new ResponseEntity<String>("사용 가능한 아이디.", HttpStatus.OK);
 	}
 
-	@GetMapping("/signup/email")	
+	@GetMapping("/signup/email")
 	public ResponseEntity<String> checkUserEmail(@RequestParam("userEmail") String userEmail) {
 		log.warn("userEmail ======== " + userEmail);
 		try {
@@ -78,57 +82,59 @@ public class UserController {
 		}
 		return new ResponseEntity<String>("사용 가능한 이메일.", HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId, @RequestParam("userPwd") String inputPwd, @RequestBody UserVO user) {
 		try {
 			userService.deleteUser(inputPwd, user);
 		} catch (InvalidValueException ive) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>(userId + "님 탈퇴완료", HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/help/id", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> findUserId(@RequestBody UserVO user) {
-		String userId = userService.getIdByNameAndPhone(user.getUserName(), user.getUserPhone());
-		String responseMsg = null;
-		if (userId == null) {
-			responseMsg = "존재하지 않는 사용자";
-			return new ResponseEntity<String>(responseMsg,HttpStatus.CONFLICT);
+		String userId = null;
+		try {
+			userId = userService.getIdByNameAndPhone(user);
+		} catch (InvalidValueException e) {
+			return new ResponseEntity<String>("이름 또는 전화번호가 잘못 입력되었습니다.", HttpStatus.BAD_REQUEST);
 		}
-		responseMsg = user.getUserName() + "님의 아이디는 " + userId + "입니다.";
-		return new ResponseEntity<String>(responseMsg,HttpStatus.OK);
+		if (userId == null) {
+			return new ResponseEntity<String>("사용자 정보가 존재하지 않습니다.", HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<String>("아이디를 찾았습니다: " + userId, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/help/pwd/email", produces = "application/text; charset=UTF-8")
-	public ResponseEntity<String> sendCertEmail(@RequestParam("userId") String userId, @RequestParam("userEmail") String userEmail) {
-		
-        int certNum = EmailUtils.getCertNum();
-	    String code = "";
-	    
-	    try {
-	    	userService.checkUserIdEmail(userId, userEmail);
-	    	
-	    	EmailUtils.sendEmail(userEmail, certNum);
-	    	code = Integer.toString(certNum);
-	    	log.warn("code ======== " + code);
-	    } catch (Exception e) {
-	    	return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.BAD_REQUEST);
-	    }
-		return new ResponseEntity<String>(code ,HttpStatus.OK);
+	public ResponseEntity<String> sendCertEmail(@RequestParam("userId") String userId, @RequestParam("userEmail") String userEmail) throws EmailException {
+
+		int certNum = EmailUtils.getCertNum();
+		String code = "";
+
+		try {
+			userService.checkUserIdEmail(userId, userEmail);
+
+			EmailUtils.sendEmail(userEmail, certNum);
+			code = Integer.toString(certNum);
+			log.warn("code ======== " + code);
+		} catch (UserNotExistsException e) {
+			return new ResponseEntity<String>("사용자 정보가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<String>(code, HttpStatus.OK);
 	}
-	
-	@PostMapping(value = "/help/pwd/{userId}", produces = "application/text; charset=UTF-8")
-	public ResponseEntity<String> pwdChange(@RequestBody UserVO user, @PathVariable("userId") String userId) {
+
+	@PostMapping(value = "/help/pwd", produces = "application/text; charset=UTF-8")
+	public ResponseEntity<String> pwdChange(@RequestBody UserVO user) {
 		try {
 			userService.changeUserPwd(user);
 		} catch (Exception e) {
-			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요." ,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요.", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<String>("비밀번호 변경 완료" ,HttpStatus.OK);
+		return new ResponseEntity<String>("비밀번호 변경 완료", HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/profile", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> profileEdit(@RequestBody UserVO user) {
 		try {
@@ -136,21 +142,22 @@ public class UserController {
 		} catch (Exception e) {
 			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요.", HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<String>("수정 완료." ,HttpStatus.OK);
+		return new ResponseEntity<String>("수정 완료.", HttpStatus.OK);
 	}
-	
+
 	/*
 	 * 페이지 이동 처리
 	 */
+	
 	@GetMapping("/signup")
 	public ModelAndView signUpForm() {
 		return new ModelAndView("users/signup");
 	}
-	
+
 	@PostMapping("/login")
 	public ModelAndView loginFormPost() {
 		return new ModelAndView("users/login");
-	} 
+	}
 
 	@GetMapping("/login")
 	public ModelAndView loginFormGet() {
@@ -166,22 +173,21 @@ public class UserController {
 	public ModelAndView pwdInquiryForm() {
 		return new ModelAndView("login/pwdInquiry");
 	}
-	
+
 	@GetMapping("/help/pwd/{userId}")
 	public ModelAndView pwdChangeForm(@PathVariable("userId") String userId, RedirectAttributes rttr) {
 		ModelAndView mv = new ModelAndView();
-		rttr.addAttribute("userId", userId);
 		mv.setViewName("/login/pwdChange");
 		return mv;
 	}
-	
+
 	@GetMapping("/profile")
-	public ModelAndView profileForm(Model model, Principal principal) {
+	public ModelAndView profileForm(Model model, Principal principal, HttpSession session) {
 		String username = principal.getName();
 		if (username == null) {
 			throw new AccessDeniedException("접근 권한이 없는 사용자");
 		}
-		model.addAttribute("user", userService.getUserById(username));
+		model.addAttribute("users", userService.getUserById(username));
 		return new ModelAndView("users/profile");
 	}
 

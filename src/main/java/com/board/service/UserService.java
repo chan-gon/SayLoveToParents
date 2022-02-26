@@ -4,7 +4,7 @@ import com.board.domain.UserVO;
 
 public interface UserService {
 	
-	UserVO getUserById(String userId);
+	UserVO getUserById(String accountId);
 
 	void signUpUser(UserVO user);
 
@@ -14,8 +14,8 @@ public interface UserService {
 
 	void deleteUser(String userPwdm, UserVO user);
 
-	String getIdByNameAndPhone(String userName, String userPhone);
-
+	String getIdByNameAndPhone(UserVO user);
+	
 	void checkUserIdEmail(String userId, String userEmail);
 	
 	void changeUserPwd(UserVO user);

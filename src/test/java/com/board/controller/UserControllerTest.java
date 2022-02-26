@@ -7,10 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,7 +27,6 @@ import lombok.Setter;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml", "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserControllerTest {
 	
 	private static final String DEFAULT_PWD = "test";
@@ -59,7 +56,17 @@ public class UserControllerTest {
 	}
 	
 	@Test
-	public void A_사용자_생성_테스트() throws Exception {
+	public void 회원가입_테스트_실패() throws Exception {
+		String jsonStr = new Gson().toJson(testUser);
+		
+		mockMvc.perform(post("/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStr))
+				.andExpect(status().isConflict());
+	}
+	
+	@Test
+	public void 회원가입_테스트_성공() throws Exception {
 		String jsonStr = new Gson().toJson(testUser);
 		
 		mockMvc.perform(post("/users")
@@ -69,7 +76,16 @@ public class UserControllerTest {
 	}
 	
 	@Test
-	public void B_아이디_종복_확인_테스트() throws Exception {
+	public void 아이디_종복_확인_실패_중복아이디_없음() throws Exception {
+		mockMvc.perform(get("/users/signup/id")
+				.param("userId", "none")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void 아이디_종복_확인_성공_중복아이디_있음() throws Exception {
 		mockMvc.perform(get("/users/signup/id")
 				.param("userId", testUser.getUserId())
 				.contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +94,17 @@ public class UserControllerTest {
 	}
 	
 	@Test
-	public void C_이메일_중복_확인_테스트() throws Exception {
+	public void 이메일_중복_확인_실패_중목이메일_없음() throws Exception {
+		mockMvc.perform(get("/users/signup/email")
+				.param("userEmail", "none")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void 이메일_중복_확인_성공_중복이메일_있음() throws Exception {
 		mockMvc.perform(get("/users/signup/email")
 				.param("userEmail", testUser.getUserEmail())
 				.contentType(MediaType.APPLICATION_JSON)
@@ -88,26 +114,46 @@ public class UserControllerTest {
 	}
 	
 	@Test
-	public void D_아이디_찾기_테스트() throws Exception {
-		String jsonStr = new Gson().toJson(testUser);
+	public void 아이디_찾기_테스트() throws Exception {
+		// 성공
+		String jsonStr1 = new Gson().toJson(testUser);
 		
 		mockMvc.perform(post("/users/help/id")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonStr))
+				.content(jsonStr1))
 				.andDo(print())
 				.andExpect(status().isOk());
+		
+		// 실패
+		String jsonStr2 = new Gson().toJson(null);
+		
+		mockMvc.perform(post("/users/help/id")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStr2))
+				.andDo(print())
+				.andExpect(status().isBadRequest());
 	}
 	
 	@Test
-	public void F_사용자_탈퇴_테스트() throws Exception {
-		String jsonStr = new Gson().toJson(testUser);
+	public void 사용자_탈퇴_테스트() throws Exception {
+		// 실패
+		String jsonStr1 = new Gson().toJson(null);
 		
 		mockMvc.perform(delete("/users/{userId}", testUser.getUserId())
 				.param("userPwd", DEFAULT_PWD)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonStr))
+				.content(jsonStr1))
+				.andDo(print())
+				.andExpect(status().isBadRequest());
+
+		// 성공
+		String jsonStr2 = new Gson().toJson(testUser);
+		
+		mockMvc.perform(delete("/users/{userId}", testUser.getUserId())
+				.param("userPwd", DEFAULT_PWD)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStr2))
 				.andDo(print())
 				.andExpect(status().isOk());
 	}
-	
 }
