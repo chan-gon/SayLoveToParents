@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.board.mapper.ProductMapper">
+
+	<insert id="addNewProduct">
+		INSERT INTO product(
+			product_id, 
+			user_id, 
+			product_name, 
+			product_price, 
+			product_category,
+			product_info, 
+			product_condition, 
+			product_is_tradeable,
+			product_reg_date,
+			product_is_delivery_free,
+			product_trade_loc)
+		VALUES(
+			#{prdtId},
+			#{userId},
+			#{prdtName},
+			#{prdtPrice},
+			#{prdtCategory},
+			#{prdtInfo},
+			#{prdtCondition},
+			#{prdtIsTradeable},
+			#{prdtRegDate},
+			#{prdtIsDeliveryFree},
+			#{prdtTradeLoc}
+		)
+	</insert>
+
+</mapper>
