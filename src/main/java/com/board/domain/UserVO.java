@@ -9,9 +9,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /*
  * @Builder
@@ -27,7 +29,6 @@ import lombok.RequiredArgsConstructor;
  * @RequiredArgsConstructor
  * : @NonNull 어노테이션 또는 final 키워드가 있는 필드를 파라미터로 가지는 생성자를 만든다.
  */
-
 @Getter
 @Builder
 @NoArgsConstructor(force = true)
@@ -35,7 +36,8 @@ import lombok.RequiredArgsConstructor;
 public class UserVO implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	private final String accountId;
 	private final String userId;
 	private final String userPwd;
 	private final String userName;
@@ -43,7 +45,6 @@ public class UserVO implements UserDetails {
 	private final String userPhone;
 	private final String userAddr;
 	private final Date userRegDate;
-	private final Date userDropDate;
 	private final String userAuth;
 	private final int userEnabled;
 

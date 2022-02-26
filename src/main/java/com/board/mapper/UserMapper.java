@@ -8,15 +8,15 @@ public interface UserMapper {
 
 	UserVO getUserById(String userId);
 	
-	String getPassword(String userId);
-	
 	void signUpUser(UserVO user);
 
 	int isExistUserId(String userId);
 
 	int isExistUserEmail(String userEmail);
 
-	String getIdByNameAndPhone(@Param("userName") String userName, @Param("userPhone") String userPhone);
+	String getIdByNameAndPhone(UserVO user);
+	
+	String getAccountId(String userId);
 	
 	int checkUserIdEmail(@Param("userId") String userId, @Param("userEmail") String userEmail);
 	
@@ -24,5 +24,5 @@ public interface UserMapper {
 	
 	void changeUserProfile(UserVO user);
 
-	void deleteUser(String userId);
+	void deleteUser(String accountId);
 }

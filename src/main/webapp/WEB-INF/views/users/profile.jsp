@@ -13,16 +13,16 @@
         </div>
         <div class="forms">
             <div class="inputs"> <span>아이디</span> 
-            	<input readonly value='<c:out value="${user.userId }" />' id="userId" name="userId" disabled> 
+            	<input readonly value='<c:out value="${users.userId }" />' id="userId" name="userId" disabled> 
             </div>
             <div class="inputs"> <span>이메일</span> 
-            	<input type="text" readonly value='<c:out value="${user.userEmail }" />' id="userEmail" name="userEmail" disabled title="이메일 주소는 @가 포함되어야 합니다."> 
+            	<input type="text" readonly value='<c:out value="${users.userEmail }" />' id="userEmail" name="userEmail" disabled title="이메일 주소는 @가 포함되어야 합니다."> 
             </div>
             <div class="inputs"> <span>전화번호</span> 
-            	<input type="text" readonly value='<c:out value="${user.userPhone }" />' id="userPhone" name="userPhone" disabled title="전화번호는 숫자만 가능합니다."> 
+            	<input type="text" readonly value='<c:out value="${users.userPhone }" />' id="userPhone" name="userPhone" disabled title="전화번호는 숫자만 가능합니다."> 
             </div>
             <div class="inputs"> <span>주소</span> 
-            	<input type="text" readonly value='<c:out value="${user.userAddr }" />' id="userAddr" name="userAddr" disabled title="클릭하면 주소 검색이 가능합니다."> 
+            	<input type="text" readonly value='<c:out value="${users.userAddr }" />' id="userAddr" name="userAddr" disabled title="클릭하면 주소 검색이 가능합니다."> 
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
 	});
 	
 	var homeBtn = document.getElementById('homeBtn');
-	homeBtn.addEventListener('click', function() {
+		homeBtn.addEventListener('click', function() {
 		location.href = "/";
 	});
 	

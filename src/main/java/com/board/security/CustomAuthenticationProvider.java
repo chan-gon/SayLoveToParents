@@ -25,7 +25,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		String password = (String) authentication.getCredentials();
 
 		UserVO user = (UserVO) service.loadUserByUsername(username);
-
+		
 		if (!PasswordEncryptor.isMatch(password, user.getPassword())) {
 			throw new BadCredentialsException(username);
 		}
