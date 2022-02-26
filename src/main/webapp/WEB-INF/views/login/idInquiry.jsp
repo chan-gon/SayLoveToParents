@@ -79,6 +79,16 @@
     		$('#submitBtn').on('click',function() {
     			var userName = $('#userName').val();
     			var userPhone = $('#userPhone').val();
+    			
+    			if (userName == null || userName == "") {
+    				alert("이름을 입력하세요.");
+    				return;
+    			}
+    			if (userPhone == null || userPhone == "") {
+    				alert("전화번호를 입력하세요.");
+    				return;
+    			}
+    			
     			$.ajax({
     				type: "post",
     				url: "/users/help/id",
