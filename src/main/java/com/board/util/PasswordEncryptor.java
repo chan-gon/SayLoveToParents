@@ -1,4 +1,4 @@
-package com.board.utils;
+package com.board.util;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 

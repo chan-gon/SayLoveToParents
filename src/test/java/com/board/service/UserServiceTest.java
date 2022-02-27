@@ -18,7 +18,7 @@ import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.exception.UserNotExistsException;
-import com.board.utils.PasswordEncryptor;
+import com.board.util.PasswordEncryptor;
 
 /*
  * @RunWith(SpringJUnit4ClassRunner.class)

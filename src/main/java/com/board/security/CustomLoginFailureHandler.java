@@ -13,7 +13,7 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
-import com.board.utils.MessageUtils;
+import com.board.util.MessageUtils;
 
 import lombok.extern.log4j.Log4j;
 
