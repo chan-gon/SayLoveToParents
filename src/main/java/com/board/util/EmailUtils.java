@@ -13,7 +13,7 @@ public class EmailUtils {
 	private static final String USER_PWD = MessageUtils.getMessage("email.setAuthUserPwd");
 	private static final String EMAIL_FROM = MessageUtils.getMessage("email.setFromEmail");
 
-	public static void sendEmail(String userEmail, int certNum) throws EmailException {
+	public static void sendEmail(String userEmail, String certNum) throws EmailException {
 		SimpleEmail email = new SimpleEmail();
 		email.setHostName("smtp.naver.com");
 		email.setSmtpPort(465);
@@ -33,10 +33,10 @@ public class EmailUtils {
 		}
 	}
 
-	public static int getCertNum() {
+	public static String getCertNum() {
 		Random random = new Random();
 		int randomNum = random.nextInt(888888) + 111111;
-		return randomNum;
+		return Integer.toString(randomNum);
 	}
 
 }
