@@ -10,15 +10,15 @@ public interface UserMapper {
 	
 	void signUpUser(UserVO user);
 
-	int isExistUserId(String userId);
+	String isExistUserId(String userId);
 
-	int isExistUserEmail(String userEmail);
+	String isExistUserEmail(String userEmail);
 
 	String getIdByNameAndPhone(UserVO user);
 	
 	String getAccountId(String userId);
 	
-	int checkUserIdEmail(@Param("userId") String userId, @Param("userEmail") String userEmail);
+	String isValidIdAndEmail(@Param("userId") String userId, @Param("userEmail") String userEmail);
 	
 	void changeUserPwd(UserVO user);
 	

@@ -39,10 +39,10 @@ import com.board.util.PasswordEncryptor;
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 public class UserServiceTest {
 	
-	private static final String TEST_ACNT_ID = "CE4D52B5E6A44D9C828085F2AD3CEE0A";
+	private static final String TEST_ACNT_ID = "1111";
 	private static final String TEST_PWD = "test";
-	private static final String FAKE_ID = "none";
-	private static final String FAKE_EMAIL = "none@naver.com";
+	private static final String NOT_EXIST_ID = "none";
+	private static final String NOT_EXIST_EMAIL = "none@naver.com";
 	
 	@Autowired
 	private UserService userService;
@@ -87,7 +87,7 @@ public class UserServiceTest {
 	 */
 	@Test(expected = None.class)
 	public void 아이디_중복_확인_테스트_실패() {
-		userService.isExistUserId(FAKE_ID);
+		userService.isExistUserId(NOT_EXIST_ID);
 	}
 	
 	/*
@@ -102,7 +102,7 @@ public class UserServiceTest {
 	
 	@Test(expected = None.class)
 	public void 이메일_중복_확인_테스트_실패() {
-		userService.isExistUserEmail(FAKE_EMAIL);
+		userService.isExistUserEmail(NOT_EXIST_EMAIL);
 	}
 	
 	@Test
@@ -132,7 +132,7 @@ public class UserServiceTest {
 		exceptionRule.expectMessage("존재하지 않는 사용자입니다.");
 		UserVO user = UserVO.builder()
 				.accountId("none")
-				.userId(FAKE_ID)
+				.userId(NOT_EXIST_ID)
 				.userPwd("newPwd")
 				.build();
 		userService.changeUserPwd(user);

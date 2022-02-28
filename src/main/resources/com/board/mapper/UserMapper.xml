@@ -37,12 +37,20 @@
 		VALUES(#{userId}, #{userPwd}, #{userName}, #{userEmail}, #{userPhone}, #{userAddr}, sysdate, default, default)
 	</insert>
 	
-	<select id="isExistUserId" parameterType="String" resultType="int">
-		SELECT COUNT(user_id) FROM site_user WHERE user_id = #{userId}
+	<select id="isExistUserId" parameterType="String" resultType="String">
+		SELECT case 
+				when count(user_id) >= 1 then 'EXISTED'
+				else 'NOT_EXISTED' end as isexisted_id
+		FROM site_user
+		WHERE user_id = #{userId}
 	</select>
 	
-	<select id="isExistUserEmail" parameterType="String" resultType="int">
-		SELECT COUNT(user_email) FROM site_user WHERE user_email = #{userEmail}
+	<select id="isExistUserEmail" parameterType="String" resultType="String">
+		SELECT case 
+				when count(user_email) >= 1 then 'EXISTED'
+				else 'NOT_EXISTED' end as isexisted_email
+		FROM site_user
+		WHERE user_email = #{userEmail}
 	</select>
 	
 	<delete id="deleteUser">
@@ -53,8 +61,12 @@
 		SELECT user_id FROM site_user WHERE user_name = #{userName} AND user_phone = #{userPhone}
 	</select>
 	
-	<select id="checkUserIdEmail" parameterType="map" resultType="int">
-		SELECT COUNT(*) FROM site_user WHERE user_id = #{userId} AND user_email = #{userEmail}
+	<select id="isValidIdAndEmail" parameterType="map" resultType="String">
+		SELECT case
+			when count(*) >= 1 then 'VALID'
+			else 'INVALID' end as isvalid_id_email 
+		FROM site_user
+		WHERE user_id = #{userId} AND user_email = #{userEmail}
 	</select>
 	
 	<select id="getAccountId" parameterType="String" resultType="String">
