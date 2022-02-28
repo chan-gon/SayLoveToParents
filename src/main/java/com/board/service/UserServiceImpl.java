@@ -7,6 +7,7 @@ import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.exception.UserNotExistsException;
+import com.board.mapper.ProductMapper;
 import com.board.mapper.UserMapper;
 import com.board.util.PasswordEncryptor;
 
@@ -37,10 +38,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void signUpUser(UserVO user) {
 
-//		int cnt = userMapper.isExistUserId(user.getUserId());
-//		if (cnt > 0) {
-//			throw new UserAlreadyExistsException(USER_EXISTS_MSG);
-//		}
+		if (userMapper.isExistUserId(user.getUserId()).equals(EXISTED)) {
+			throw new UserAlreadyExistsException(USER_EXISTS_MSG);
+		}
 
 		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
 
@@ -142,8 +142,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO getUserById(String userId) {
-		if (userMapper.isExistUserId(userId).equals(EXISTED)) {
-			throw new UserAlreadyExistsException(USER_EXISTS_MSG);
+		if (userId == null) {
+			throw new InvalidValueException(INVALID_VALUE_MSG);
 		}
 		return userMapper.getUserById(userId);
 	}
