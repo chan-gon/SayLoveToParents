@@ -5,10 +5,27 @@
     
 <mapper namespace="com.board.mapper.ProductMapper">
 
+	<resultMap type="com.board.domain.ProductVO" id="productSelectRM">
+		<result property="prdtId" column="product_id" />
+		<result property="accountId" column="account_id" />
+		<result property="prdtName" column="product_name" />
+		<result property="prdtPrice" column="product_price" />
+		<result property="prdtCategory" column="product_category" />
+		<result property="prdtInfo" column="product_info" />
+		<result property="prdtCondition" column="product_condition" />
+		<result property="prdtIsTradeable" column="product_is_tradeable" />
+		<result property="prdtRegDate" column="product_reg_date" />
+		<result property="prdtUpdateDate" column="product_update_date" />
+		<result property="prdtIsDeliveryFree" column="product_is_delivery_free" />
+		<result property="prdtLikeCnt" column="product_like_cnt" />
+		<result property="prdtTradeLoc" column="product_trade_loc" />
+		<result property="prdtTradeStatus" column="product_trade_status" />
+	</resultMap>
+
 	<insert id="addNewProduct">
 		INSERT INTO product(
-			product_id, 
-			user_id, 
+			product_id,
+			account_id, 
 			product_name, 
 			product_price, 
 			product_category,
@@ -20,17 +37,44 @@
 			product_trade_loc)
 		VALUES(
 			#{prdtId},
-			#{userId},
+			#{accountId},
 			#{prdtName},
 			#{prdtPrice},
 			#{prdtCategory},
 			#{prdtInfo},
 			#{prdtCondition},
 			#{prdtIsTradeable},
-			#{prdtRegDate},
+			sysdate,
 			#{prdtIsDeliveryFree},
 			#{prdtTradeLoc}
 		)
 	</insert>
+	
+	<select id="getProductById" parameterType="String" resultType="com.board.domain.ProductVO">
+		SELECT
+			product_id,
+			account_id,
+			product_name, 
+			product_price, 
+			product_category,
+			product_info, 
+			product_condition, 
+			product_is_tradeable,
+			product_reg_date,
+			product_update_date,
+			product_is_delivery_free,
+			product_like_cnt,
+			product_trade_loc,
+			product_trade_status
+		FROM
+			product
+		WHERE account_id = #{accountId}
+	</select>
+	
+	<delete id="deleteProduct">
+		DELETE FROM product
+		WHERE account_id = #{accountId}
+		AND product_id = #{prdtId}
+	</delete>
 
 </mapper>
