@@ -7,11 +7,11 @@ import com.board.exception.EmailAlreadyExistsException;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.exception.UserNotExistsException;
-import com.board.mapper.ProductMapper;
 import com.board.mapper.UserMapper;
 import com.board.util.PasswordEncryptor;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 /*
  * @RequiredArgsConstructor
@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Log4j
 public class UserServiceImpl implements UserService {
 
 	private static final String INVALID_VALUE_MSG = "올바르지 않은 값입니다. 다시 입력해주세요.";
@@ -120,7 +121,7 @@ public class UserServiceImpl implements UserService {
 		if (newUser == null) {
 			throw new UserNotExistsException(NOT_EXISTS_MSG);
 		}
-		String encodedPwd = PasswordEncryptor.encrypt(newUser.getUserPwd());
+		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
 		UserVO changeUser = UserVO.builder()
 				.accountId(newUser.getAccountId())
 				.userPwd(encodedPwd)

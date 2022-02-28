@@ -5,7 +5,16 @@
 <mapper namespace="com.board.mapper.UserMapper">
 
 	<resultMap type="com.board.domain.UserVO" id="userSelectRM">
+		<result property="accountId" column="account_id" />
 		<result property="userId" column="user_id" />
+		<result property="userPwd" column="user_pwd" />
+		<result property="userName" column="user_name" />
+		<result property="userEmail" column="user_email" />
+		<result property="userPhone" column="user_phone" />
+		<result property="userAddr" column="user_addr" />
+		<result property="userRegDate" column="user_reg_date" />
+		<result property="userAuth" column="user_auth" />
+		<result property="userEnabled" column="user_enabled" />
 	</resultMap>
 
 	<select id="getUserById" parameterType="String" resultType="com.board.domain.UserVO" resultMap="userSelectRM">
