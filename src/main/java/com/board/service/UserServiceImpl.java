@@ -1,7 +1,6 @@
 package com.board.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.board.domain.UserVO;
 import com.board.exception.EmailAlreadyExistsException;
@@ -9,10 +8,9 @@ import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.exception.UserNotExistsException;
 import com.board.mapper.UserMapper;
-import com.board.utils.PasswordEncryptor;
+import com.board.util.PasswordEncryptor;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 
 /*
  * @RequiredArgsConstructor
@@ -25,18 +23,25 @@ import lombok.extern.log4j.Log4j;
 
 @Service
 @RequiredArgsConstructor
-@Log4j
 public class UserServiceImpl implements UserService {
-	
+
 	private static final String INVALID_VALUE_MSG = "올바르지 않은 값입니다. 다시 입력해주세요.";
 	private static final String NOT_EXISTS_MSG = "존재하지 않는 사용자입니다.";
-	private static final String USER_ALRDY_MSG = "사용자 중복 에러. 동일한 값을 가진 사용자가 존재합니다.";
+	private static final String USER_EXISTS_MSG = "이미 존재하는 사용자입니다.";
+	
+	private static final String EXISTED = "EXISTED";
+	private static final String INVALID = "INVALID";
 
 	private final UserMapper userMapper;
 
 	@Override
-	@Transactional
 	public void signUpUser(UserVO user) {
+
+//		int cnt = userMapper.isExistUserId(user.getUserId());
+//		if (cnt > 0) {
+//			throw new UserAlreadyExistsException(USER_EXISTS_MSG);
+//		}
+
 		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
 
 		UserVO encryptedUser = UserVO.builder()
@@ -47,27 +52,32 @@ public class UserServiceImpl implements UserService {
 				.userPhone(user.getUserPhone())
 				.userAddr(user.getUserAddr())
 				.build();
-		
-		int cnt = userMapper.isExistUserId(encryptedUser.getUserId());
-		if (cnt > 0) {
-			throw new UserAlreadyExistsException(USER_ALRDY_MSG);
-		}
+
 		userMapper.signUpUser(encryptedUser);
 	}
 
 	@Override
 	public void isExistUserId(String userId) {
-		int cnt = userMapper.isExistUserId(userId);
-		if (cnt > 0) {
+		if (userMapper.isExistUserId(userId).equals(EXISTED)) {
 			throw new UserAlreadyExistsException(String.format("(%s)는 이미 존재하는 아이디입니다.", userId));
 		}
 	}
 
 	@Override
 	public void isExistUserEmail(String userEmail) {
-		int cnt = userMapper.isExistUserEmail(userEmail);
-		if (cnt > 0) {
+		if (userMapper.isExistUserEmail(userEmail).equals(EXISTED)) {
 			throw new EmailAlreadyExistsException(String.format("(%s)는 이미 존재하는 이메일입니다.", userEmail));
+		}
+	}
+	
+	/*
+	 * 이메일 인증번호 전송을 위해
+	 * 사용자 아이디/이메일 존재 여부 확인하는 메소드
+	 */
+	@Override
+	public void isValidIdAndEmail(String userId, String userEmail) {
+		if (userMapper.isValidIdAndEmail(userId, userEmail).equals(INVALID)) {
+			throw new UserNotExistsException(NOT_EXISTS_MSG);
 		}
 	}
 
@@ -83,7 +93,7 @@ public class UserServiceImpl implements UserService {
 		if (!isValidPassword) {
 			throw new InvalidValueException(INVALID_VALUE_MSG);
 		}
-		
+
 		userMapper.deleteUser(currentUser.getUserId());
 	}
 
@@ -92,58 +102,34 @@ public class UserServiceImpl implements UserService {
 		if (user == null) {
 			throw new InvalidValueException(INVALID_VALUE_MSG);
 		}
-		
-		String userId = userMapper.getIdByNameAndPhone(user);
-		return userId; 
-	}
-
-	/*
-	 * Controller의 /help/pwd/email 핸들러 전용 함수. 기존의 isExistUserId, isExistUserEmail
-	 * 함수로 구현 가능하지만, 해당 함수들은 기존 로직과 연결되어 있어 함수간 관계 파악 후 리팩토링 예정
-	 */
-	@Override
-	public void checkUserIdEmail(String userId, String userEmail) {
-		int cnt = userMapper.checkUserIdEmail(userId, userEmail);
-		if (cnt == 0) {
-			throw new UserNotExistsException(NOT_EXISTS_MSG);
-		}
+		return userMapper.getIdByNameAndPhone(user);
 	}
 
 	/**
-	 *	사용자로부터 받은 아이디 값으로 accountId를 가져온 다음
-	 *	유효성 체크 후 생성자를 만들어서 비밀번호 변경 메소드 매개변수로 입력
+	 * 사용자로부터 받은 아이디 값으로 accountId를 가져온 다음 유효성 체크 후 생성자를 만들어서 비밀번호 변경 메소드 매개변수로 입력
 	 *
-	 *	해당 메소드는 Controller 계층에서 넘어오는 UserVO 객체에 의존한다
-	 *	accountId 값을 View 계층의 HTML 태그에 심어서 가져오는 방법은 보안에 취약하므로
-	 *	Controller 계층의 메소드에 의존하더라도 이 방법이 안전하다고 판단했다
+	 * 해당 메소드는 Controller 계층에서 넘어오는 UserVO 객체에 의존한다 accountId 값을 View 계층의 HTML 태그에
+	 * 심어서 가져오는 방법은 보안에 취약하므로 Controller 계층의 메소드에 의존하더라도 이 방법이 안전하다고 판단했다
 	 */
 	@Override
-	@Transactional
 	public void changeUserPwd(UserVO user) {
-		
 		if (user == null) {
 			throw new InvalidValueException(INVALID_VALUE_MSG);
 		}
-		
 		UserVO newUser = userMapper.getUserById(user.getUserId());
-		
 		if (newUser == null) {
 			throw new UserNotExistsException(NOT_EXISTS_MSG);
 		}
 		String encodedPwd = PasswordEncryptor.encrypt(newUser.getUserPwd());
-		
 		UserVO changeUser = UserVO.builder()
 				.accountId(newUser.getAccountId())
 				.userPwd(encodedPwd)
 				.build();
-
 		userMapper.changeUserPwd(changeUser);
 	}
 
 	@Override
-	@Transactional
 	public void changeUserProfile(UserVO user) {
-		
 		String accountId = userMapper.getAccountId(user.getUserId());
 		UserVO editUser = UserVO.builder()
 				.accountId(accountId)
@@ -151,15 +137,13 @@ public class UserServiceImpl implements UserService {
 				.userPhone(user.getUserPhone())
 				.userAddr(user.getUserAddr())
 				.build();
-
 		userMapper.changeUserProfile(editUser);
 	}
 
 	@Override
 	public UserVO getUserById(String userId) {
-		int cnt = userMapper.isExistUserId(userId);
-		if (cnt > 1) {
-			throw new UserAlreadyExistsException(USER_ALRDY_MSG);
+		if (userMapper.isExistUserId(userId).equals(EXISTED)) {
+			throw new UserAlreadyExistsException(USER_EXISTS_MSG);
 		}
 		return userMapper.getUserById(userId);
 	}

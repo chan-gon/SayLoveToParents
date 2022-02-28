@@ -26,7 +26,7 @@
     </bean>
     
     <!-- MessageSource를 사용하기위한 MessageUtils 매핑 -->
-    <bean id="message" class="com.board.utils.MessageUtils">
+    <bean id="message" class="com.board.util.MessageUtils">
         <property name="messageSourceAccessor" ref="messageSourceAccessor"/>
     </bean>
       

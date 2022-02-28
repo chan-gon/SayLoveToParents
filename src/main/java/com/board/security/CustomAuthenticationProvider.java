@@ -9,7 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.board.domain.UserVO;
-import com.board.utils.PasswordEncryptor;
+import com.board.util.PasswordEncryptor;
 
 import lombok.Setter;
 

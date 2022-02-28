@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.board.domain.UserVO;
-import com.board.utils.PasswordEncryptor;
+import com.board.util.PasswordEncryptor;
 import com.google.gson.Gson;
 
 import lombok.Setter;

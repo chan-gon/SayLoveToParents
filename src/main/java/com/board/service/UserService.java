@@ -12,11 +12,11 @@ public interface UserService {
 
 	void isExistUserEmail(String userEmail);
 
+	void isValidIdAndEmail(String userId, String userEmail);
+
 	void deleteUser(String userPwdm, UserVO user);
 
 	String getIdByNameAndPhone(UserVO user);
-	
-	void checkUserIdEmail(String userId, String userEmail);
 	
 	void changeUserPwd(UserVO user);
 	

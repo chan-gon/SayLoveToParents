@@ -5,7 +5,6 @@ import java.security.Principal;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.mail.EmailException;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,7 +26,7 @@ import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
 import com.board.exception.UserNotExistsException;
 import com.board.service.UserService;
-import com.board.utils.EmailUtils;
+import com.board.util.EmailUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -63,9 +62,8 @@ public class UserController {
 
 	@GetMapping("/signup/id")
 	public ResponseEntity<String> checkUserId(@RequestParam("userId") String userId) {
-		log.warn("userId ======== " + userId);
 		try {
-			userService.isExistUserId(userId);
+			userService.isExistUserId(userId); 
 		} catch (UserAlreadyExistsException e) {
 			return new ResponseEntity<String>("이미 존재하는 아이디.", HttpStatus.CONFLICT);
 		}
@@ -74,7 +72,6 @@ public class UserController {
 
 	@GetMapping("/signup/email")
 	public ResponseEntity<String> checkUserEmail(@RequestParam("userEmail") String userEmail) {
-		log.warn("userEmail ======== " + userEmail);
 		try {
 			userService.isExistUserEmail(userEmail);
 		} catch (EmailAlreadyExistsException e) {
@@ -110,19 +107,17 @@ public class UserController {
 	@GetMapping(value = "/help/pwd/email", produces = "application/text; charset=UTF-8")
 	public ResponseEntity<String> sendCertEmail(@RequestParam("userId") String userId, @RequestParam("userEmail") String userEmail) throws EmailException {
 
-		int certNum = EmailUtils.getCertNum();
-		String code = "";
+		String certNum = EmailUtils.getCertNum();
 
 		try {
-			userService.checkUserIdEmail(userId, userEmail);
+			userService.isValidIdAndEmail(userId, userEmail);
 
 			EmailUtils.sendEmail(userEmail, certNum);
-			code = Integer.toString(certNum);
-			log.warn("code ======== " + code);
+			log.warn("이메일 인증번호 ======== " + certNum);
 		} catch (UserNotExistsException e) {
 			return new ResponseEntity<String>("사용자 정보가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<String>(code, HttpStatus.OK);
+		return new ResponseEntity<String>(certNum, HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/help/pwd", produces = "application/text; charset=UTF-8")
