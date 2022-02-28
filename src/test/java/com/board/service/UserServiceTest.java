@@ -174,16 +174,8 @@ public class UserServiceTest {
 		userService.changeUserPwd(user);
 	}
 	
-	@Test
-	public void 회원_탈퇴_테스트_실패() {
-		exceptionRule.expect(InvalidValueException.class);
-		exceptionRule.expectMessage("올바르지 않은 값입니다. 다시 입력해주세요.");
-		UserVO deleteUser = userService.getUserById(testUser.getUserId());
-		userService.deleteUser("wrongPwd", deleteUser);
-	}
-	
 	@Test(expected = None.class)
-	public void 회원_탈퇴_테스트_성공() {
+	public void 회원_탈퇴_테스트() {
 		userService.deleteUser(TEST_PWD, testUser);
 	}
 	

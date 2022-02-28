@@ -29,7 +29,7 @@
 			user_auth
 		FROM
 			site_user
-		WHERE user_id = #{user_id}
+		WHERE user_id = #{userId}
 	</select>
 	
 	<insert id="signUpUser">

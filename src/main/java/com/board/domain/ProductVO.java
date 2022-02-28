@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductVO {
 	
-	private final int prdtId;
-	private final String userId;
+	private final String prdtId;
+	private final String accountId;
 	private final String prdtName;
 	private final int prdtPrice;
 	private final String prdtCategory;

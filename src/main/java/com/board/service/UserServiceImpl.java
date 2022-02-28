@@ -11,6 +11,7 @@ import com.board.mapper.UserMapper;
 import com.board.util.PasswordEncryptor;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 /*
  * @RequiredArgsConstructor
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Log4j
 public class UserServiceImpl implements UserService {
 
 	private static final String INVALID_VALUE_MSG = "올바르지 않은 값입니다. 다시 입력해주세요.";
@@ -37,10 +39,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void signUpUser(UserVO user) {
 
-//		int cnt = userMapper.isExistUserId(user.getUserId());
-//		if (cnt > 0) {
-//			throw new UserAlreadyExistsException(USER_EXISTS_MSG);
-//		}
+		if (userMapper.isExistUserId(user.getUserId()).equals(EXISTED)) {
+			throw new UserAlreadyExistsException(USER_EXISTS_MSG);
+		}
 
 		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
 
@@ -120,7 +121,7 @@ public class UserServiceImpl implements UserService {
 		if (newUser == null) {
 			throw new UserNotExistsException(NOT_EXISTS_MSG);
 		}
-		String encodedPwd = PasswordEncryptor.encrypt(newUser.getUserPwd());
+		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
 		UserVO changeUser = UserVO.builder()
 				.accountId(newUser.getAccountId())
 				.userPwd(encodedPwd)
@@ -142,8 +143,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO getUserById(String userId) {
-		if (userMapper.isExistUserId(userId).equals(EXISTED)) {
-			throw new UserAlreadyExistsException(USER_EXISTS_MSG);
+		if (userId == null) {
+			throw new InvalidValueException(INVALID_VALUE_MSG);
 		}
 		return userMapper.getUserById(userId);
 	}

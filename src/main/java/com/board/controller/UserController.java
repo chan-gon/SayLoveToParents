@@ -2,8 +2,6 @@ package com.board.controller;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.mail.EmailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -177,7 +175,7 @@ public class UserController {
 	}
 
 	@GetMapping("/profile")
-	public ModelAndView profileForm(Model model, Principal principal, HttpSession session) {
+	public ModelAndView profileForm(Model model, Principal principal) {
 		String username = principal.getName();
 		if (username == null) {
 			throw new AccessDeniedException("접근 권한이 없는 사용자");
