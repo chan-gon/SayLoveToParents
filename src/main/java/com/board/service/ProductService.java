@@ -8,8 +8,9 @@ import com.board.domain.ProductVO;
 
 public interface ProductService {
 
-	void addNewProduct(String userId, ProductVO product, List<MultipartFile> productImage);
-	
 	List<ProductVO> getProductById(String accountId);
-	
+
+	List<ProductVO> getProductList();
+
+	void addNewProduct(String userId, ProductVO product, List<MultipartFile> productImage);
 }

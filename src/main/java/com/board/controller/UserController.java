@@ -178,7 +178,7 @@ public class UserController {
 	public ModelAndView profileForm(Model model, Principal principal) {
 		String username = principal.getName();
 		if (username == null) {
-			throw new AccessDeniedException("접근 권한이 없는 사용자");
+			throw new UserNotExistsException("존재하지 않는 사용자입니다.");
 		}
 		model.addAttribute("users", userService.getUserById(username));
 		return new ModelAndView("users/profile");

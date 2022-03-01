@@ -20,6 +20,13 @@
 		<result property="prdtLikeCnt" column="product_like_cnt" />
 		<result property="prdtTradeLoc" column="product_trade_loc" />
 		<result property="prdtTradeStatus" column="product_trade_status" />
+		
+		<collection property="imageVO" resultMap="imageSelectRM" />
+	</resultMap>
+	
+	<resultMap type="com.board.domain.ImageVO" id="imageSelectRM">
+		<result property="fileName" column="file_name" />
+		<result property="filePath" column="file_path" />
 	</resultMap>
 
 	<insert id="addNewProduct">
@@ -69,6 +76,30 @@
 		FROM
 			product
 		WHERE account_id = #{accountId}
+	</select>
+	
+	<select id="getProductList" resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
+		SELECT
+				a.product_id,
+				a.account_id,
+				a.product_name, 
+				a.product_price, 
+				a.product_category,
+				a.product_info, 
+				a.product_condition, 
+				a.product_is_tradeable,
+				a.product_reg_date,
+				a.product_update_date,
+				a.product_is_delivery_free,
+				a.product_like_cnt,
+				a.product_trade_loc,
+				a.product_trade_status,
+				b.file_name,
+				b.file_path
+			FROM 
+				product a LEFT OUTER JOIN image_file b
+			ON
+				a.product_id = b.product_id
 	</select>
 	
 	<delete id="deleteProduct">

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +39,8 @@ public class ProductController {
 	 */
 	
 	@PostMapping("/new")
-	public ResponseEntity<String> addNewProduct(@RequestPart List<MultipartFile> productImage, @RequestPart ProductVO product, @RequestPart UserVO user) {
+	public ResponseEntity<String> addNewProduct(@RequestPart List<MultipartFile> productImage,
+			@RequestPart ProductVO product, @RequestPart UserVO user) {
 		try {
 			productService.addNewProduct(user.getUserId(), product, productImage);
 		} catch (InvalidValueException e) {
@@ -49,10 +49,10 @@ public class ProductController {
 		return new ResponseEntity<String>("상품 등록 완료.", HttpStatus.OK);
 	}
 	
-	
 	/*
 	 * 페이지 호출
 	 */
+	
 	
 	@GetMapping("/new")
 	public ModelAndView newProduct(Model model, Principal principal) {

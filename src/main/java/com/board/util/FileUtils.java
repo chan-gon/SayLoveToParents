@@ -10,8 +10,8 @@ import com.board.exception.ImageUploadFailException;
 
 public class FileUtils {
 	
-	private static final String DEFAULT_FILE_PATH = "D:\\joonggo_images";
-
+	private static final String DEFAULT_FILE_PATH = "C:/joonggo_market/images";
+	
 	public static String getFileName(MultipartFile multipartFile) {
 		StringBuilder builder = new StringBuilder();
 		UUID uuid = UUID.randomUUID();
@@ -33,8 +33,8 @@ public class FileUtils {
 		return DEFAULT_FILE_PATH;
 	}
 
-	public static void saveImages(String filePath, MultipartFile multipartFile) {
-		File saveImages = new File(filePath, getFileName(multipartFile));
+	public static void saveImages(String filePath, String fileName, MultipartFile multipartFile) {
+		File saveImages = new File(filePath, fileName);
 		try {
 			multipartFile.transferTo(saveImages);
 		} catch (IOException e) {

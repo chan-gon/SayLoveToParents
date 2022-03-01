@@ -27,5 +27,7 @@ public class ProductVO {
 	private final int prdtLikeCnt;
 	private final String prdtTradeLoc;
 	private final String prdtTradeStatus;
+	
+	private final ImageVO imageVO;
 
 }

@@ -23,7 +23,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 			request.setAttribute("ERROR_MSG", "접근 권한이 없는 사용자");
 		}
 		
-		request.getRequestDispatcher("/users/login").forward(request, response);
+		request.getRequestDispatcher("/login/accessDenied").forward(request, response);
 	}
 
 }
