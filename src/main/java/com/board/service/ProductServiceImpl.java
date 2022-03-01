@@ -1,6 +1,5 @@
 package com.board.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.board.domain.ImageVO;
 import com.board.domain.ProductVO;
 import com.board.domain.UserVO;
-import com.board.exception.ImageUploadFailException;
 import com.board.mapper.ImageMapper;
 import com.board.mapper.ProductMapper;
 import com.board.mapper.UserMapper;
@@ -30,11 +28,7 @@ public class ProductServiceImpl implements ProductService {
 	private final ProductMapper productMapper;
 	
 	private final ImageMapper imageMapper;
-
-	/**
-	 *	userId를 통해 사용자 정보를 가져온 다음
-	 *	accountId
-	 */
+	
 	@Override
 	@Transactional
 	public void addNewProduct(String userId, ProductVO product, List<MultipartFile> productImage) {
@@ -59,19 +53,24 @@ public class ProductServiceImpl implements ProductService {
 		for (int i = 0; i < productImage.size(); i++) {
 			String filePath = FileUtils.getFilePath();
 			String fileName = FileUtils.getFileName(productImage.get(i));
+			FileUtils.saveImages(filePath, fileName, productImage.get(i));
 			ImageVO newImage = ImageVO.builder()
 					.prdtId(productId)
 					.fileName(fileName)
 					.filePath(filePath)
 					.build();
 			imageMapper.addImages(newImage);
-			FileUtils.saveImages(filePath, productImage.get(i));
 		}
 	}
 
 	@Override
 	public List<ProductVO> getProductById(String accountId) {
 		return productMapper.getProductById(accountId);
+	}
+
+	@Override
+	public List<ProductVO> getProductList() {
+		return productMapper.getProductList();
 	}
 
 }

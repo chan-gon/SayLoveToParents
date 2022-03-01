@@ -39,7 +39,8 @@ public class ProductController {
 	 */
 	
 	@PostMapping("/new")
-	public ResponseEntity<String> addNewProduct(@RequestPart List<MultipartFile> productImage, @RequestPart ProductVO product, @RequestPart UserVO user) {
+	public ResponseEntity<String> addNewProduct(@RequestPart List<MultipartFile> productImage,
+			@RequestPart ProductVO product, @RequestPart UserVO user) {
 		try {
 			productService.addNewProduct(user.getUserId(), product, productImage);
 		} catch (InvalidValueException e) {
@@ -48,10 +49,10 @@ public class ProductController {
 		return new ResponseEntity<String>("상품 등록 완료.", HttpStatus.OK);
 	}
 	
-	
 	/*
 	 * 페이지 호출
 	 */
+	
 	
 	@GetMapping("/new")
 	public ModelAndView newProduct(Model model, Principal principal) {
