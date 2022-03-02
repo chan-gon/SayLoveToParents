@@ -20,8 +20,10 @@
 
 					<!-- 판매 상품 리스트 -->
 					<c:forEach var="product" items="${products }">
+					<input hidden="hidden" type="text" id="prdtId" name="prdtId" value='<c:out value="${product.prdtId }" />'>
 						<div class="gallery">
-							<a target="_blank" href="#"> <img src='${imagePath }${product.imageVO.fileName }' alt="Cinque Terre" width="600" height="400">
+							<a target="_blank" href="/products/${product.prdtId }" id="imageBtn"> 
+							<img src='${imagePath }${product.imageVO.fileName }' alt="Cinque Terre" >
 							</a>
 							<div class="desc"><c:out value="${product.prdtName }" /> </div>
 						</div>
@@ -41,5 +43,5 @@
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
-
+        
 <%@ include file="../includes/footer.jsp" %>
