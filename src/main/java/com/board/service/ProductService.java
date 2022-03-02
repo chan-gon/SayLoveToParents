@@ -8,7 +8,7 @@ import com.board.domain.ProductVO;
 
 public interface ProductService {
 
-	List<ProductVO> getProductById(String accountId);
+	ProductVO getProductById(String prdtId);
 
 	List<ProductVO> getProductList();
 

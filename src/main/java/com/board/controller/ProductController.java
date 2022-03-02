@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -49,6 +50,8 @@ public class ProductController {
 		return new ResponseEntity<String>("상품 등록 완료.", HttpStatus.OK);
 	}
 	
+	
+	
 	/*
 	 * 페이지 호출
 	 */
@@ -64,4 +67,15 @@ public class ProductController {
 		return new ModelAndView("product/newProduct");
 	}
 	
+	@GetMapping("/{prdtId}")
+	public ModelAndView getProduct(@PathVariable("prdtId") String prdtId, Model model) {
+		ProductVO selectedProduct = productService.getProductById(prdtId);
+		model.addAttribute("product", selectedProduct);
+		return new ModelAndView("product/productDetail");
+	}
+	
+	@GetMapping("/shop")
+	public ModelAndView myShop() {
+		return new ModelAndView("product/shop");
+	}
 }

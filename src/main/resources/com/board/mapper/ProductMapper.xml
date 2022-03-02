@@ -57,49 +57,56 @@
 		)
 	</insert>
 	
-	<select id="getProductById" parameterType="String" resultType="com.board.domain.ProductVO">
+	<select id="getProductById" parameterType="String" resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
 		SELECT
-			product_id,
-			account_id,
-			product_name, 
-			product_price, 
-			product_category,
-			product_info, 
-			product_condition, 
-			product_is_tradeable,
-			product_reg_date,
-			product_update_date,
-			product_is_delivery_free,
-			product_like_cnt,
-			product_trade_loc,
-			product_trade_status
-		FROM
-			product
-		WHERE account_id = #{accountId}
+			a.product_id,
+			a.account_id,
+			a.product_name, 
+			a.product_price, 
+			a.product_category,
+			a.product_info, 
+			a.product_condition, 
+			a.product_is_tradeable,
+			a.product_reg_date,
+			a.product_update_date,
+			a.product_is_delivery_free,
+			a.product_like_cnt,
+			a.product_trade_loc,
+			a.product_trade_status,
+			b.file_name,
+			b.file_path
+		FROM 
+			product a LEFT OUTER JOIN image_file b
+		ON
+			a.product_id = b.product_id
+		WHERE 
+			a.product_id = #{prdtId}
 	</select>
 	
 	<select id="getProductList" resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
 		SELECT
-				a.product_id,
-				a.account_id,
-				a.product_name, 
-				a.product_price, 
-				a.product_category,
-				a.product_info, 
-				a.product_condition, 
-				a.product_is_tradeable,
-				a.product_reg_date,
-				a.product_update_date,
-				a.product_is_delivery_free,
-				a.product_like_cnt,
-				a.product_trade_loc,
-				a.product_trade_status,
-				b.file_name,
-				b.file_path
-			FROM 
-				product a LEFT OUTER JOIN image_file b
-			ON
-				a.product_id = b.product_id
+			a.product_id,
+			a.account_id,
+			a.product_name, 
+			a.product_price, 
+			a.product_category,
+			a.product_info, 
+			a.product_condition, 
+			a.product_is_tradeable,
+			a.product_reg_date,
+			a.product_update_date,
+			a.product_is_delivery_free,
+			a.product_like_cnt,
+			a.product_trade_loc,
+			a.product_trade_status,
+			b.file_name,
+			b.file_path
+		FROM 
+			product a LEFT OUTER JOIN image_file b
+		ON
+			a.product_id = b.product_id
+		ORDER BY 
+			a.product_reg_date
 	</select>
 	
 	<delete id="deleteProduct">

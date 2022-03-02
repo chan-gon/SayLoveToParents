@@ -16,7 +16,7 @@ public class ProductVO {
 	private final String prdtId;
 	private final String accountId;
 	private final String prdtName;
-	private final int prdtPrice;
+	private final String prdtPrice;
 	private final String prdtCategory;
 	private final String prdtInfo;
 	private final String prdtCondition;

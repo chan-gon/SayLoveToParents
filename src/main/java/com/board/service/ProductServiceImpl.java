@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductVO> getProductById(String accountId) {
+	public ProductVO getProductById(String accountId) {
 		return productMapper.getProductById(accountId);
 	}
 
