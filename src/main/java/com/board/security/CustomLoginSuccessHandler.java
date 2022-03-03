@@ -11,10 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-/*
- * Spring Security를 통한 로그인 성공 이후의 동작을 제어하는 클래스
- */
-
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
 	private final String DEFAULT_LOGIN_SUCCESS_URL = "/";
@@ -22,9 +18,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-
 		clearAuthenticationAttributes(request);
-
 		response.sendRedirect(DEFAULT_LOGIN_SUCCESS_URL);
 	}
 
