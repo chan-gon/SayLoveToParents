@@ -73,4 +73,14 @@ public class ProductServiceImpl implements ProductService {
 		return productMapper.getProductList();
 	}
 
+	@Override
+	public void likeProuct(String prdtId) {
+		productMapper.likeProuct(prdtId);
+	}
+
+	@Override
+	public void unlikeProuct(String prdtId) {
+		productMapper.unlikeProuct(prdtId);
+	}
+
 }

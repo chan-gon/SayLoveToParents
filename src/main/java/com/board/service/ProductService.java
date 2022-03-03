@@ -13,4 +13,8 @@ public interface ProductService {
 	List<ProductVO> getProductList();
 
 	void addNewProduct(String userId, ProductVO product, List<MultipartFile> productImage);
+
+	void likeProuct(String prdtId);
+
+	void unlikeProuct(String prdtId);
 }

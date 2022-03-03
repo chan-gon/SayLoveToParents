@@ -14,4 +14,7 @@ public interface ProductMapper {
 
 	void deleteProduct(ProductVO product);
 
+	void likeProuct(String prdtId);
+	
+	void unlikeProuct(String prdtId);
 }

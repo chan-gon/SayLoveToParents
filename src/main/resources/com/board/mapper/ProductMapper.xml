@@ -109,10 +109,22 @@
 			a.product_reg_date
 	</select>
 	
+	<update id="likeProuct">
+		UPDATE product
+		SET product_like_cnt = product_like_cnt+1
+		WHERE product_id = #{prdtId}
+	</update>
+	
+	<update id="unlikeProuct">
+		UPDATE product
+		SET product_like_cnt = product_like_cnt-1
+		WHERE product_id = #{prdtId}
+	</update>
+	
 	<delete id="deleteProduct">
 		DELETE FROM product
 		WHERE account_id = #{accountId}
 		AND product_id = #{prdtId}
 	</delete>
-
+	
 </mapper>

@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.board.domain.ImageVO;
 import com.board.domain.ProductVO;
 import com.board.domain.UserVO;
 import com.board.exception.InvalidValueException;
 import com.board.exception.UserNotExistsException;
+import com.board.service.ImageService;
 import com.board.service.ProductService;
 import com.board.service.UserService;
 
@@ -35,6 +37,8 @@ public class ProductController {
 	
 	private final ProductService productService;
 	
+	private final ImageService imageService;
+	
 	/*
 	 * 비즈니스 로직
 	 */
@@ -50,7 +54,25 @@ public class ProductController {
 		return new ResponseEntity<String>("상품 등록 완료.", HttpStatus.OK);
 	}
 	
+	@PostMapping(value = "/like/{prdtId}", produces = "application/text; charset=UTF-8")
+	public ResponseEntity<String> likeProduct(@PathVariable("prdtId") String prdtId) {
+		try {
+			productService.likeProuct(prdtId);
+		} catch (InvalidValueException e) {
+			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요.", HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<String>("찜하기 완료.", HttpStatus.OK);
+	}
 	
+	@PostMapping(value = "/unlike/{prdtId}", produces = "application/text; charset=UTF-8")
+	public ResponseEntity<String> unlikeProduct(@PathVariable("prdtId") String prdtId) {
+		try {
+			productService.unlikeProuct(prdtId);
+		} catch (InvalidValueException e) {
+			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요.", HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<String>("찜하기 취소 완료.", HttpStatus.OK);
+	}
 	
 	/*
 	 * 페이지 호출
@@ -70,6 +92,8 @@ public class ProductController {
 	@GetMapping("/{prdtId}")
 	public ModelAndView getProduct(@PathVariable("prdtId") String prdtId, Model model) {
 		ProductVO selectedProduct = productService.getProductById(prdtId);
+		List<ImageVO> productImages = imageService.getImagesById(prdtId);
+		model.addAttribute("images", productImages);
 		model.addAttribute("product", selectedProduct);
 		return new ModelAndView("product/productDetail");
 	}
