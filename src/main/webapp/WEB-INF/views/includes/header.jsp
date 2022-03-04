@@ -82,13 +82,11 @@
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                     
+	                    <sec:authorize access="isAuthenticated()">
 	                        <li><a href="/products/shop"><i class="fa fa-gear fa-fw"></i>내상점</a>
 	                        </li>
-	                        
 	                        <li><a href="/products/new"><i class="fa fa-gear fa-fw"></i>판매하기</a>
 	                        </li>
-	                        
-	                    <sec:authorize access="isAuthenticated()">
 	                        <li><a href="/users/profile"><i class="fa fa-user fa-fw"></i>회원정보 수정</a>
 	                        </li>
 	                    </sec:authorize>
