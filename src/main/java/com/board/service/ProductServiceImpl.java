@@ -114,13 +114,17 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	@Transactional
 	public void deleteProduct(Principal principal, String prdtId) {
+		try {
 			String userId = principal.getName();
 			String accountId = userMapper.getAccountId(userId);
-			imageMapper.deleteImages(prdtId);
 			List<ImageVO> localImages = imageMapper.getImagesById(prdtId);
 			for (int i = 0; i < localImages.size(); i++) {
 				FileUtils.deleteImages(localImages.get(i));
 			}
+			imageMapper.deleteImages(prdtId);
 			productMapper.deleteProduct(accountId, prdtId);
+		} catch (RuntimeException e) {
+			throw new DeleteProductException(ProductExceptionMessage.DELETE_FAIL);
+		}
 	}
 }
