@@ -45,8 +45,8 @@
 	}
 	
 	div.gallery img {
-		width: 100%;
-		height: auto;
+		width: 179px;
+		height: 220px;
 	}
 	
 	div.desc {
@@ -82,7 +82,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                     
-	                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>내상점</a>
+	                        <li><a href="/products/shop"><i class="fa fa-gear fa-fw"></i>내상점</a>
 	                        </li>
 	                        
 	                        <li><a href="/products/new"><i class="fa fa-gear fa-fw"></i>판매하기</a>

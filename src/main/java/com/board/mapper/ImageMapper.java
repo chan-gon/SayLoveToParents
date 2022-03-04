@@ -9,5 +9,7 @@ public interface ImageMapper {
 	void addImages(ImageVO image);
 
 	List<ImageVO> getImagesById(String prdtId);
+	
+	void deleteImages(String prdtId);
 
 }

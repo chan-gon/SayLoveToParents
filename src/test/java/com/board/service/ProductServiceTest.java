@@ -23,19 +23,6 @@ public class ProductServiceTest {
 	
 	public ProductVO testProduct;
 	
-	@Before
-	public void setup() {
-		testProduct = ProductVO.builder()
-				.prdtName("test")
-				.prdtPrice(777)
-				.prdtCategory("신발")
-				.prdtInfo("test")
-				.prdtCondition("새상품")
-				.prdtIsTradeable("교환불가")
-				.prdtIsDeliveryFree("배송비포함")
-				.prdtTradeLoc("하와이")
-				.build();
-	}
 	
 
 }
