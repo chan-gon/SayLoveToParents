@@ -2,6 +2,8 @@ package com.board.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.board.domain.ProductVO;
 
 public interface ProductMapper {
@@ -14,7 +16,7 @@ public interface ProductMapper {
 
 	void addNewProduct(ProductVO product);
 
-	void deleteProduct(String accountId, String prdtId);
+	void deleteProduct(@Param("accountId") String accountId, @Param("prdtId") String prdtId);
 
 	void likeProuct(String prdtId);
 	

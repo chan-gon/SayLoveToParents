@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,14 +42,9 @@ public class ProductController {
 	 */
 	
 	@PostMapping("/new")
-	public ResponseEntity<String> addNewProduct(@RequestPart List<MultipartFile> productImage,
+	public void addNewProduct(@RequestPart List<MultipartFile> productImage,
 			@RequestPart ProductVO product, @RequestPart UserVO user) {
-		try {
-			productService.addNewProduct(user.getUserId(), product, productImage);
-		} catch (IllegalArgumentException e) {
-			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요.", HttpStatus.CONFLICT);
-		}
-		return new ResponseEntity<String>("상품 등록 완료.", HttpStatus.OK);
+		productService.addNewProduct(user.getUserId(), product, productImage);
 	}
 	
 	@PostMapping(value = "/like/{prdtId}", produces = "application/text; charset=UTF-8")
@@ -73,14 +67,9 @@ public class ProductController {
 		return new ResponseEntity<String>("찜하기 취소 완료.", HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/delete/{prdtId}")
-	public ResponseEntity<String> deleteProduct(@PathVariable("prdtId") String prdtId, Principal principal) {
-		try {
-			productService.deleteProduct(principal, prdtId);
-		} catch (IllegalArgumentException e) {
-			return new ResponseEntity<String>("에러 발생. 다시 요청해주세요.", HttpStatus.CONFLICT);
-		}
-		return new ResponseEntity<String>("삭제 완료.", HttpStatus.OK);
+	@PostMapping("/delete/{prdtId}")
+	public void deleteProduct(@PathVariable("prdtId") String prdtId, Principal principal) {
+		productService.deleteProduct(principal, prdtId);
 	}
 	
 	/*

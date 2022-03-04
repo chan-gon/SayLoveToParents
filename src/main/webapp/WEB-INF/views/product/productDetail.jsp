@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,13 +83,15 @@ p {
 		<form method="post">
 		<p>
 			<input type="text" hidden="hidden" id="prdtId" name="prdtId" value="<c:out value='${product.prdtId}'/>" >
-			<c:if test="${product.prdtLikeCnt == 0 }">
-				<button type="button" id="likeBtn">찜하기</button>
-			</c:if>
-			<c:if test="${product.prdtLikeCnt > 0 }">
-				<button type="button" id="unlikeBtn">찜하기 취소</button>
-			</c:if>
-			<button type="button">연락하기</button>
+			<sec:authorize access="isAuthenticated()" >
+				<c:if test="${product.prdtLikeCnt == 0 }">
+					<button type="button" id="likeBtn">찜하기</button>
+				</c:if>
+				<c:if test="${product.prdtLikeCnt > 0 }">
+					<button type="button" id="unlikeBtn">찜하기 취소</button>
+				</c:if>
+				<button type="button">연락하기</button>
+			</sec:authorize>
 		</p>
 		</form>
 	</div>
