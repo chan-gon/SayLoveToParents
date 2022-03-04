@@ -26,5 +26,10 @@
 		WHERE 
 			a.product_id = #{prdtId}
 	</select>
+	
+	<delete id="deleteImages">
+		DELETE FROM image_file
+		WHERE product_id = #{prdtId}
+	</delete>
 
 </mapper>

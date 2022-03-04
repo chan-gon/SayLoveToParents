@@ -9,10 +9,12 @@ public interface ProductMapper {
 	ProductVO getProductById(String prdtId);
 
 	List<ProductVO> getProductList();
+	
+	List<ProductVO> getProductListById(String accountId);
 
 	void addNewProduct(ProductVO product);
 
-	void deleteProduct(ProductVO product);
+	void deleteProduct(String accountId, String prdtId);
 
 	void likeProuct(String prdtId);
 	

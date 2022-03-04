@@ -1,5 +1,6 @@
 package com.board.service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -83,4 +84,23 @@ public class ProductServiceImpl implements ProductService {
 		productMapper.unlikeProuct(prdtId);
 	}
 
+	@Override
+	public List<ProductVO> getProductListById(Principal principal) {
+		String userId = principal.getName();
+		String accountId = userMapper.getAccountId(userId);
+		return productMapper.getProductListById(accountId);
+	}
+
+	@Override
+	@Transactional
+	public void deleteProduct(Principal principal, String prdtId) {
+		String userId = principal.getName();
+		String accountId = userMapper.getAccountId(userId);
+		productMapper.deleteProduct(accountId, prdtId);
+		imageMapper.deleteImages(prdtId);
+		List<ImageVO> localImages = imageMapper.getImagesById(prdtId);
+		for (int i = 0; i < localImages.size(); i++) {
+			FileUtils.deleteImages(localImages.get(i));
+		}
+	}
 }

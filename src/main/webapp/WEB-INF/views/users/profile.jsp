@@ -84,10 +84,10 @@
 					data: JSON.stringify(formData),
 					contentType: "application/json; charset=utf8",
 					success: function(data) {
-						alert(data);
+						alert("수정 완료.");
 					},
 					error: function(xhr) {
-						alert(xhr.responseText);
+						alert("에러 발생. 다시 요청해주세요.");
 					}
 				});
 			}

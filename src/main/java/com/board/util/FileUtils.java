@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.domain.ImageVO;
 import com.board.exception.ImageUploadFailException;
 
 public class FileUtils {
@@ -40,6 +41,13 @@ public class FileUtils {
 		} catch (IOException e) {
 			throw new ImageUploadFailException("에러 발생. 다시 요청해주세요.");
 		} 
+	}
+
+	public static void deleteImages(ImageVO imageVO) {
+		File file = new File(DEFAULT_FILE_PATH + "\\" + imageVO.getFileName());
+		if (file.exists()) {
+			file.delete();
+		} 			
 	}
 
 }

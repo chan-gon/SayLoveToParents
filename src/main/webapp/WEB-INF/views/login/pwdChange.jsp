@@ -82,11 +82,11 @@
 						contentType : 'application/json',
 						data : JSON.stringify(formData),
 						success : function(data) {
-							alert(data);
+							alert("비밀번호 변경 완료");
 							location.href = "/";
 						},
 						error : function(xhr, status, error) {
-							alert(error);
+							alert("에러 발생. 다시 요청해주세요.");
 						}
 					});
 				});

@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>중고거래사이트</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/resources/js/product/productDetail/css/style.css">
@@ -13,150 +15,46 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-6 text-center mb-4">
-					<h2 class="heading-section">Table #06</h2>
+					<h2 class="heading-section">내상점</h2>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<h3 class="h5 mb-4 text-center">Table Accordion</h3>
+					<h3 class="h5 mb-4 text-center">등록된 상품</h3>
 					<div class="table-wrap">
 						<table class="table">
 							<thead class="thead-primary">
 								<tr>
-									<th>&nbsp;</th>
-									<th>&nbsp;</th>
-									<th>Product</th>
-									<th>Price</th>
-									<th>Quantity</th>
-									<th>total</th>
-									<th>&nbsp;</th>
+									<th>사진</th>
+									<th>이름</th>
+									<th>가격</th>
+									<th>등록일</th>
+									<th>상태</th>
+									<th>삭제</th>
 								</tr>
 							</thead>
 							<tbody>
+							<c:forEach var="product" items="${products }">
 								<tr class="alert" role="alert">
-									<td><label class="checkbox-wrap checkbox-primary"> <input type="checkbox" checked> <span class="checkmark"></span>
-									</label></td>
 									<td>
-										<div class="img" style="background-image: url(images/product-1.png);"></div>
+										<div class="img" style="background-image: url(/productImages/${product.imageVO.fileName });"></div>
 									</td>
 									<td>
 										<div class="email">
-											<span>Sneakers Shoes 2020 For Men </span> <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>
+											<c:out value="${product.prdtName }" />
 										</div>
 									</td>
-									<td>$44.99</td>
-									<td class="quantity">
-										<div class="input-group">
-											<input type="text" name="quantity" class="quantity form-control input-number" value="2" min="1" max="100">
-										</div>
-									</td>
-									<td>$89.98</td>
+									<td><c:out value="${product.prdtPrice }" /> </td>
+									<td><fmt:formatDate value="${product.prdtRegDate }" pattern="yyyy-MM-dd" /></td>
 									<td>
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-											<span aria-hidden="true"><i class="fa fa-close"></i></span>
-										</button>
+										<c:out value="${product.prdtTradeStatus }" />
+									</td>
+									<td>
+										<button type="button" id="deleteBtn">삭제</button>
+										<button type="button" id="updateBtn">수정</button>
 									</td>
 								</tr>
-
-								<tr class="alert" role="alert">
-									<td><label class="checkbox-wrap checkbox-primary"> <input type="checkbox"> <span class="checkmark"></span>
-									</label></td>
-									<td>
-										<div class="img" style="background-image: url(images/product-2.png);"></div>
-									</td>
-									<td>
-										<div class="email">
-											<span>Sneakers Shoes 2020 For Men </span> <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>
-										</div>
-									</td>
-									<td>$30.99</td>
-									<td class="quantity">
-										<div class="input-group">
-											<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-										</div>
-									</td>
-									<td>$30.99</td>
-									<td>
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-											<span aria-hidden="true"><i class="fa fa-close"></i></span>
-										</button>
-									</td>
-								</tr>
-
-								<tr class="alert" role="alert">
-									<td><label class="checkbox-wrap checkbox-primary"> <input type="checkbox"> <span class="checkmark"></span>
-									</label></td>
-									<td>
-										<div class="img" style="background-image: url(images/product-3.png);"></div>
-									</td>
-									<td>
-										<div class="email">
-											<span>Sneakers Shoes 2020 For Men </span> <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>
-										</div>
-									</td>
-									<td>$35.50</td>
-									<td class="quantity">
-										<div class="input-group">
-											<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-										</div>
-									</td>
-									<td>$35.50</td>
-									<td>
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-											<span aria-hidden="true"><i class="fa fa-close"></i></span>
-										</button>
-									</td>
-								</tr>
-
-								<tr class="alert" role="alert">
-									<td><label class="checkbox-wrap checkbox-primary"> <input type="checkbox"> <span class="checkmark"></span>
-									</label></td>
-									<td>
-										<div class="img" style="background-image: url(images/product-4.png);"></div>
-									</td>
-									<td>
-										<div class="email">
-											<span>Sneakers Shoes 2020 For Men </span> <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>
-										</div>
-									</td>
-									<td>$76.99</td>
-									<td class="quantity">
-										<div class="input-group">
-											<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-										</div>
-									</td>
-									<td>$76.99</td>
-									<td>
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-											<span aria-hidden="true"><i class="fa fa-close"></i></span>
-										</button>
-									</td>
-								</tr>
-
-								<tr class="alert" role="alert">
-									<td class="border-bottom-0"><label class="checkbox-wrap checkbox-primary"> <input type="checkbox"> <span class="checkmark"></span>
-									</label></td>
-									<td class="border-bottom-0">
-										<div class="img" style="background-image: url(images/product-1.png);"></div>
-									</td>
-									<td class="border-bottom-0">
-										<div class="email">
-											<span>Sneakers Shoes 2020 For Men </span> <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>
-										</div>
-									</td>
-									<td class="border-bottom-0">$40.00</td>
-									<td class="quantity border-bottom-0">
-										<div class="input-group">
-											<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-										</div>
-									</td>
-									<td class="border-bottom-0">$40.00</td>
-									<td class="border-bottom-0">
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-											<span aria-hidden="true"><i class="fa fa-close"></i></span>
-										</button>
-									</td>
-								</tr>
+							</c:forEach>
 							</tbody>
 						</table>
 					</div>
@@ -169,5 +67,14 @@
 	<script src="/resources/js/product/productDetail/js/popper.js"></script>
 	<script src="/resources/js/product/productDetail/js/bootstrap.min.js"></script>
 	<script src="/resources/js/product/productDetail/js/main.js"></script>
+	<script type="text/javascript">
+		$("#deleteBtn").on("click", function() {
+			console.log('click')
+		});
+		
+		$("#updateBtn").on("click", function() {
+			console.log('click')
+		});
+	</script>
 </body>
 </html>

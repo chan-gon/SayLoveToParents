@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>중고거래사이트</title>
 <!-- Bootstrap Core CSS -->
 <link href="/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
@@ -75,7 +75,7 @@ p {
 		<p>배송비: <c:out value="${product.prdtIsDeliveryFree }" /></p>
 		<p>거래지역: <c:out value="${product.prdtTradeLoc }" /></p>
 		<p>상품정보</p>
-		<textarea rows="5" id="prdtInfo" name="prdtInfo" class="form-control" style="resize: none; !important:text-align: left;">
+		<textarea rows="5" id="prdtInfo" name="prdtInfo" class="form-control" readonly="readonly" style="resize: none; !important:text-align: left;">
 			<c:out value="${product.prdtInfo }" />
 		</textarea>
 		<br>

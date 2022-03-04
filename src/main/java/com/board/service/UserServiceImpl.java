@@ -4,9 +4,12 @@ import org.springframework.stereotype.Service;
 
 import com.board.domain.UserVO;
 import com.board.exception.EmailAlreadyExistsException;
-import com.board.exception.InvalidValueException;
 import com.board.exception.UserAlreadyExistsException;
-import com.board.exception.UserNotExistsException;
+import com.board.exception.user.DeleteUserException;
+import com.board.exception.user.InsertUserException;
+import com.board.exception.user.UpdateUserException;
+import com.board.exception.user.UserExceptionMessage;
+import com.board.exception.user.UserNotFoundException;
 import com.board.mapper.UserMapper;
 import com.board.util.PasswordEncryptor;
 
@@ -27,10 +30,6 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class UserServiceImpl implements UserService {
 
-	private static final String INVALID_VALUE_MSG = "올바르지 않은 값입니다. 다시 입력해주세요.";
-	private static final String NOT_EXISTS_MSG = "존재하지 않는 사용자입니다.";
-	private static final String USER_EXISTS_MSG = "이미 존재하는 사용자입니다.";
-	
 	private static final String EXISTED = "EXISTED";
 	private static final String INVALID = "INVALID";
 
@@ -40,7 +39,7 @@ public class UserServiceImpl implements UserService {
 	public void signUpUser(UserVO user) {
 
 		if (userMapper.isExistUserId(user.getUserId()).equals(EXISTED)) {
-			throw new UserAlreadyExistsException(USER_EXISTS_MSG);
+			throw new InsertUserException(UserExceptionMessage.INSERT_FAIL);
 		}
 
 		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
@@ -78,32 +77,26 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void isValidIdAndEmail(String userId, String userEmail) {
 		if (userMapper.isValidIdAndEmail(userId, userEmail).equals(INVALID)) {
-			throw new UserNotExistsException(NOT_EXISTS_MSG);
+			throw new UserNotFoundException(UserExceptionMessage.NOT_FOUND);
 		}
 	}
 
 	@Override
 	public void deleteUser(String inputPwd, UserVO currentUser) {
-
-		if (currentUser == null) {
-			throw new UserNotExistsException(NOT_EXISTS_MSG);
-		}
-
 		boolean isValidPassword = PasswordEncryptor.isMatch(inputPwd, currentUser.getUserPwd());
-
 		if (!isValidPassword) {
-			throw new InvalidValueException(INVALID_VALUE_MSG);
+			throw new DeleteUserException(UserExceptionMessage.DELETE_FAIL);
 		}
-
 		userMapper.deleteUser(currentUser.getUserId());
 	}
 
 	@Override
 	public String getIdByNameAndPhone(UserVO user) {
-		if (user == null) {
-			throw new InvalidValueException(INVALID_VALUE_MSG);
+		try {
+			return userMapper.getIdByNameAndPhone(user);
+		} catch (RuntimeException e) {
+			throw new UserNotFoundException(UserExceptionMessage.NOT_FOUND);
 		}
-		return userMapper.getIdByNameAndPhone(user);
 	}
 
 	/**
@@ -114,39 +107,42 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public void changeUserPwd(UserVO user) {
-		if (user == null) {
-			throw new InvalidValueException(INVALID_VALUE_MSG);
+		try {
+			UserVO newUser = userMapper.getUserById(user.getUserId());
+			String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
+			UserVO changeUser = UserVO.builder()
+					.accountId(newUser.getAccountId())
+					.userPwd(encodedPwd)
+					.build();
+			userMapper.changeUserPwd(changeUser);
+		} catch (RuntimeException e) {
+			throw new UpdateUserException(UserExceptionMessage.PWD_UPDATE_FAIL);
 		}
-		UserVO newUser = userMapper.getUserById(user.getUserId());
-		if (newUser == null) {
-			throw new UserNotExistsException(NOT_EXISTS_MSG);
-		}
-		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
-		UserVO changeUser = UserVO.builder()
-				.accountId(newUser.getAccountId())
-				.userPwd(encodedPwd)
-				.build();
-		userMapper.changeUserPwd(changeUser);
 	}
 
 	@Override
 	public void changeUserProfile(UserVO user) {
-		String accountId = userMapper.getAccountId(user.getUserId());
-		UserVO editUser = UserVO.builder()
-				.accountId(accountId)
-				.userEmail(user.getUserEmail())
-				.userPhone(user.getUserPhone())
-				.userAddr(user.getUserAddr())
-				.build();
-		userMapper.changeUserProfile(editUser);
+		try {
+			String accountId = userMapper.getAccountId(user.getUserId());
+			UserVO editUser = UserVO.builder()
+					.accountId(accountId)
+					.userEmail(user.getUserEmail())
+					.userPhone(user.getUserPhone())
+					.userAddr(user.getUserAddr())
+					.build();
+			userMapper.changeUserProfile(editUser);
+		} catch (RuntimeException e) {
+			throw new UpdateUserException(UserExceptionMessage.UPDATE_FAIL);
+		}
 	}
 
 	@Override
 	public UserVO getUserById(String userId) {
-		if (userId == null) {
-			throw new InvalidValueException(INVALID_VALUE_MSG);
+		try {
+			return userMapper.getUserById(userId);
+		} catch (RuntimeException e) {
+			throw new UserNotFoundException(UserExceptionMessage.NOT_FOUND);
 		}
-		return userMapper.getUserById(userId);
 	}
 
 }
