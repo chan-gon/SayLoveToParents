@@ -18,12 +18,12 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
-		
+		System.err.println("!!!!!!!!!!!!!!!!!!!!!!!");
 		if (accessDeniedException instanceof AccessDeniedException) {
 			request.setAttribute("ERROR_MSG", "접근 권한이 없는 사용자");
 		}
 		
-		request.getRequestDispatcher("/login/accessDenied").forward(request, response);
+		request.getRequestDispatcher("error/403").forward(request, response);
 	}
 
 }

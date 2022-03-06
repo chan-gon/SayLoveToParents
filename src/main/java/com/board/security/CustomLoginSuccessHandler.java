@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
-	private final String DEFAULT_LOGIN_SUCCESS_URL = "/";
+	private final String DEFAULT_LOGIN_SUCCESS_URL = "/main";
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
