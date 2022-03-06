@@ -96,4 +96,9 @@ public class ProductController {
 		model.addAttribute("products", productList);
 		return new ModelAndView("product/shop");
 	}
+	
+	@GetMapping("/update")
+	public ModelAndView productUpdate() {
+		return new ModelAndView("product/update");
+	}
 }

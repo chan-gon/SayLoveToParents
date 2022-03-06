@@ -46,9 +46,9 @@
 		</div>
 
 		<div class="form-group row">
-			<label class="col-sm-2" for="prdtName">제목</label>
+			<label class="col-sm-2" for="prdtName">상품명</label>
 			<div class="com-sm-3">
-				<input type="text" id="prdtName" name="prdtName" class="form-control"><span><span id="nameCnt">
+				<input type="text" id="prdtName" name="prdtName" class="form-control">
 			</div>
 		</div>
 

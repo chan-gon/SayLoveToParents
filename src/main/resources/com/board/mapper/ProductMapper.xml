@@ -165,4 +165,9 @@
 		AND product_id = #{prdtId}
 	</delete>
 	
+	<update id="updateProduct">
+		UPDATE product
+		SET 
+	</update>
+	
 </mapper>

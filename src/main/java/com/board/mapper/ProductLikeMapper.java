@@ -4,6 +4,6 @@ import com.board.domain.ProductLikeVO;
 
 public interface ProductLikeMapper {
 	
-	ProductLikeVO isLikedOrNot(String prdtId);
+	ProductLikeVO isLikedOrNot(ProductLikeVO productLike);
 
 }
