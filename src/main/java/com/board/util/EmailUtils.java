@@ -5,7 +5,8 @@ import java.util.Random;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
-import com.board.exception.EmailCannotSendException;
+import com.board.exception.user.UserExceptionMessage;
+import com.board.exception.user.UserExistsException;
 
 public class EmailUtils {
 
@@ -28,8 +29,8 @@ public class EmailUtils {
 			email.setSubject("비밀번호 재설정을 위한 인증번호 입니다.");
 			email.setMsg("[인증번호] " + certNum + " 입니다. \n 인증번호 확인란에 기입해주십시오.");
 			email.send();
-		} catch (EmailCannotSendException e) {
-			e.printStackTrace();
+		} catch (UserExistsException e) {
+			throw new UserExistsException(UserExceptionMessage.ALREADY_EXISTS);
 		}
 	}
 
