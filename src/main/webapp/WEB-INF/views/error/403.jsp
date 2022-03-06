@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>500</title>
+<title>403</title>
 <!-- Google font -->
 <link href="https://fonts.googleapis.com/css?family=Quicksand:700" rel="stylesheet">
 
@@ -21,8 +21,8 @@
 				<div></div>
 				<div></div>
 			</div>
-			<h1>페이지 오류 안내</h1>
-			<h2>홈페이지 이용에 불편을 드려 죄송합니다.</h2>
+			<h1>웹 페이지를 볼 수 있는 권한이 없습니다.</h1>
+			<h2>서비스를 이용하려면 로그인해야 합니다.</h2>
 			<a href="/main">MAIN</a>
 			<a href="javascript:history.back()">BACK</a>
 		</div>
