@@ -1,75 +1,87 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+#backLink {
+	margin: 10px 0 0 10px;
+	display: block;
+}
+</style>
+<!-- Bootstrap Core CSS -->
+<link href="/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-<%@ include file="../includes/header.jsp"%>
+<!-- MetisMenu CSS -->
+<link href="/resources/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
 
+<!-- DataTables CSS -->
+<link href="/resources/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
 
-       <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">회원가입</h1>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <form id="signUpForm" role="form" method="post">
-                                    <input type="hidden" id="idCheckResult" value="0">
-                                    <input type="hidden" id="emailCheckResult" value="0">
-                                        <div class="form-group input-group">
-                                            <input class="form-control" placeholder="아이디" type="text" id="userId" name="userId" autofocus>
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-default" type="button" id="checkUserId"><i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <input class="form-control" placeholder="비밀번호" type="password" id="userPwd" name="userPwd">
-                                        </div>
-                                        <div class="form-group">
-                                            <input class="form-control" placeholder="이름" type="text" id="userName" name="userName">
-                                        </div>
-                                        <div class="form-group input-group">
-                                            <input class="form-control" placeholder="이메일" type="text" id="userEmail" name="userEmail">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-default" type="button" id="checkUserEmail"><i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <input class="form-control" placeholder="연락처" type="text" id="userPhone" name="userPhone">
-                                        </div>
-                                        <div class="form-group input-group">
-                                            <input class="form-control" placeholder="주소" type="text" id="userAddr" name="userAddr">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-default" type="button" id="findAddr"><i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                        <button type="button" id="submitBtn" class="btn btn-success">회원가입</button>
-                                    </form>
-                                </div>
-                                <!-- /.col-lg-6 (nested) -->
-                                <!-- /.col-lg-6 (nested) -->
-                            </div>
-                            <!-- /.row (nested) -->
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-        <!-- /#page-wrapper -->
+<!-- DataTables Responsive CSS -->
+<link href="/resources/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
 
-    <!-- /#wrapper -->
+<!-- Custom CSS -->
+<link href="/resources/dist/css/sb-admin-2.css" rel="stylesheet">
 
+<!-- Custom Fonts -->
+<link href="/resources/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<a href="javascript:history.back()" id="backLink">BACK</a>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="login-panel panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">회원가입</h3>
+					</div>
+					<div class="panel-body">
+						<form id="signUpForm" role="form" method="post">
+							<input type="hidden" id="idCheckResult" value="0"> <input type="hidden" id="emailCheckResult" value="0">
+							<fieldset>
+								<div class="form-group input-group">
+									<input class="form-control" placeholder="아이디" type="text" id="userId" name="userId" autofocus> <span class="input-group-btn">
+										<button class="btn btn-default" type="button" id="checkUserId">
+											<i class="fa fa-search"></i>
+										</button>
+									</span>
+								</div>
+								<div class="form-group">
+									<input class="form-control" placeholder="비밀번호" type="password" id="userPwd" name="userPwd">
+								</div>
+								<div class="form-group">
+									<input class="form-control" placeholder="이름" type="text" id="userName" name="userName">
+								</div>
+								<div class="form-group input-group">
+									<input class="form-control" placeholder="이메일" type="text" id="userEmail" name="userEmail"> <span class="input-group-btn">
+										<button class="btn btn-default" type="button" id="checkUserEmail">
+											<i class="fa fa-search"></i>
+										</button>
+									</span>
+								</div>
+								<div class="form-group">
+									<input class="form-control" placeholder="연락처" type="text" id="userPhone" name="userPhone">
+								</div>
+								<div class="form-group input-group">
+									<input class="form-control" placeholder="주소" type="text" id="userAddr" name="userAddr"> <span class="input-group-btn">
+										<button class="btn btn-default" type="button" id="findAddr">
+											<i class="fa fa-search"></i>
+										</button>
+									</span>
+								</div>
+								<button type="button" id="submitBtn" class="btn btn-success">회원가입</button>
+
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
 
 	// 아이디/이메일 중복체크 실행 여부 확인값 초기화
@@ -127,7 +139,7 @@
 				// 전화번호 체크
 				var phoneCheck = /^[0-9]{3}[0-9]{4}[0-9]{4}$/;
 				if (!phoneCheck.test(userPhone.value)) {
-					alert("전화번호는 숫자만 가능합니다.");
+					alert("전화번호 입력 양식을 지켜주세요.\n - 숫자만 입력 \n - 010-{4자리 숫자}-{4자리 숫자}");
 					userPhone.focus();
 					isSignable = false;
 					return false;
@@ -246,5 +258,5 @@
 	});
 	
 </script>
-
-<%@ include file="../includes/footer.jsp"%>
+</body>
+</html>

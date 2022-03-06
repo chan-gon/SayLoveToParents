@@ -49,7 +49,7 @@
 	
 	var homeBtn = document.getElementById('homeBtn');
 		homeBtn.addEventListener('click', function() {
-		location.href = "/";
+		location.href = "/main";
 	});
 	
 	$(function() {
