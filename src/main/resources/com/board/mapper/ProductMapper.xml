@@ -149,6 +149,16 @@
 		WHERE product_id = #{prdtId}
 	</update>
 	
+	<insert id="addLikeProduct">
+		INSERT INTO product_like(product_id, account_id, create_date)
+		VALUES(#{prdtId}, #{accountId}, sysdate)
+	</insert>
+	
+	<delete id="deleteLikeProduct">
+		DELETE FROM product_like
+		WHERE product_id = #{prdtId} AND account_id = #{accountId}
+	</delete>
+	
 	<delete id="deleteProduct">
 		DELETE FROM product
 		WHERE account_id = #{accountId}

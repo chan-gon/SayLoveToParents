@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,13 +83,15 @@ p {
 		<form method="post">
 		<p>
 			<input type="text" hidden="hidden" id="prdtId" name="prdtId" value="<c:out value='${product.prdtId}'/>" >
-			<c:if test="${product.prdtLikeCnt == 0 }">
-				<button type="button" id="likeBtn">찜하기</button>
-			</c:if>
-			<c:if test="${product.prdtLikeCnt > 0 }">
-				<button type="button" id="unlikeBtn">찜하기 취소</button>
-			</c:if>
-			<button type="button">연락하기</button>
+			<sec:authorize access="isAuthenticated()" >
+				<c:if test="${empty productLike }">
+					<button type="button" id="likeBtn">찜하기</button>
+				</c:if>
+				<c:if test="${not empty productLike }">
+					<button type="button" id="unlikeBtn">찜하기 취소</button>
+				</c:if>
+				<button type="button">연락하기</button>
+			</sec:authorize>
 		</p>
 		</form>
 	</div>
@@ -107,12 +110,12 @@ p {
 			type: "post",
 			url: "/products/like/"+prdtId,
 			success: function(data){
-				alert(data);
+				alert("찜하기 완료.");
 				likeBtn.text("찜하기 취소");
 				likeBtn.attr("id", "unlikeBtn");
 			},
 			error: function(e) {
-				alert(e.responseText);
+				alert("에러 발생. 다시 요청해주세요.");
 			}
 		});
 	});
@@ -125,12 +128,12 @@ p {
 			type: "post",
 			url: "/products/unlike/"+prdtId,
 			success: function(data){
-				alert(data);
+				alert("찜하기 취소 완료.");
 				unlikeBtn.text("찜하기");
 				unlikeBtn.attr("id", "likeBtn");
 			},
 			error: function(e) {
-				alert(e.responseText);
+				alert("에러 발생. 다시 요청해주세요.");
 			}
 		});
 	});

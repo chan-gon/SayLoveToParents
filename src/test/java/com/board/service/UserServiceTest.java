@@ -14,10 +14,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.board.domain.UserVO;
-import com.board.exception.EmailAlreadyExistsException;
-import com.board.exception.InvalidValueException;
-import com.board.exception.UserAlreadyExistsException;
-import com.board.exception.UserNotExistsException;
+import com.board.exception.user.UpdateUserException;
+import com.board.exception.user.UserExistsException;
+import com.board.exception.user.UserNotFoundException;
 import com.board.util.PasswordEncryptor;
 
 /*
@@ -77,8 +76,7 @@ public class UserServiceTest {
 	
 	@Test
 	public void 회원가입_테스트_실패() {
-		exceptionRule.expect(UserAlreadyExistsException.class);
-		exceptionRule.expectMessage("사용자 중복 에러. 동일한 값을 가진 사용자가 존재합니다.");
+		exceptionRule.expect(UserExistsException.class);
 		userService.signUpUser(testUser);
 	}
 	
@@ -95,8 +93,7 @@ public class UserServiceTest {
 	 */
 	@Test
 	public void 아이디_중복_확인_테스트_성공() {
-		exceptionRule.expect(UserAlreadyExistsException.class);
-		exceptionRule.expectMessage("(" + testUser.getUserId() + ")는 이미 존재하는 아이디입니다.");
+		exceptionRule.expect(UserExistsException.class);
 		userService.isExistUserId(testUser.getUserId());
 	}
 	
@@ -107,16 +104,15 @@ public class UserServiceTest {
 	
 	@Test
 	public void 이메일_중복_확인_테스트_성공() {
-		exceptionRule.expect(EmailAlreadyExistsException.class);
-		exceptionRule.expectMessage("(" + testUser.getUserEmail() + ")는 이미 존재하는 이메일입니다.");
+		exceptionRule.expect(UserExistsException.class);
 		userService.isExistUserEmail(testUser.getUserEmail());
 	}
 	
 	@Test
 	public void 아이디_찾기_테스트_실패() {
-		exceptionRule.expect(InvalidValueException.class);
-		exceptionRule.expectMessage("올바르지 않은 값입니다. 다시 입력해주세요.");
-		String id = userService.getIdByNameAndPhone(null);
+		exceptionRule.expect(UserNotFoundException.class);
+		exceptionRule.expectMessage("사용자 조회에 실패했습니다.");
+		String id = userService.getIdByNameAndPhone(testUser);
 		assertNull(id);
 	}
 	
@@ -128,8 +124,8 @@ public class UserServiceTest {
 	
 	@Test
 	public void 비밀번호_변경_테스트_실패() {
-		exceptionRule.expect(UserNotExistsException.class);
-		exceptionRule.expectMessage("존재하지 않는 사용자입니다.");
+		exceptionRule.expect(UpdateUserException.class);
+		exceptionRule.expectMessage("비밀번호 변경에 실패했습니다.");
 		UserVO user = UserVO.builder()
 				.accountId("none")
 				.userId(NOT_EXIST_ID)
@@ -178,5 +174,4 @@ public class UserServiceTest {
 	public void 회원_탈퇴_테스트() {
 		userService.deleteUser(TEST_PWD, testUser);
 	}
-	
 }

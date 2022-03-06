@@ -1,5 +1,7 @@
 package com.board.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,6 +21,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.board.domain.UserVO;
+import com.board.exception.user.InsertUserException;
+import com.board.exception.user.UserExistsException;
+import com.board.exception.user.UserNotFoundException;
 import com.board.util.PasswordEncryptor;
 import com.google.gson.Gson;
 
@@ -58,11 +63,9 @@ public class UserControllerTest {
 	@Test
 	public void 회원가입_테스트_실패() throws Exception {
 		String jsonStr = new Gson().toJson(testUser);
-		
-		mockMvc.perform(post("/users")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonStr))
-				.andExpect(status().isConflict());
+
+		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+				.andExpect(result -> assertTrue(result.getResolvedException() instanceof InsertUserException));
 	}
 	
 	@Test
@@ -72,7 +75,7 @@ public class UserControllerTest {
 		mockMvc.perform(post("/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonStr))
-				.andExpect(status().isCreated());
+				.andExpect(status().isOk());
 	}
 	
 	@Test
@@ -90,7 +93,7 @@ public class UserControllerTest {
 				.param("userId", testUser.getUserId())
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isConflict());
+				.andExpect(result -> assertTrue(result.getResolvedException() instanceof UserExistsException));
 	}
 	
 	@Test
@@ -110,7 +113,7 @@ public class UserControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
-				.andExpect(status().isConflict());
+				.andExpect(result -> assertTrue(result.getResolvedException() instanceof UserExistsException));
 	}
 	
 	@Test
@@ -123,17 +126,11 @@ public class UserControllerTest {
 				.content(jsonStr1))
 				.andDo(print())
 				.andExpect(status().isOk());
-		
-		// 실패
-		String jsonStr2 = new Gson().toJson(null);
-		
-		mockMvc.perform(post("/users/help/id")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonStr2))
-				.andDo(print())
-				.andExpect(status().isBadRequest());
 	}
 	
+	/*
+	 * 사용자 테스트는 필수 구현이 마감된 이후 진행 예정
+	 */
 	@Test
 	public void 사용자_탈퇴_테스트() throws Exception {
 		// 실패
@@ -156,4 +153,5 @@ public class UserControllerTest {
 				.andDo(print())
 				.andExpect(status().isOk());
 	}
+	
 }

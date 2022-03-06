@@ -11,7 +11,7 @@ import com.board.exception.ImageUploadFailException;
 
 public class FileUtils {
 	
-	private static final String DEFAULT_FILE_PATH = "C:/joonggo_market/images";
+	private static final String DEFAULT_FILE_PATH = "C:\\joonggo_market\\images";
 	
 	public static String getFileName(MultipartFile multipartFile) {
 		StringBuilder builder = new StringBuilder();

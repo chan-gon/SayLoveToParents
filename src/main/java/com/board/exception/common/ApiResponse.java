@@ -1,4 +1,4 @@
-package com.board.common;
+package com.board.exception.common;
 
 import org.springframework.http.HttpStatus;
 

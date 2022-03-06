@@ -50,8 +50,11 @@
 										<c:out value="${product.prdtTradeStatus }" />
 									</td>
 									<td>
-										<button type="button" id="deleteBtn">삭제</button>
+									<form method="post">
+										<input hidden="hidden" type="text" id="prdtId" name="prdtId" value="<c:out value="${product.prdtId }" />" >
+										<button type="button" id="deleteBtn" onclick="deleteProduct(this)">삭제</button>
 										<button type="button" id="updateBtn">수정</button>
+									</form>
 									</td>
 								</tr>
 							</c:forEach>
@@ -68,9 +71,23 @@
 	<script src="/resources/js/product/productDetail/js/bootstrap.min.js"></script>
 	<script src="/resources/js/product/productDetail/js/main.js"></script>
 	<script type="text/javascript">
-		$("#deleteBtn").on("click", function() {
-			console.log('click')
-		});
+		function deleteProduct(e) {
+			var result = confirm("해당 상품을 삭제하시겠습니까?");
+			if (result) {
+				var prdtId = $(e).prev("input").val();
+				$.ajax({
+					type: "post",
+					url: "/products/delete/"+prdtId,
+					success: function(data) {
+						alert("삭제 완료");
+						location.reload();
+					},
+					error: function(e) {
+						alert("에러 발생. 다시 요청해주세요.");
+					}
+				});
+			}
+		}
 		
 		$("#updateBtn").on("click", function() {
 			console.log('click')

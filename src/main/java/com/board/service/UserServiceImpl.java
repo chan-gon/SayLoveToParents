@@ -3,12 +3,11 @@ package com.board.service;
 import org.springframework.stereotype.Service;
 
 import com.board.domain.UserVO;
-import com.board.exception.EmailAlreadyExistsException;
-import com.board.exception.UserAlreadyExistsException;
 import com.board.exception.user.DeleteUserException;
 import com.board.exception.user.InsertUserException;
 import com.board.exception.user.UpdateUserException;
 import com.board.exception.user.UserExceptionMessage;
+import com.board.exception.user.UserExistsException;
 import com.board.exception.user.UserNotFoundException;
 import com.board.mapper.UserMapper;
 import com.board.util.PasswordEncryptor;
@@ -59,14 +58,14 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void isExistUserId(String userId) {
 		if (userMapper.isExistUserId(userId).equals(EXISTED)) {
-			throw new UserAlreadyExistsException(String.format("(%s)는 이미 존재하는 아이디입니다.", userId));
+			throw new UserExistsException(UserExceptionMessage.ALREADY_EXISTS);
 		}
 	}
 
 	@Override
 	public void isExistUserEmail(String userEmail) {
 		if (userMapper.isExistUserEmail(userEmail).equals(EXISTED)) {
-			throw new EmailAlreadyExistsException(String.format("(%s)는 이미 존재하는 이메일입니다.", userEmail));
+			throw new UserExistsException(UserExceptionMessage.ALREADY_EXISTS);
 		}
 	}
 	
@@ -92,11 +91,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String getIdByNameAndPhone(UserVO user) {
-		try {
-			return userMapper.getIdByNameAndPhone(user);
-		} catch (RuntimeException e) {
+		String findUserId = userMapper.getIdByNameAndPhone(user);
+		if (findUserId == null) {
 			throw new UserNotFoundException(UserExceptionMessage.NOT_FOUND);
 		}
+		return findUserId;
 	}
 
 	/**

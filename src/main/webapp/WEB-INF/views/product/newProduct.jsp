@@ -196,11 +196,11 @@ $("#uploadBtn").on("click", function(e) {
 				Accept: "text/html; charset=utf-8"
 			},
 			success: function(data) {
-				alert(data);
-				location.href = "/";
+				alert("상품 등록 완료.");
+				location.href = "/main";
 			},
 			error: function(e) {
-				alert(e.responseText);
+				alert("에러 발생. 다시 요청해주세요.");
 			}
 		});
 	}
