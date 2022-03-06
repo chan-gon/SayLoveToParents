@@ -1,6 +1,5 @@
 package com.board.service;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,10 +14,12 @@ import com.board.exception.product.DeleteProductException;
 import com.board.exception.product.InsertProductException;
 import com.board.exception.product.ProductExceptionMessage;
 import com.board.exception.product.ProductNotFoundException;
+import com.board.exception.product.UpdateProductException;
 import com.board.mapper.ImageMapper;
 import com.board.mapper.ProductMapper;
 import com.board.mapper.UserMapper;
 import com.board.util.FileUtils;
+import com.board.util.LoginUserUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -34,6 +35,11 @@ public class ProductServiceImpl implements ProductService {
 	
 	private final ImageMapper imageMapper;
 	
+	/**
+	 * 	파일 등록 작업에 productId가 사용되기 때문에 테이블 PK인 productId의 난수값 생성을 
+	 * 	DB 내부가 아닌 비즈니스 로직에서 생성하도록 했다.
+	 *	
+	 */
 	@Override
 	@Transactional
 	public void addNewProduct(String userId, ProductVO product, List<MultipartFile> productImage) {
@@ -91,19 +97,43 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	@Transactional
 	public void likeProuct(String prdtId) {
-		productMapper.likeProuct(prdtId);
-	}
-
-	@Override
-	public void unlikeProuct(String prdtId) {
-		productMapper.unlikeProuct(prdtId);
-	}
-
-	@Override
-	public List<ProductVO> getProductListById(Principal principal) {
 		try {
-			String userId = principal.getName();
+			String currentUserId = LoginUserUtils.getUserId();
+			String accountId = userMapper.getAccountId(currentUserId);
+			ProductVO addLikeProduct = ProductVO.builder()
+					.prdtId(prdtId)
+					.accountId(accountId)
+					.build();
+			productMapper.likeProuct(prdtId);
+			productMapper.addLikeProduct(addLikeProduct);
+		} catch (RuntimeException e) {
+			throw new UpdateProductException(ProductExceptionMessage.UPDATE_FAIL);
+		}
+	}
+
+	@Override
+	@Transactional
+	public void unlikeProuct(String prdtId) {
+		try {
+			String currentUserId = LoginUserUtils.getUserId();
+			String accountId = userMapper.getAccountId(currentUserId);
+			ProductVO deleteLikeProduct = ProductVO.builder()
+					.prdtId(prdtId)
+					.accountId(accountId)
+					.build();
+			productMapper.unlikeProuct(prdtId);
+			productMapper.deleteLikeProduct(deleteLikeProduct);
+		} catch (RuntimeException e) {
+			throw new UpdateProductException(ProductExceptionMessage.UPDATE_FAIL);
+		}
+	}
+
+	@Override
+	public List<ProductVO> getProductListById() {
+		try {
+			String userId = LoginUserUtils.getUserId();
 			String accountId = userMapper.getAccountId(userId);
 			return productMapper.getProductListById(accountId);
 		} catch (RuntimeException e) {
@@ -113,9 +143,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional
-	public void deleteProduct(Principal principal, String prdtId) {
+	public void deleteProduct(String prdtId) {
 		try {
-			String userId = principal.getName();
+			String userId = LoginUserUtils.getUserId();
 			String accountId = userMapper.getAccountId(userId);
 			List<ImageVO> localImages = imageMapper.getImagesById(prdtId);
 			for (int i = 0; i < localImages.size(); i++) {
@@ -127,4 +157,5 @@ public class ProductServiceImpl implements ProductService {
 			throw new DeleteProductException(ProductExceptionMessage.DELETE_FAIL);
 		}
 	}
+
 }
