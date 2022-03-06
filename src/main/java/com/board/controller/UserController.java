@@ -138,4 +138,9 @@ public class UserController {
 			throw new NullPointerException();
 		}
 	}
+	
+	@GetMapping("/accessdenied")
+	public ModelAndView accessDeniedErrorPage() {
+		return new ModelAndView("error/403");
+	}
 }
