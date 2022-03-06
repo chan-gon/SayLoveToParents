@@ -197,7 +197,7 @@ $("#uploadBtn").on("click", function(e) {
 			},
 			success: function(data) {
 				alert("상품 등록 완료.");
-				location.href = "/";
+				location.href = "/main";
 			},
 			error: function(e) {
 				alert("에러 발생. 다시 요청해주세요.");
