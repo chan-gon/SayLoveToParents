@@ -26,4 +26,6 @@ public interface ProductMapper {
 	
 	void deleteLikeProduct(ProductVO product);
 	
+	void updateProduct(ProductVO product);
+	
 }
