@@ -60,20 +60,20 @@
 					<option>남성의류</option>
 					<option>신발</option>
 					<option>가방</option>
-					<option>시계/쥬얼리</option>
-					<option>패션 액세서리</option>
-					<option>디지털/가전</option>
-					<option>스포츠/레저</option>
-					<option>차량/오토바이</option>
+					<option>시계</option>
+					<option>패션액세서리</option>
+					<option>디지털</option>
+					<option>스포츠</option>
+					<option>차량</option>
 					<option>스타굿즈</option>
 					<option>키덜트</option>
-					<option>음반/악기</option>
-					<option>도서/티켓/문구</option>
-					<option>뷰티/미용</option>
-					<option>가구/인테리어</option>
-					<option>생활/가공식품</option>
+					<option>음반</option>
+					<option>도서</option>
+					<option>뷰티</option>
+					<option>가구</option>
+					<option>생활</option>
 					<option>반려동물용품</option>
-					<option>유아동/출산</option>
+					<option>유아동</option>
 				</select>
 			</div>
 		</div>
