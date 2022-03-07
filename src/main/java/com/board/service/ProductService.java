@@ -22,4 +22,6 @@ public interface ProductService {
 
 	void deleteProduct(String prdtId);
 	
+	void updateProduct(ProductVO product, List<MultipartFile> productImage);
+	
 }

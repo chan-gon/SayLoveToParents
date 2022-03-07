@@ -64,6 +64,12 @@ public class ProductController {
 		productService.deleteProduct(prdtId);
 	}
 	
+	@PostMapping("/update/{prdtId}")
+	public void updateProduct(@PathVariable("prdtId") String prdtId, @RequestPart List<MultipartFile> productImage,
+			@RequestPart ProductVO product) {
+		productService.updateProduct(product, productImage);
+	}
+	
 	/*
 	 * 페이지 호출
 	 */
@@ -95,5 +101,12 @@ public class ProductController {
 		List<ProductVO> productList = productService.getProductListById();
 		model.addAttribute("products", productList);
 		return new ModelAndView("product/shop");
+	}
+	
+	@GetMapping("/update/{prdtId}")
+	public ModelAndView productUpdate(@PathVariable("prdtId") String prdtId, Model model) {
+		ProductVO product = productService.getProductById(prdtId);
+		model.addAttribute("product", product);
+		return new ModelAndView("product/update");
 	}
 }

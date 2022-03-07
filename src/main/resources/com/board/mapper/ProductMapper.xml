@@ -165,4 +165,18 @@
 		AND product_id = #{prdtId}
 	</delete>
 	
+	<update id="updateProduct">
+		UPDATE product
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="prdtName != null">product_name = #{prdtName},</if>
+			<if test="prdtCategory != null">product_category = #{prdtCategory},</if>
+			<if test="prdtTradeLoc != null">product_trade_loc = #{prdtTradeLoc},</if>
+			<if test="prdtCondition != null">product_condition = #{prdtCondition},</if>
+			<if test="prdtIsTradeable != null">product_is_tradeable = #{prdtIsTradeable},</if>
+			<if test="prdtIsDeliveryFree != null">product_is_delivery_free = #{prdtIsDeliveryFree},</if>
+			<if test="prdtInfo != null">product_info = #{prdtInfo}</if>
+		</trim>
+		WHERE product_id = #{prdtId} 
+	</update>
+	
 </mapper>

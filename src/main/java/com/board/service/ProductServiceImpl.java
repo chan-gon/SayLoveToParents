@@ -158,4 +158,42 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
+	@Override
+	public void updateProduct(ProductVO product, List<MultipartFile> productImage) {
+		ProductVO updateProduct = ProductVO.builder()
+				.prdtId(product.getPrdtId())
+				.prdtName(product.getPrdtName())
+				.prdtCategory(product.getPrdtCategory())
+				.prdtTradeLoc(product.getPrdtTradeLoc())
+				.prdtCondition(product.getPrdtCondition())
+				.prdtIsTradeable(product.getPrdtIsTradeable())
+				.prdtIsDeliveryFree(product.getPrdtIsDeliveryFree())
+				.prdtInfo(product.getPrdtInfo())
+				.build();
+		productMapper.updateProduct(updateProduct);
+		
+		String prdtId = product.getPrdtId();
+		if (!productImage.isEmpty()) {
+			// 이미지 삭제
+			List<ImageVO> localImages = imageMapper.getImagesById(prdtId);
+			for (int i = 0; i < localImages.size(); i++) {
+				FileUtils.deleteImages(localImages.get(i));
+			}
+			imageMapper.deleteImages(prdtId);
+			
+			// 업데이트 이미지 등록
+			for (int i = 0; i < productImage.size(); i++) {
+				String filePath = FileUtils.getFilePath();
+				String fileName = FileUtils.getFileName(productImage.get(i));
+				FileUtils.saveImages(filePath, fileName, productImage.get(i));
+				ImageVO newImage = ImageVO.builder()
+						.prdtId(prdtId)
+						.fileName(fileName)
+						.filePath(filePath)
+						.build();
+				imageMapper.addImages(newImage);
+			}
+		}
+	}
+
 }

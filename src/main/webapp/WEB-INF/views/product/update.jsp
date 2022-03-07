@@ -27,13 +27,13 @@
 
 <div class="jumbotron">
 	<div class="container">
-		<h1 class="display-3">상품 등록</h1>
+		<h1 class="display-3">상품 수정</h1>
 	</div>
 </div>
 
 <div class="container">
 	<form id="newProductForm" name="newProductForm" action="./processAddProduct.jsp" class="form-horizontal" method="post" enctype="multipart/form-data">
-	<input type="text" hidden="hidden" id="userId" name="userId" value='<c:out value="${users.userId }" />' >
+		<input hidden="hidden" id="prdtId" name="prdtId" value="<c:out value="${product.prdtId }" />">
 		<div class="form-group row">
 			<div id='image_preview'>
 				<h5>
@@ -46,34 +46,35 @@
 		</div>
 
 		<div class="form-group row">
-			<label class="col-sm-2" for="prdtName">상품명</label>
+			<label class="col-sm-2" for="prdtName">제목</label>
 			<div class="com-sm-3">
-				<input type="text" id="prdtName" name="prdtName" class="form-control">
+				<input type="text" id="prdtName" name="prdtName" class="form-control" value="<c:out value="${product.prdtName }" />">
 			</div>
 		</div>
 
 		<div class="form-group row">
 			<label class="col-sm-2" for="prdtCategory">카테고리</label>
+			<input hidden="hidden" id="categoryValue" name="categoryValue" value="<c:out value="${product.prdtCategory }" />">
 			<div class="com-sm-3">
 				<select class="form-control" id="prdtCategory" name="prdtCategory">
-					<option>여성의류</option>
-					<option>남성의류</option>
-					<option>신발</option>
-					<option>가방</option>
-					<option>시계</option>
-					<option>패션액세서리</option>
-					<option>디지털</option>
-					<option>스포츠</option>
-					<option>차량</option>
-					<option>스타굿즈</option>
-					<option>키덜트</option>
-					<option>음반</option>
-					<option>도서</option>
-					<option>뷰티</option>
-					<option>가구</option>
-					<option>생활</option>
-					<option>반려동물용품</option>
-					<option>유아동</option>
+					<option value="여성의류">여성의류</option>
+					<option value="남성의류">남성의류</option>
+					<option value="신발">신발</option>
+					<option value="가방">가방</option>
+					<option value="쥬얼리">쥬얼리</option>
+					<option value="패션액세서리">패션액세서리</option>
+					<option value="디지털">디지털</option>
+					<option value="스포츠">스포츠</option>
+					<option value="차량">차량</option>
+					<option value="스타굿즈">스타굿즈</option>
+					<option value="키덜트">키덜트</option>
+					<option value="음반/악기">음반</option>
+					<option value="도서">도서</option>
+					<option value="뷰티">뷰티</option>
+					<option value="가구">가구</option>
+					<option value="생활">생활</option>
+					<option value="반려동물용품">반려동물용품</option>
+					<option value="유아동">유아동</option>
 				</select>
 			</div>
 		</div>
@@ -81,31 +82,34 @@
 		<div class="form-group row">
 			<label class="col-sm-2" for="prdtTradeLoc">거래지역</label>
 			<div class="com-sm-3">
-				<input type="text" id="prdtTradeLoc" name="prdtTradeLoc" class="form-control">
+				<input type="text" id="prdtTradeLoc" name="prdtTradeLoc" class="form-control" value="<c:out value="${product.prdtTradeLoc }" />" >
 			</div>
 		</div>
 
 		<div class="form-group row">
 			<label class="col-sm-2" for="prdtCondition">상태</label>
-			<div class="com-sm-5">
-				<input type="radio" id="prdtCondition" name="prdtCondition" value="중고" checked="checked"> 중고상품
+			<input hidden="hidden" id="conditionValue" name="conditionValue" value="<c:out value="${product.prdtCondition }" />">
+			<div class="com-sm-5" id="conditionDiv">
+				<input type="radio" id="prdtCondition" name="prdtCondition" value="중고상품"> 중고상품
 				<input type="radio" id="prdtCondition" name="prdtCondition" value="새상품"> 새상품
 			</div>
 		</div>
 
 		<div class="form-group row">
 			<label class="col-sm-2" for="prdtIsTradeable">교환</label>
-			<div class="com-sm-5">
-				<input type="radio" id="prdtIsTradeable" name="prdtIsTradeable" value="교환불가" checked="checked"> 교환불가 
+			<input hidden="hidden" id="tradeableValue" name="tradeableValue" value="<c:out value="${product.prdtIsTradeable }" />">
+			<div class="com-sm-5" id="tradeableDiv">
+				<input type="radio" id="prdtIsTradeable" name="prdtIsTradeable" value="교환불가"> 교환불가 
 				<input type="radio" id="prdtIsTradeable" name="prdtIsTradeable" value="교환가능"> 교환가능
 			</div>
 		</div>
 
 		<div class="form-group row">
 			<label class="col-sm-2" for="prdtPrice">가격</label>
-			<div class="com-sm-3">
-				<input type="text" id="prdtPrice" name="prdtPrice" class="form-control" onkeyup="convertNum(this);"> 
-				<input type="radio" id="prdtIsDeliveryFree" name="prdtIsDeliveryFree" value="배송비포함" checked="checked"> 배송비포함 
+			<input hidden="hidden" id="deliveryValue" name="deliveryValue" value="<c:out value="${product.prdtIsDeliveryFree }" />">
+			<div class="com-sm-3" id="deliveryFreeDiv">
+				<input type="text" id="prdtPrice" name="prdtPrice" class="form-control" onkeyup="convertNum(this);" value="<c:out value="${product.prdtPrice }" />"> 
+				<input type="radio" id="prdtIsDeliveryFree" name="prdtIsDeliveryFree" value="배송비포함"> 배송비포함 
 				<input type="radio" id="prdtIsDeliveryFree" name="prdtIsDeliveryFree" value="배송비별도"> 배송비별도
 			</div>
 		</div>
@@ -113,13 +117,13 @@
 		<div class="form-group row">
 			<label class="col-sm-2" for="prdtInfo">설명</label>
 			<div class="com-sm-3">
-				<textarea rows="5" id="prdtInfo" name="prdtInfo" class="form-control" style="resize: none"></textarea>
+				<textarea rows="5" id="prdtInfo" name="prdtInfo" class="form-control" style="resize: none">${product.prdtInfo }</textarea>
 			</div>
 		</div>
 
 		<div class="form-group row">
 			<div class="col-sm-offset-2 col-sm-10">
-				<input type="button" id="uploadBtn" class="btn btn-primary pull-right" value="등록">
+				<input type="button" id="uploadBtn" class="btn btn-primary pull-right" value="수정">
 			</div>
 		</div>
 	</form>
@@ -129,6 +133,49 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="/resources/js/product/image-load.js"></script>
 <script type="text/javascript">
+
+// 가져온 상품의 카테고리/상태/교환여부/배송비포함여부 세팅 함수
+setSelectValue();
+setConditionValue();
+setTradeableValue();
+setDeliveryFreeValue();
+
+// 카테고리 세팅
+function setSelectValue() {
+	var categoryVal = $("#categoryValue").val();
+	$("#prdtCategory option[value=" + categoryVal + "]").attr('selected','selected')
+}
+
+// 상태 세팅
+function setConditionValue() {
+	var conditionVal = $("#conditionValue").val();
+	document.querySelectorAll('#prdtCondition').forEach((e) => {
+		if (e.value == conditionVal) {
+			e.checked = true;
+		}
+	})
+}
+
+// 교환여부 세팅
+function setTradeableValue() {
+	var tradeableVal = $("#tradeableValue").val();
+	document.querySelectorAll('#prdtIsTradeable').forEach((e) => {
+		if (e.value == tradeableVal) {
+			e.checked = true;
+		}
+	})
+}
+
+// 배송비포함여부 세팅
+function setDeliveryFreeValue() {
+	var deliveryFreeVal = $("#deliveryValue").val();
+	document.querySelectorAll('#prdtIsDeliveryFree').forEach((e) => {
+		if (e.value == deliveryFreeVal) {
+			e.checked = true;
+		}
+	})
+}
+
 
 var regex = new RegExp("(.*?)\(exe|sh|zip|alz|webp|svg)$");
 var maxSize = 5242880;
@@ -149,7 +196,7 @@ function checkExtension(fileName, fileSize) {
 $("#uploadBtn").on("click", function(e) {
 	var flag = false;
 	
-	if (isImageNull() == false || isTextNull() == false || isTextAreaNull() == false) {
+	if (isTextNull() == false || isTextAreaNull() == false || isPrdtNameIsLong() == false) {
 		flag = false;
 	} else {
 		flag = true;
@@ -158,14 +205,15 @@ $("#uploadBtn").on("click", function(e) {
 	
 	if (flag) {
 		let inputData1 = {
+				"prdtId" : $("#prdtId").val(),
 				"prdtName" : $("#prdtName").val(),
 				"prdtCategory" : $("#prdtCategory").val(),
 				"prdtTradeLoc" : $("#prdtTradeLoc").val(),
-				"prdtCondition" : $("#prdtCondition").val(),
-				"prdtIsTradeable" : $("#prdtIsTradeable").val(),
+				"prdtCondition" : $("input[name=prdtCondition]:checked").val(),
+				"prdtIsTradeable" : $("input[name=prdtIsTradeable]:checked").val(),
 				"prdtPrice" : $("#prdtPrice").val(),
 				"prdtInfo" : $("#prdtInfo").val(),
-				"prdtIsDeliveryFree" : $("#prdtIsDeliveryFree").val()
+				"prdtIsDeliveryFree" : $("input[name=prdtIsDeliveryFree]:checked").val()
 		}
 		
 		let inputData2 = {
@@ -186,9 +234,10 @@ $("#uploadBtn").on("click", function(e) {
 		formData.append("product", new Blob([JSON.stringify(inputData1)], {type: "application/json"}));
 		formData.append("user", new Blob([JSON.stringify(inputData2)], {type: "application/json"}));
 		
+		var prdtId = $("#prdtId").val();
 		$.ajax({
 			type: "post",
-			url: "/products/new",
+			url: "/products/update/"+prdtId,
 			processData: false,
 			contentType: false,
 			data: formData,
@@ -196,8 +245,8 @@ $("#uploadBtn").on("click", function(e) {
 				Accept: "text/html; charset=utf-8"
 			},
 			success: function(data) {
-				alert("상품 등록 완료.");
-				location.href = "/main";
+				alert("상품 수정 완료.");
+				history.back();
 			},
 			error: function(e) {
 				alert("에러 발생. 다시 요청해주세요.");
@@ -205,16 +254,6 @@ $("#uploadBtn").on("click", function(e) {
 		});
 	}
 });
-
-function isImageNull() {
-	var inputFile = $("#att_zone")[0].childNodes.length;
-	if (inputFile == 0) {
-		alert("상품 사진을 등록해주세요.");
-		return false;
-	} else {
-		return true;
-	}
-}
 
 function isTextNull() {
 	var txtElements = $("#newProductForm input[type=text]");
@@ -233,6 +272,17 @@ function isTextAreaNull() {
 	var info = $("#prdtInfo")[0].value.length;
 	if (info === 0) {
 		alert("상품 정보를 입력해주세요.");
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function isPrdtNameIsLong() {
+	var prdtNameCnt = $('#prdtName').val().length;
+	if (prdtNameCnt > 20) {
+		alert("상품명은 20글자 이내로 작성해주세요.");
+		$('#prdtName').focus();
 		return false;
 	} else {
 		return true;
@@ -260,6 +310,7 @@ function uncomma(str) {
     str = String(str);
     return str.replace(/[^\d]+/g, '');
 }
+
 </script>
 
 <%@ include file="../includes/footer.jsp"%>

@@ -37,7 +37,7 @@
 		margin: 5px;
 		border: 1px solid #ccc;
 		float: left;
-		width: 180px;
+		width: 210px;
 	}
 	
 	div.gallery:hover {
@@ -45,12 +45,12 @@
 	}
 	
 	div.gallery img {
-		width: 179px;
+		width: 208px;
 		height: 220px;
 	}
 	
 	div.desc {
-		padding: 15px;
+		padding: 15px 0;
 		text-align: center;
 	}
 	</style>
@@ -70,7 +70,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">중고거래사이트</a>
+                <a class="navbar-brand" href="/main">중고거래사이트</a>
             </div>
             <!-- /.navbar-header -->
 

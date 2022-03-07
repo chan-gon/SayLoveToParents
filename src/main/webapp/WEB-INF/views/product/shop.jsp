@@ -9,6 +9,17 @@
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/resources/js/product/productDetail/css/style.css">
+<style>
+#backLink {
+	margin: 10px 0 0 10px;
+	display: block;
+}
+#backLink:hover {
+  color: red;
+  background-color: transparent;
+  text-decoration: underline;
+}
+</style>
 </head>
 <body>
 	<section class="ftco-section">
@@ -53,7 +64,7 @@
 									<form method="post">
 										<input hidden="hidden" type="text" id="prdtId" name="prdtId" value="<c:out value="${product.prdtId }" />" >
 										<button type="button" id="deleteBtn" onclick="deleteProduct(this)">삭제</button>
-										<button type="button" id="updateBtn">수정</button>
+										<button type="button" id="updateBtn" onclick="updateProduct(this)">수정</button>
 									</form>
 									</td>
 								</tr>
@@ -62,6 +73,7 @@
 						</table>
 					</div>
 				</div>
+				<a href="javascript:history.back()" id="backLink">BACK</a>
 			</div>
 		</div>
 	</section>
@@ -89,9 +101,10 @@
 			}
 		}
 		
-		$("#updateBtn").on("click", function() {
-			console.log('click')
-		});
+		function updateProduct(e) {
+			var prdtId = $(e).prev().prev().val();
+			location.href = "/products/update/"+prdtId;
+		}
 	</script>
 </body>
 </html>
