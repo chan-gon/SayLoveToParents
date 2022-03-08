@@ -7,101 +7,91 @@
 <head>
 <meta charset="UTF-8">
 <title>중고거래사이트</title>
-<!-- Bootstrap Core CSS -->
-<link href="/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/resources/product/productDetail/css/productDetail.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
-<style>
-.card {
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-	max-width: 300px;
-	margin: auto;
-	text-align: left;
-	font-family: arial;
-}
-
-.price {
-	color: grey;
-	font-size: 22px;
-}
-
-.card button {
-	border: none;
-	outline: 0;
-	padding: 12px;
-	color: white;
-	background-color: #000;
-	text-align: center;
-	cursor: pointer;
-	width: 100%;
-	font-size: 18px;
-}
-
-.card button:hover {
-	opacity: 0.7;
-}
-
-img {
-	width: 210px;
-	height: 180px;
-	display: block;
-	margin: auto;
-}
-
-p {
-	margin: 0 0 0 5px;
-	padding: 10px 0 0 0;
-}
-</style>
 </head>
 <body>
-	<div class="card">
-
-		<div class="slider">
-			<c:forEach var="image" items="${images }">
-				<div>
-					<img src="/productImages/${image.fileName }">
-				</div>
-			</c:forEach>
+	<main class="container">
+	<input type="text" hidden="hidden" id="prdtId" name="prdtId" value="<c:out value='${product.prdtId}'/>" >
+		<!-- Left Column / Headphones Image -->
+		<div class="left-column">
+			<div class="slider">
+				<c:forEach var="image" items="${images }">
+					<div>
+						<img src="/productImages/${image.fileName }">
+					</div>
+				</c:forEach>
+			</div>
 		</div>
-		<hr>
-		
-		<h1>${product.prdtName }</h1>
-		<p class="price"><c:out value="${product.prdtPrice }" />원</p>
-		<p>등록일: <fmt:formatDate value="${product.prdtRegDate }" pattern="yyyy-MM-dd" /></p>
-		<p>찜한개수: <c:out value="${product.prdtLikeCnt }" /></p>
-		<p>상품상태: <c:out value="${product.prdtCondition }" /></p>
-		<p>교환여부: <c:out value="${product.prdtIsTradeable }" /></p>
-		<p>배송비: <c:out value="${product.prdtIsDeliveryFree }" /></p>
-		<p>거래지역: <c:out value="${product.prdtTradeLoc }" /></p>
-		<p>상품정보</p>
-		<textarea rows="5" id="prdtInfo" name="prdtInfo" class="form-control" readonly="readonly" style="resize: none; !important:text-align: left;">
-			<c:out value="${product.prdtInfo }" />
-		</textarea>
-		<br>
-		<form method="post">
-		<p>
-			<input type="text" hidden="hidden" id="prdtId" name="prdtId" value="<c:out value='${product.prdtId}'/>" >
-			<sec:authorize access="isAuthenticated()" >
-				<c:if test="${empty productLike }">
-					<button type="button" id="likeBtn">찜하기</button>
-				</c:if>
-				<c:if test="${not empty productLike }">
-					<button type="button" id="unlikeBtn">찜하기 취소</button>
-				</c:if>
-				<button type="button">연락하기</button>
-			</sec:authorize>
-		</p>
-		</form>
-	</div>
+		<!-- Right Column -->
+		<div class="right-column">
 
-<script type="text/javascript">
+			<!-- Product Description -->
+			<div class="product-description">
+				<h1>
+					<c:out value="${product.prdtName }" />
+				</h1>
+				<p>
+					<c:out value="${product.prdtInfo }" />
+				</p>
+			</div>
+
+			<div class="product-configuration">
+				<div class="product-color">
+					<span>등록일: </span>
+					<fmt:formatDate value="${product.prdtRegDate }" pattern="yyyy-MM-dd" />
+				</div>
+				<div class="product-color">
+					<span>찜한개수: </span>
+					<c:out value="${product.prdtLikeCnt }" />
+				</div>
+				<div class="product-color">
+					<span>상품상태: </span>
+					<c:out value="${product.prdtCondition }" />
+				</div>
+				<div class="product-color">
+					<span>교환여부: </span>
+					<c:out value="${product.prdtIsTradeable }" />
+				</div>
+				<div class="product-color">
+					<span>배송비: </span>
+					<c:out value="${product.prdtIsDeliveryFree }" />
+				</div>
+				<div class="product-color">
+					<span>거래지역: </span>
+					<c:out value="${product.prdtTradeLoc }" />
+				</div>
+
+				<div class="cable-config">
+					<div class="cable-choose">
+						<sec:authorize access="isAuthenticated()">
+							<c:if test="${empty productLike }">
+								<button type="button" id="likeBtn">찜하기</button>
+							</c:if>
+							<c:if test="${not empty productLike }">
+								<button type="button" id="unlikeBtn">찜하기 취소</button>
+							</c:if>
+							<button type="button">연락하기</button>
+						</sec:authorize>
+					</div>
+				</div>
+			</div>
+
+			<!-- Product Pricing -->
+			<div class="product-price">
+				<span><c:out value="${product.prdtPrice }" />원</span>
+			</div>
+		</div>
+	</main>
+
+
+	<script type="text/javascript">
 	// Image Slider
 	$(document).ready(function() {
 		$('.slider').bxSlider();
 	});
-	
 	$(document).on("click", "#likeBtn", function(e) {
 		e.preventDefault();
 		var prdtId = $("#prdtId").val();
@@ -113,13 +103,13 @@ p {
 				alert("찜하기 완료.");
 				likeBtn.text("찜하기 취소");
 				likeBtn.attr("id", "unlikeBtn");
+				location.reload();
 			},
 			error: function(e) {
 				alert("에러 발생. 다시 요청해주세요.");
 			}
 		});
 	});
-	
 	$(document).on("click", "#unlikeBtn", function(e) {
 		e.preventDefault();
 		var prdtId = $("#prdtId").val();
@@ -131,12 +121,13 @@ p {
 				alert("찜하기 취소 완료.");
 				unlikeBtn.text("찜하기");
 				unlikeBtn.attr("id", "likeBtn");
+				location.reload();
 			},
 			error: function(e) {
 				alert("에러 발생. 다시 요청해주세요.");
 			}
 		});
 	});
-</script>
+	</script>
 </body>
 </html>
