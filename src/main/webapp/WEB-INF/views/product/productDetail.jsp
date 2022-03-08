@@ -7,12 +7,19 @@
 <head>
 <meta charset="UTF-8">
 <title>중고거래사이트</title>
+<link href="/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/resources/product/productDetail/css/productDetail.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+<style>
+#backBtn {
+	margin: 20px auto auto 20px;
+}
+</style>
 </head>
 <body>
+	<a href="javascript:history.back()" id="backBtn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">BACK</a>
 	<main class="container">
 	<input type="text" hidden="hidden" id="prdtId" name="prdtId" value="<c:out value='${product.prdtId}'/>" >
 		<!-- Left Column / Headphones Image -->
@@ -85,7 +92,6 @@
 			</div>
 		</div>
 	</main>
-
 
 	<script type="text/javascript">
 	// Image Slider

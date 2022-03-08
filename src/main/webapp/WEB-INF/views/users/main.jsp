@@ -2,6 +2,14 @@
 <%@ include file="../includes/header.jsp"%>
 <!-- sidebar -->
 <%@ include file="../includes/sidebar.jsp"%>
+<style>
+.pagination {
+margin-top: 10px;
+margin-left: auto;
+margin-right: auto;
+padding-left: 350px;
+}
+</style>
 <!-- End of sidebar -->
 <div id="page-wrapper">
 	<div class="row">
@@ -30,23 +38,7 @@
 					</c:forEach>
 					<!-- End of 판매 상품 리스트 -->
 
-					<!-- 페이징 -->
-					<div class="pull-right">
-						<ul class="pagination">
-							<c:if test="${pageMaker.prev }">
-								<li class="paginate_button previous"><a href='<c:out value="${pageMaker.startPage - 1}" />'>Previous</a></li>
-							</c:if>
-
-							<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">
-								<li class="paginate_button ${pageMaker.cri.pageNum == num ? "active":""} "><a href="${num }">${num }</a></li>
-							</c:forEach>
-
-							<c:if test="${pageMaker.next }">
-								<li class="paginate_button next"><a href='<c:out value="${pageMaker.endPage - 1}" />'>Next</a></li>
-							</c:if>
-						</ul>
-					</div>
-					<!-- End of 페이징 -->
+					
 
 				</div>
 				<!-- /.panel-body -->
@@ -54,6 +46,21 @@
 			<!-- /.panel -->
 		</div>
 		<!-- /.col-lg-12 -->
+		<!-- 페이징 -->
+		<ul class="pagination">
+			<c:if test="${pageMaker.prev }">
+				<li class="paginate_button previous"><a href='<c:out value="${pageMaker.startPage - 1}" />'>Previous</a></li>
+			</c:if>
+
+			<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">
+				<li class="paginate_button ${pageMaker.cri.pageNum == num ? "active":""} "><a href="${num }">${num }</a></li>
+			</c:forEach>
+
+			<c:if test="${pageMaker.next }">
+				<li class="paginate_button next"><a href='<c:out value="${pageMaker.endPage + 1}" />'>Next</a></li>
+			</c:if>
+		</ul>
+		<!-- End of 페이징 -->
 	</div>
 	<!-- /.row -->
 	<!-- /.row -->

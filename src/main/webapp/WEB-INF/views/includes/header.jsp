@@ -33,27 +33,27 @@
     <link href="/resources/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
 	<style>
-	div.gallery {
-		margin: 5px;
-		border: 1px solid #ccc;
-		float: left;
-		width: 210px;
-	}
-	
-	div.gallery:hover {
-		border: 1px solid #777;
-	}
-	
-	div.gallery img {
-		width: 208px;
-		height: 220px;
-	}
-	
-	div.desc {
-		padding: 15px 0;
-		text-align: center;
-	}
-	</style>
+div.gallery {
+	margin: 5px;
+	border: 1px solid #ccc;
+	float: left;
+	width: 210px;
+}
+
+div.gallery:hover {
+	border: 1px solid #777;
+}
+
+div.gallery img {
+	width: 208px;
+	height: 220px;
+}
+
+div.desc {
+	padding: 15px 0;
+	text-align: center;
+}
+</style>
 
 </head>
 

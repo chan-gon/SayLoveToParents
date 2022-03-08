@@ -10,18 +10,13 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/resources/product/productDetail/css/style.css">
 <style>
-#backLink {
-	margin: 10px 0 0 10px;
-	display: block;
-}
-#backLink:hover {
-  color: red;
-  background-color: transparent;
-  text-decoration: underline;
+#backBtn {
+	margin: 20px auto auto 20px;
 }
 </style>
 </head>
 <body>
+	<a href="javascript:history.back()" id="backBtn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">BACK</a>
 	<section class="ftco-section">
 		<div class="container">
 			<div class="row justify-content-center">
@@ -73,7 +68,6 @@
 						</table>
 					</div>
 				</div>
-				<a href="javascript:history.back()" id="backLink">BACK</a>
 			</div>
 		</div>
 	</section>
