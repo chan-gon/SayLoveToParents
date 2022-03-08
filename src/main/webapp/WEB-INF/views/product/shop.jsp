@@ -8,20 +8,15 @@
 <title>중고거래사이트</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="/resources/js/product/productDetail/css/style.css">
+<link rel="stylesheet" href="/resources/product/productDetail/css/style.css">
 <style>
-#backLink {
-	margin: 10px 0 0 10px;
-	display: block;
-}
-#backLink:hover {
-  color: red;
-  background-color: transparent;
-  text-decoration: underline;
+#backBtn {
+	margin: 20px auto auto 20px;
 }
 </style>
 </head>
 <body>
+	<a href="javascript:history.back()" id="backBtn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">BACK</a>
 	<section class="ftco-section">
 		<div class="container">
 			<div class="row justify-content-center">
@@ -73,15 +68,14 @@
 						</table>
 					</div>
 				</div>
-				<a href="javascript:history.back()" id="backLink">BACK</a>
 			</div>
 		</div>
 	</section>
 
-	<script src="/resources/js/product/productDetail/js/jquery.min.js"></script>
-	<script src="/resources/js/product/productDetail/js/popper.js"></script>
-	<script src="/resources/js/product/productDetail/js/bootstrap.min.js"></script>
-	<script src="/resources/js/product/productDetail/js/main.js"></script>
+	<script src="/resources/product/productDetail/js/jquery.min.js"></script>
+	<script src="/resources/product/productDetail/js/popper.js"></script>
+	<script src="/resources/product/productDetail/js/bootstrap.min.js"></script>
+	<script src="/resources/product/productDetail/js/main.js"></script>
 	<script type="text/javascript">
 		function deleteProduct(e) {
 			var result = confirm("해당 상품을 삭제하시겠습니까?");

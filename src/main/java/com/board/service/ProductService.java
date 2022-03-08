@@ -4,13 +4,14 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.domain.Criteria;
 import com.board.domain.ProductVO;
 
 public interface ProductService {
 
 	ProductVO getProductById(String prdtId);
 
-	List<ProductVO> getProductList();
+	List<ProductVO> getProductList(Criteria cri);
 
 	List<ProductVO> getProductListById();
 
@@ -23,5 +24,7 @@ public interface ProductService {
 	void deleteProduct(String prdtId);
 	
 	void updateProduct(ProductVO product, List<MultipartFile> productImage);
+	
+	int getProductCount();
 	
 }

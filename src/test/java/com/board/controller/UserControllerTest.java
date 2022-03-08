@@ -1,6 +1,5 @@
 package com.board.controller;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,7 +22,6 @@ import org.springframework.web.context.WebApplicationContext;
 import com.board.domain.UserVO;
 import com.board.exception.user.InsertUserException;
 import com.board.exception.user.UserExistsException;
-import com.board.exception.user.UserNotFoundException;
 import com.board.util.PasswordEncryptor;
 import com.google.gson.Gson;
 

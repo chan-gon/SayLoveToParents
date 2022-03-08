@@ -130,7 +130,7 @@
 			b.file_name,
 			b.file_path
 		FROM 
-			product a LEFT OUTER JOIN image_file b
+			product a INNER JOIN image_file b
 		ON
 			a.product_id = b.product_id
 		ORDER BY 
@@ -178,5 +178,43 @@
 		</trim>
 		WHERE product_id = #{prdtId} 
 	</update>
+	
+	<select id="getListWithPaging" resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
+		<![CDATA[
+		SELECT 
+			*
+			FROM (SELECT A.*, ROWNUM AS RN
+					FROM (
+						SELECT 
+							a.product_id,
+							a.account_id,
+							a.product_name, 
+							a.product_price, 
+							a.product_category,
+							a.product_info, 
+							a.product_condition, 
+							a.product_is_tradeable,
+							a.product_reg_date,
+							a.product_update_date,
+							a.product_is_delivery_free,
+							a.product_like_cnt,
+							a.product_trade_loc,
+							a.product_trade_status,
+							b.file_name,
+							b.file_path
+						FROM
+							product a LEFT OUTER JOIN image_file b
+						ON
+							a.product_id = b.product_id
+						ORDER BY a.product_id
+					) A
+					WHERE rownum <= #{pageNum} * #{amount}
+			) WHERE RN > (#{pageNum}-1) * #{amount}
+		]]>
+	</select>
+	
+	<select id="getProductCount" resultType="int">
+		SELECT DISTINCT COUNT(*) FROM product
+	</select>
 	
 </mapper>
