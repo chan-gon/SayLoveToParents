@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.board.domain.Criteria;
+import com.board.domain.PageDTO;
 import com.board.domain.ProductVO;
 import com.board.service.ProductService;
 
@@ -30,13 +32,14 @@ public class HomeController {
 	 *	로그인 이후의 첫 페이지
 	 */
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	public String home(Locale locale, Model model, Criteria cri) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 
-		List<ProductVO> productList = productService.getProductList();
-
+		List<ProductVO> productList = productService.getProductList(cri);
+		int productCnt = productService.getProductCount();
 		model.addAttribute("imagePath", "/productImages/");
 		model.addAttribute("products", productList);
+		model.addAttribute("pageMaker", new PageDTO(cri, productCnt));
 
 		return "users/main";
 	}

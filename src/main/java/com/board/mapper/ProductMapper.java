@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.board.domain.Criteria;
 import com.board.domain.ProductVO;
 
 public interface ProductMapper {
@@ -27,5 +28,9 @@ public interface ProductMapper {
 	void deleteLikeProduct(ProductVO product);
 	
 	void updateProduct(ProductVO product);
+	
+	List<ProductVO> getListWithPaging(Criteria cri);
+	
+	int getProductCount();
 	
 }

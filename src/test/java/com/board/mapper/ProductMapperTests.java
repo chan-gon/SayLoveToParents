@@ -1,4 +1,6 @@
-package com.board.service;
+package com.board.mapper;
+
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,19 +16,18 @@ import lombok.extern.log4j.Log4j;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
-public class ProductServiceTest {
+public class ProductMapperTests {
 	
 	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private ProductService productService;
-	
-	public ProductVO testProduct;
-	
-	@Test
-	public void testGetList() {
-		productService.getProductList(new Criteria(1, 10)).forEach(board -> log.info(board));
-	}
+	private ProductMapper productMapper;
 
+	@Test
+	public void testPaging() {
+		Criteria cri = new Criteria();
+		cri.setPageNum(2);
+		cri.setAmount(10);
+		List<ProductVO> list = productMapper.getListWithPaging(cri);
+		log.info("=========================== " + list);
+		list.forEach(board -> log.info(board));
+	}
 }

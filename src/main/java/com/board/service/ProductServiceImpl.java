@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.domain.Criteria;
 import com.board.domain.ImageVO;
 import com.board.domain.ProductVO;
 import com.board.domain.UserVO;
@@ -88,9 +89,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductVO> getProductList() {
+	public List<ProductVO> getProductList(Criteria cri) {
 		try {
-			return productMapper.getProductList();
+			return productMapper.getListWithPaging(cri);
 		} catch (RuntimeException e) {
 			throw new ProductNotFoundException(ProductExceptionMessage.NOT_FOUND);
 		}
@@ -193,6 +194,15 @@ public class ProductServiceImpl implements ProductService {
 						.build();
 				imageMapper.addImages(newImage);
 			}
+		}
+	}
+
+	@Override
+	public int getProductCount() {
+		try {
+			return productMapper.getProductCount();
+		} catch (RuntimeException e) {
+			throw new ProductNotFoundException(ProductExceptionMessage.NOT_FOUND);
 		}
 	}
 

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link href="/resources/css/profile.css" rel="stylesheet">
+<title>중고거래사이트</title>
 </head>
 <body>
 <div class="container">
