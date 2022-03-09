@@ -7,45 +7,48 @@
 margin-top: 10px;
 margin-left: auto;
 margin-right: auto;
-padding-left: 350px;
+padding-left: 13px;
 }
 </style>
 <!-- End of sidebar -->
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">판매중인 상품</h1>
+			<c:choose>
+				<c:when test="${empty products }">
+					<h1 class="page-header">판매중인 상품이 없습니다</h1>
+				</c:when>
+				<c:otherwise>
+					<h1 class="page-header">판매중인 상품</h1>
+				</c:otherwise>
+			</c:choose>
 		</div>
-		<!-- /.col-lg-12 -->
 	</div>
-	<!-- /.row -->
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
-				<!-- /.panel-heading -->
 				<div class="panel-body">
-
-					<!-- 판매 상품 리스트 -->
-					<c:forEach var="product" items="${products }">
-						<input hidden="hidden" type="text" id="prdtId" name="prdtId" value='<c:out value="${product.prdtId }" />'>
-						<div class="gallery">
-							<a href="/products/${product.prdtId }" id="imageBtn"><img src='${imagePath }${product.imageVO.fileName }' alt="Cinque Terre">
-							</a>
-							<div class="desc">
-								<c:out value="${product.prdtName }" />
+				<c:choose>
+					<c:when test="${empty products }">
+						<img src='/resources/images/product-not-found.png' alt="NOT FOUND" style="width:100%">
+					</c:when>
+					<c:otherwise>
+						<!-- 판매 상품 리스트 -->
+						<c:forEach var="product" items="${products }">
+							<input hidden="hidden" type="text" id="prdtId" name="prdtId" value='<c:out value="${product.prdtId }" />'>
+							<div class="gallery">
+								<a href="/products/${product.prdtId }" id="imageBtn"><img src='${imagePath }${product.imageVO.fileName }' alt="Cinque Terre"> </a>
+								<div class="desc">
+									<c:out value="${product.prdtName }" />
+								</div>
 							</div>
-						</div>
-					</c:forEach>
-					<!-- End of 판매 상품 리스트 -->
-
-					
-
+						</c:forEach>
+						<!-- End of 판매 상품 리스트 -->
+					</c:otherwise>
+				</c:choose>
 				</div>
-				<!-- /.panel-body -->
 			</div>
-			<!-- /.panel -->
 		</div>
-		<!-- /.col-lg-12 -->
 		<!-- 페이징 -->
 		<ul class="pagination">
 			<c:if test="${pageMaker.prev }">
@@ -62,10 +65,6 @@ padding-left: 350px;
 		</ul>
 		<!-- End of 페이징 -->
 	</div>
-	<!-- /.row -->
-	<!-- /.row -->
-	<!-- /.row -->
-	<!-- /.row -->
 </div>
 <!-- 페이징 번호 클릭에 따른 페이지 이동 처리를 위한 form -->
 <form id="actionForm" action="/main" method="get">

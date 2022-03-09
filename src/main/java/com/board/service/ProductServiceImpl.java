@@ -198,9 +198,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public int getProductCount() {
+	public int getProductCount(Criteria cri) {
 		try {
-			return productMapper.getProductCount();
+			return productMapper.getProductCount(cri);
 		} catch (RuntimeException e) {
 			throw new ProductNotFoundException(ProductExceptionMessage.NOT_FOUND);
 		}

@@ -205,16 +205,30 @@
 						FROM
 							product a LEFT OUTER JOIN image_file b
 						ON
-							a.product_id = b.product_id
-						ORDER BY a.product_id
-					) A
+							a.product_id = b.product_id ]]>
+						<trim prefix="WHERE">
+							<if test="keyword != null">
+								a.product_name like '%'||#{keyword}||'%'
+							</if>
+							<if test="category != null">
+								a.product_category like '%'||#{category}||'%'
+							</if>
+						</trim>
+						<![CDATA[ ORDER BY a.product_id) A
 					WHERE rownum <= #{pageNum} * #{amount}
-			) WHERE RN > (#{pageNum}-1) * #{amount}
-		]]>
+			) WHERE RN > (#{pageNum}-1) * #{amount} ]]>
 	</select>
 	
 	<select id="getProductCount" resultType="int">
 		SELECT DISTINCT COUNT(*) FROM product
+		<trim prefix="WHERE">
+			<if test="keyword != null">
+				product_name like '%'||#{keyword}||'%'
+			</if>
+			<if test="category != null">
+				product_category like '%'||#{category}||'%'
+			</if>
+		</trim>
 	</select>
 	
 </mapper>

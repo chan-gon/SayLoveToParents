@@ -8,7 +8,8 @@
 <title>중고거래사이트</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="/resources/product/productDetail/css/style.css">
+<link rel="stylesheet" href="/resources/product/shop/shop.css">
+<link href="/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <style>
 #backBtn {
 	margin: 20px auto auto 20px;
@@ -72,10 +73,7 @@
 		</div>
 	</section>
 
-	<script src="/resources/product/productDetail/js/jquery.min.js"></script>
-	<script src="/resources/product/productDetail/js/popper.js"></script>
-	<script src="/resources/product/productDetail/js/bootstrap.min.js"></script>
-	<script src="/resources/product/productDetail/js/main.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		function deleteProduct(e) {
 			var result = confirm("해당 상품을 삭제하시겠습니까?");

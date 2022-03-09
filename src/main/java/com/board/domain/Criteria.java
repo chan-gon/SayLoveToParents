@@ -12,8 +12,13 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Criteria {
+	// 페이징 처리
 	private int pageNum;
 	private int amount;
+	
+	// 조건 검색
+	private String keyword;
+	private String category;
 
 	/*
 	 * 생성자를 통해 기본값을 1페이지에 10개로 처리
@@ -26,5 +31,5 @@ public class Criteria {
 		this.pageNum = pageNum;
 		this.amount = amount;
 	}
-
+	
 }

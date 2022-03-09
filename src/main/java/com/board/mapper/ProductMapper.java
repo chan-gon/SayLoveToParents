@@ -31,6 +31,6 @@ public interface ProductMapper {
 	
 	List<ProductVO> getListWithPaging(Criteria cri);
 	
-	int getProductCount();
+	int getProductCount(Criteria cri);
 	
 }

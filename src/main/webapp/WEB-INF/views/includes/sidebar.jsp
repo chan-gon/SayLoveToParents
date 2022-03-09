@@ -2,23 +2,40 @@
 <link href="/resources/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <div class="navbar-default sidebar" role="navigation">
 	<div class="sidebar-nav navbar-collapse">
+		<form action="/main" method="get" id="searchForm">
 		<ul class="nav" id="side-menu">
 			<li class="sidebar-search">
 				<div class="input-group custom-search-form">
-					<input type="text" class="form-control" placeholder="상품명,지역명 입력"> <span class="input-group-btn">
-						<button class="btn btn-default" type="button">
+					<input type="text" class="form-control" id="keyword" name="keyword" placeholder="상품명 입력"> 
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" name="keywordBtn">
 							<i class="fa fa-search"></i>
 						</button>
 					</span>
-				</div> <!-- /input-group -->
+				</div>
 			</li>
-			<li><a href="#">전체 카테고리<span class="fa arrow"></span></a>
-				<ul class="nav nav-second-level">
-					<li><a href="flot.html">Flot Charts</a></li>
-					<li><a href="morris.html">Morris.js Charts</a></li>
-				</ul> <!-- /.nav-second-level --></li>
+			<li><a id="category">여성의류</a></li>
+			<li><a id="category">남성의류</a></li>
+			<li><a id="category">신발</a></li>
+			<li><a id="category">가방</a></li>
+			<li><a id="category">시계</a></li>
+			<li><a id="category">패션액세서리</a></li>
+			<li><a id="category">디지털</a></li>
+			<li><a id="category">스포츠</a></li>
+			<li><a id="category">차량</a></li>
+			<li><a id="category">스타굿즈</a></li>
+			<li><a id="category">키덜트</a></li>
+			<li><a id="category">음반</a></li>
+			<li><a id="category">도서</a></li>
+			<li><a id="category">뷰티</a></li>
+			<li><a id="category">가구</a></li>
+			<li><a id="category">생활</a></li>
+			<li><a id="category">반려동물용품</a></li>
+			<li><a id="category">유아동</a></li>
 		</ul>
+		<input type="hidden" name="pageNum" value='<c:out value="${pageMaker.cri.pageNum }" />'> 
+		<input type="hidden" name="amount" value='<c:out value="${pageMaker.cri.amount }" />'>
+		<input type="hidden" name="category" value='<c:out value="${pageMaker.cri.category }" />'>
+		</form>
 	</div>
-	<!-- /.sidebar-collapse -->
 </div>
-<!-- /.navbar-static-side -->
