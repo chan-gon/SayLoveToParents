@@ -40,6 +40,10 @@
         	}
         	// keyword만 쿼리 스트링에 포함하기 위해 category 값을 담는 input 태그 비활성화
         	searchForm.find("input[name='category']").prop('disabled',true);
+        	/*
+        	검색 시 첫번째 페이지부터 출력하도록 설정
+        	이렇게 하지 않으면 가장 마지막 페이지에서 검색 시 마지막 페이지에 화면이 머무르게 된다
+        	*/
         	searchForm.find("input[name='pageNum']").val("1");
         	searchForm.submit();
         });
@@ -52,6 +56,7 @@
         		searchForm.find("input[name='category']").val(this.innerHTML);
         		// category만 쿼리 스트링에 포함하기 위해 keyword 값을 담는 input 태그 비활성화
         		searchForm.find("input[name='keyword']").prop('disabled',true);
+        		searchForm.find("input[name='pageNum']").val("1");
         		searchForm.submit();
         	});
         }

@@ -80,9 +80,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductVO getProductById(String accountId) {
+	public ProductVO getProductById(String prdtId) {
 		try {
-			return productMapper.getProductById(accountId);
+			ProductVO product = productMapper.getProductById(prdtId);
+			if(product == null) {
+				throw new ProductNotFoundException(ProductExceptionMessage.NOT_FOUND);
+			}
+			return product;
 		} catch (RuntimeException e) {
 			throw new ProductNotFoundException(ProductExceptionMessage.NOT_FOUND);
 		}
@@ -164,6 +168,7 @@ public class ProductServiceImpl implements ProductService {
 		ProductVO updateProduct = ProductVO.builder()
 				.prdtId(product.getPrdtId())
 				.prdtName(product.getPrdtName())
+				.prdtPrice(product.getPrdtPrice())
 				.prdtCategory(product.getPrdtCategory())
 				.prdtTradeLoc(product.getPrdtTradeLoc())
 				.prdtCondition(product.getPrdtCondition())

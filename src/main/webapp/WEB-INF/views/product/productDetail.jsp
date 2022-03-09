@@ -49,6 +49,9 @@
 				<div class="product-color">
 					<span>등록일: </span>
 					<fmt:formatDate value="${product.prdtRegDate }" pattern="yyyy-MM-dd" />
+					/
+					<span>수정일: </span>
+					<fmt:formatDate value="${product.prdtUpdateDate }" pattern="yyyy-MM-dd" />
 				</div>
 				<div class="product-color">
 					<span>찜한개수: </span>
