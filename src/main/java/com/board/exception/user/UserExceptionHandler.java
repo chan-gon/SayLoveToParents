@@ -1,11 +1,11 @@
 package com.board.exception.user;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.board.controller.UserController;
-import com.board.exception.common.ApiResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,10 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 public class UserExceptionHandler {
 
 	@ExceptionHandler(UserException.class)
-	public ApiResponse userExceptionHandler(UserException e) {
+	public ModelAndView userExceptionHandler(UserException e, Model model) {
 		log.warn("===== START =====");
 		log.warn("{}...", e.getClass(), e);
 		log.warn("===== END =====");
-		return new ApiResponse(HttpStatus.OK, e.getUserExceptionMessage().getMessage());
+		model.addAttribute("EXCEPTION_MSG", e.getUserExceptionMessage().getMessage());
+		return new ModelAndView("error/exception");
 	}
 }
