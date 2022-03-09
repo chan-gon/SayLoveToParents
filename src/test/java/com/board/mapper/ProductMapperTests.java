@@ -30,4 +30,16 @@ public class ProductMapperTests {
 		log.info("=========================== " + list);
 		list.forEach(board -> log.info(board));
 	}
+	
+	@Test
+	public void testSearch() {
+		Criteria cri = new Criteria();
+		cri.setPageNum(1);
+		cri.setAmount(10);
+		cri.setCategory("디지털");
+		
+		List<ProductVO> list = productMapper.getListWithPaging(cri);
+		list.forEach(board -> log.info(board));
+		
+	}
 }

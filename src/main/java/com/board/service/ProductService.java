@@ -25,6 +25,6 @@ public interface ProductService {
 	
 	void updateProduct(ProductVO product, List<MultipartFile> productImage);
 	
-	int getProductCount();
+	int getProductCount(Criteria cri);
 	
 }

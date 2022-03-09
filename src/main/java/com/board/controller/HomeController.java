@@ -36,7 +36,8 @@ public class HomeController {
 		logger.info("Welcome home! The client locale is {}.", locale);
 
 		List<ProductVO> productList = productService.getProductList(cri);
-		int productCnt = productService.getProductCount();
+		int productCnt = productService.getProductCount(cri);
+		System.err.println(productCnt);
 		model.addAttribute("imagePath", "/productImages/");
 		model.addAttribute("products", productList);
 		model.addAttribute("pageMaker", new PageDTO(cri, productCnt));
