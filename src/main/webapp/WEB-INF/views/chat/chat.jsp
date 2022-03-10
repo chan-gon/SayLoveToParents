@@ -5,28 +5,38 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="/resources/chat/chat.css">
 </head>
 <body>
-	<div class="container">
 	<input hidden="hidden" id="userid" name="userid" value='<c:out value="${userid }"/>'>
-		<div class="col-6">
-			<label><b>채팅방</b></label>
+	<div id="wrapper">
+		<div id="menu">
+			<p class="welcome">
+				연락하기 <b></b>
+			</p>
+			<p class="logout">
+				<a id="exit">채팅방 나가기</a>
+			</p>
 		</div>
-		<div>
-			<div id="msgArea" class="col"></div>
-			<div class="col-6">
-				<div class="input-group mb-3">
-					<input type="text" id="msg" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
-					<div class="input-group-append">
-						<button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
-					</div>
+
+		<div id="chatbox"></div>
+
+		<form name="message" action="">
+			<input type="text" id="msg" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
+			<button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+		</form>
+	</div>
+
+	<div>
+		<div class="col-6">
+			<div class="input-group mb-3">
+				<div class="input-group-append">
+					
 				</div>
 			</div>
 		</div>
-		<div class="col-6"></div>
 	</div>
 
-	<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		//전송 버튼 누르는 이벤트
@@ -35,7 +45,7 @@
 			$('#msg').val('')
 		});
 
-		var sock = new SockJS('http://localhost:8081/chatting');
+		var sock = new WebSocket('ws://localhost:8081/chatting');
 		sock.open = function() {
 			console.log('open test');
 			sock.send('test message');
@@ -74,7 +84,7 @@
 				str += "<b>" + sessionId + " : " + message + "</b>";
 				str += "</div></div>";
 
-				$("#msgArea").append(str);
+				$("#chatbox").append(str);
 			} else {
 
 				var str = "<div class='col-6'>";
@@ -82,26 +92,30 @@
 				str += "<b>" + sessionId + " : " + message + "</b>";
 				str += "</div></div>";
 
-				$("#msgArea").append(str);
+				$("#chatbox").append(str);
 			}
 
 		}
 		//채팅창에서 나갔을 때
 		function onClose(evt) {
-
 			var user = $('#userid').val();
 			var str = user + " 님이 퇴장하셨습니다.";
-
-			$("#msgArea").append(str);
+			$("#chatbox").append(str);
 		}
 		//채팅창에 들어왔을 때
 		function onOpen(evt) {
-
 			var user = $('#userid').val();
 			var str = user + "님이 입장하셨습니다.";
-
-			$("#msgArea").append(str);
+			$("#chatbox").append(str);
 		}
+		// 채팅방 나가기
+		$("#exit").on("click", function() {
+			var user = $('#userid').val();
+			var str = user + "님이 퇴장하셨습니다.";
+			$("#chatbox").append(str);
+			sock.close();
+			history.back();
+		});
 	</script>
 </body>
 </html>

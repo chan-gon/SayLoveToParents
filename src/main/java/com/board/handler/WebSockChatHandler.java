@@ -3,9 +3,12 @@ package com.board.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import lombok.extern.log4j.Log4j;
@@ -16,7 +19,8 @@ import lombok.extern.log4j.Log4j;
  *
  */
 @Log4j
-public class WebSockChatHandler extends TextWebSocketHandler {
+@Component
+public class WebSockChatHandler extends TextWebSocketHandler implements WebSocketConfigurer {
 
 	// 1:N(서버:클라이언트) 채팅 구현을 위해 여러 사용자 session을 받아야 하므로 List로 구현
 	private List<WebSocketSession> sessionList = new ArrayList<WebSocketSession>();
@@ -25,7 +29,6 @@ public class WebSockChatHandler extends TextWebSocketHandler {
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		log.info("#ChattingHandler, afterConnectionEstablished");
 		sessionList.add(session);
-
 		log.info(session.getPrincipal().getName() + "님이 입장하셨습니다.");
 	}
 
@@ -47,6 +50,11 @@ public class WebSockChatHandler extends TextWebSocketHandler {
 		log.info("#ChattingHandler, afterConnectionClosed");
 		sessionList.remove(session);
 		log.info(session.getPrincipal().getName() + "님이 퇴장하셨습니다.");
+	}
+
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		registry.addHandler(this, "chatting").setAllowedOrigins("*");
 	}
 
 }
