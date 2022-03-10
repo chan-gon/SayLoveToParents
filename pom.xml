@@ -243,6 +243,14 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>        
+		
+		<!-- Messaging -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-websocket</artifactId>
+			<version>5.0.7.RELEASE</version>
+		</dependency>
+				
 	</dependencies>
     <build>
         <plugins>
