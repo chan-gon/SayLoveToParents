@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,6 +36,8 @@
 		</div>
 	</div>
 
+	<script src="/resources/dist/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		//전송 버튼 누르는 이벤트
@@ -45,7 +46,7 @@
 			$('#msg').val('')
 		});
 
-		var sock = new WebSocket('ws://localhost:8081/chatting');
+		var sock = new WebSocket('ws://localhost:8081/websocket');
 		sock.open = function() {
 			console.log('open test');
 			sock.send('test message');

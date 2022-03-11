@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.board.mapper.ChatMapper">
+
+	<resultMap type="com.board.domain.ChatRoomDTO" id="chatRoomRM">
+		<result property="roomId" column="room_id" />
+		<result property="accountId" column="account_id" />
+		<result property="prdtId" column="room_id" />
+		<result property="regDate" column="reg_date" />
+	</resultMap>
+	
+	<resultMap type="com.board.domain.ChatMessageDTO" id="chatMessageRM">
+		<result property="roomId" column="room_id" />
+		<result property="writer" column="writer" />
+		<result property="message" column="message" />
+		<result property="sendDate" column="send_date" />
+	</resultMap>
+
+	<insert id="addNewChat">
+		INSERT INTO chat_room(room_id, account_id, product_id, reg_date)
+		VALUES(#{roomId}, #{accountId},#{prdtId}, sysdate)
+	</insert>
+
+	<insert id="sendMessage">
+		INSERT INTO chat_message(room_id, writer, message, send_date)
+		VALUES(#{roomId}, #{writer}, #{message}, sysdate)
+	</insert>
+
+	<delete id="deleteChat">
+		DELETE FROM chat_room
+		WHERE room_id = #{roomId}
+	</delete>
+	
+	<select id="getChatList" parameterType="String" resultType="com.board.domain.ChatRoomDTO" resultMap="chatRoomRM">
+		SELECT room_id, product_id, reg_date
+		FROM chat_room
+		WHERE account_id = #{accountId}
+	</select>
+	
+	<select id="getRoomId" parameterType="map" resultType="String">
+		SELECT room_id FROM chat_room
+		WHERE product_id = #{prdtId} AND account_id = #{accountId}
+	</select>
+	
+	<select id="isChatRoomExist" parameterType="String" resultType="String">
+		SELECT case 
+			when count(room_id) >= 1 then 'EXISTED'
+			else 'NOT_EXISTED' end as isexisted_room_id
+		FROM chat_room
+		WHERE product_id = #{prdtId} AND account_id = #{accountId}
+	</select>
+
+</mapper>

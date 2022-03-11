@@ -19,10 +19,9 @@
 </style>
 </head>
 <body>
+	<input type="text" hidden="hidden" id="prdtId" name="prdtId" value="<c:out value='${product.prdtId}'/>" >	
 	<a href="javascript:history.back()" id="backBtn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">BACK</a>
 	<main class="container">
-	<input type="text" hidden="hidden" id="prdtId" name="prdtId" value="<c:out value='${product.prdtId}'/>" >
-		<!-- Left Column / Headphones Image -->
 		<div class="left-column">
 			<div class="slider">
 				<c:forEach var="image" items="${images }">
@@ -83,7 +82,7 @@
 							<c:if test="${not empty productLike }">
 								<button type="button" id="unlikeBtn">찜하기 취소</button>
 							</c:if>
-							<button type="button">연락하기</button>
+								<button type="button" id="chatBtn">연락하기</button>
 						</sec:authorize>
 					</div>
 				</div>
@@ -137,6 +136,26 @@
 			}
 		});
 	});
+	
+	$("#chatBtn").on("click", function(e) {
+		var prdtId = $("#prdtId").val();
+		var result = confirm("연락하시겠습니까");
+		if (result) {
+			$.ajax({
+				type: "post",
+				url: "/chat/room",
+				data: {"prdtId":prdtId},
+				success: function(data) {
+					alert("연락 페이지로 이동합니다.");
+					location.href = "/chat/room?prdtId="+prdtId;
+				},
+				error: function(e) {
+					alert("기존 연락 페이지로 이동합니다.");
+				}
+			});
+		}
+	});
+	
 	</script>
 </body>
 </html>

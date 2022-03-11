@@ -9,13 +9,11 @@
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-	<websocket:handlers>
-		<websocket:mapping handler="chattingHandler" path="/chatting" />
-		<websocket:handshake-interceptors>
-			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
-		</websocket:handshake-interceptors>
-	</websocket:handlers>
-	
-	<beans:bean id="chattingHandler" class="com.board.handler.WebSockChatHandler" />
+	<websocket:message-broker application-destination-prefix="/app">
+		<websocket:stomp-endpoint path="/stomp">
+			<websocket:sockjs />
+		</websocket:stomp-endpoint>
+		<websocket:simple-broker prefix="/topic"/>
+	</websocket:message-broker>
 
 </beans:beans>
