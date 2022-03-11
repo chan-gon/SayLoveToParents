@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.board.domain.ChatMessageDTO;
 import com.board.domain.ChatRoomDTO;
+import com.board.exception.chat.ChattingExceptionMessange;
+import com.board.exception.chat.InsertChattingException;
 import com.board.mapper.ChatMapper;
 import com.board.mapper.UserMapper;
 import com.board.util.LoginUserUtils;
@@ -27,18 +29,22 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	@Transactional
 	public void addNewChat(String prdtId) {
-		String userId = LoginUserUtils.getUserId();
-		String accountId = userMapper.getAccountId(userId);
-		String checkRoomDup = chatMapper.isChatRoomExist(prdtId, accountId);
-		if (checkRoomDup.equals("EXISTED")) {
-			throw new RuntimeException();
+		try {
+			String userId = LoginUserUtils.getUserId();
+			String accountId = userMapper.getAccountId(userId);
+			String checkRoomDup = chatMapper.isChatRoomExist(prdtId, accountId);
+			if (checkRoomDup.equals("EXISTED")) {
+				throw new RuntimeException();
+			}
+			ChatRoomDTO newRoom = ChatRoomDTO.builder()
+					.roomId(UUID.randomUUID().toString())
+					.accountId(accountId)
+					.prdtId(prdtId)
+					.build();
+			chatMapper.addNewChat(newRoom);
+		} catch (RuntimeException e) {
+			throw new InsertChattingException(ChattingExceptionMessange.INSERT_FAIL);
 		}
-		ChatRoomDTO newRoom = ChatRoomDTO.builder()
-				.roomId(UUID.randomUUID().toString())
-				.accountId(accountId)
-				.prdtId(prdtId)
-				.build();
-		chatMapper.addNewChat(newRoom);
 	}
 
 	@Override
