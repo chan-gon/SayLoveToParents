@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
-public class ChatRoomDTO {
+public class ChatRoomVO {
 
 	private final String roomId;
 	private final String accountId;

@@ -11,11 +11,12 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
-public class ChatMessageDTO {
+public class ChatMessageVO {
 
 	private final String roomId;
-	private final String writer;
-	private final String message;
+	private final String sender;
+	private final String content;
 	private final Date sendDate;
+	private final MessageType type;
 
 }

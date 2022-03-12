@@ -3,14 +3,14 @@ package com.board.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.board.domain.ChatMessageDTO;
-import com.board.domain.ChatRoomDTO;
+import com.board.domain.ChatMessageVO;
+import com.board.domain.ChatRoomVO;
 import com.board.exception.chat.ChattingExceptionMessange;
+import com.board.exception.chat.ChattingNotFoundException;
 import com.board.exception.chat.InsertChattingException;
 import com.board.mapper.ChatMapper;
 import com.board.mapper.UserMapper;
@@ -28,36 +28,32 @@ public class ChatServiceImpl implements ChatService {
 
 	@Override
 	@Transactional
-	public void addNewChat(String prdtId) {
-		try {
-			String userId = LoginUserUtils.getUserId();
+	public void addNewChat(String roomId, String prdtId, String userId) {
 			String accountId = userMapper.getAccountId(userId);
+			System.err.println("accountId = " + accountId);
 			String checkRoomDup = chatMapper.isChatRoomExist(prdtId, accountId);
 			if (checkRoomDup.equals("EXISTED")) {
 				throw new RuntimeException();
 			}
-			ChatRoomDTO newRoom = ChatRoomDTO.builder()
-					.roomId(UUID.randomUUID().toString())
+			ChatRoomVO newRoom = ChatRoomVO.builder()
+					.roomId(roomId)
 					.accountId(accountId)
 					.prdtId(prdtId)
 					.build();
 			chatMapper.addNewChat(newRoom);
-		} catch (RuntimeException e) {
-			throw new InsertChattingException(ChattingExceptionMessange.INSERT_FAIL);
-		}
 	}
 
 	@Override
 	@Transactional
-	public void sendMessage(ChatMessageDTO message) {
+	public void saveMessage(ChatMessageVO message) {
 		String userId = LoginUserUtils.getUserId();
 		String accountId = userMapper.getAccountId(userId);
-		ChatMessageDTO sendMessage = ChatMessageDTO.builder()
+		ChatMessageVO sendMessage = ChatMessageVO.builder()
 				.roomId(message.getRoomId())
-				.writer(accountId)
-				.message(message.getMessage())
+				.sender(accountId)
+				.content(message.getContent())
 				.build();
-		chatMapper.sendMessage(sendMessage);
+		chatMapper.saveMessage(sendMessage);
 	}
 
 	/**
@@ -69,19 +65,23 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public List<ChatRoomDTO> getChatList() {
+	public List<ChatRoomVO> getChatList() {
 		String userId = LoginUserUtils.getUserId();
 		String accountId = userMapper.getAccountId(userId);
-		List<ChatRoomDTO> list = new ArrayList<ChatRoomDTO>(chatMapper.getChatList(accountId));
+		List<ChatRoomVO> list = new ArrayList<ChatRoomVO>(chatMapper.getChatList(accountId));
 		Collections.reverse(list);
 		return list;
 	}
 
 	@Override
 	public String getRoomId(String prdtId) {
-		String userId = LoginUserUtils.getUserId();
-		String accountId = userMapper.getAccountId(userId);
-		return chatMapper.getRoomId(prdtId, accountId);
+		try {
+			String userId = LoginUserUtils.getUserId();
+			String accountId = userMapper.getAccountId(userId);
+			return chatMapper.getRoomId(prdtId, accountId);
+		} catch (RuntimeException e) {
+			throw new ChattingNotFoundException(ChattingExceptionMessange.NOT_FOUND);
+		}
 	}
 
 	@Override

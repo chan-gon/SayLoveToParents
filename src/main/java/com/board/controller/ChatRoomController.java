@@ -1,5 +1,7 @@
 package com.board.controller;
 
+import java.util.UUID;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.board.domain.ChatMessageDTO;
+import com.board.domain.ChatMessageVO;
 import com.board.service.ChatService;
 import com.board.util.LoginUserUtils;
 
@@ -26,15 +28,15 @@ public class ChatRoomController {
 	 * 비즈니스 로직
 	 */
 
-	@PostMapping("/room")
-	public void create(@RequestParam("prdtId") String prdtId) {
-		chatService.addNewChat(prdtId);
-	}
-
-	@PostMapping("/message")
-	public void sendMessage(@RequestBody ChatMessageDTO message) {
-		chatService.sendMessage(message);
-	}
+//	@PostMapping("/room")
+//	public void create(@RequestParam("prdtId") String prdtId) {
+//		chatService.addNewChat(prdtId);
+//	}
+//
+//	@PostMapping("/message")
+//	public void sendMessage(@RequestBody ChatMessageVO message) {
+//		chatService.saveMessage(message);
+//	}
 	
 	@GetMapping("/room-check")
 	public String roomCheck(@RequestParam("prdtId") String prdtId) {
@@ -46,11 +48,13 @@ public class ChatRoomController {
 	 */
 
 	@GetMapping("/room")
-	public ModelAndView chatroom(@RequestParam("prdtId") String prdtId, Model model) {
+	public ModelAndView chatroom(@RequestParam("userName") String userName, @RequestParam("prdtId") String prdtId, Model model) {
 		String userId = LoginUserUtils.getUserId();
-		String roomId = chatService.getRoomId(prdtId);
-		model.addAttribute("roomId", roomId);
+		String roomId = UUID.randomUUID().toString().replace("-", "");
 		model.addAttribute("userId", userId);
+		model.addAttribute("roomId", roomId);
+		model.addAttribute("prdtId", prdtId);
+		model.addAttribute("userName", userName);
 		return new ModelAndView("chat/chatroom");
 	}
 
@@ -59,6 +63,11 @@ public class ChatRoomController {
 		ModelAndView mv = new ModelAndView("chat/chat-list");
 		mv.addObject("list", chatService.getChatList());
 		return mv;
+	}
+	
+	@GetMapping("/test")
+	public ModelAndView gotest() {
+		return new ModelAndView("chat/test");
 	}
 
 }

@@ -5,17 +5,17 @@
 
 <mapper namespace="com.board.mapper.ChatMapper">
 
-	<resultMap type="com.board.domain.ChatRoomDTO" id="chatRoomRM">
+	<resultMap type="com.board.domain.ChatRoomVO" id="chatRoomRM">
 		<result property="roomId" column="room_id" />
 		<result property="accountId" column="account_id" />
 		<result property="prdtId" column="room_id" />
 		<result property="regDate" column="reg_date" />
 	</resultMap>
 	
-	<resultMap type="com.board.domain.ChatMessageDTO" id="chatMessageRM">
+	<resultMap type="com.board.domain.ChatMessageVO" id="chatMessageRM">
 		<result property="roomId" column="room_id" />
-		<result property="writer" column="writer" />
-		<result property="message" column="message" />
+		<result property="sender" column="sender" />
+		<result property="content" column="content" />
 		<result property="sendDate" column="send_date" />
 	</resultMap>
 
@@ -24,9 +24,9 @@
 		VALUES(#{roomId}, #{accountId},#{prdtId}, sysdate)
 	</insert>
 
-	<insert id="sendMessage">
-		INSERT INTO chat_message(room_id, writer, message, send_date)
-		VALUES(#{roomId}, #{writer}, #{message}, sysdate)
+	<insert id="saveMessage">
+		INSERT INTO chat_message(room_id, sender, content, send_date)
+		VALUES(#{roomId}, #{sender}, #{content}, sysdate)
 	</insert>
 
 	<delete id="deleteChat">
@@ -34,7 +34,7 @@
 		WHERE room_id = #{roomId}
 	</delete>
 	
-	<select id="getChatList" parameterType="String" resultType="com.board.domain.ChatRoomDTO" resultMap="chatRoomRM">
+	<select id="getChatList" parameterType="String" resultType="com.board.domain.ChatRoomVO" resultMap="chatRoomRM">
 		SELECT room_id, product_id, reg_date
 		FROM chat_room
 		WHERE account_id = #{accountId}

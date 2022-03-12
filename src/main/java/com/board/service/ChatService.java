@@ -2,18 +2,18 @@ package com.board.service;
 
 import java.util.List;
 
-import com.board.domain.ChatMessageDTO;
-import com.board.domain.ChatRoomDTO;
+import com.board.domain.ChatMessageVO;
+import com.board.domain.ChatRoomVO;
 
 public interface ChatService {
 
-	void addNewChat(String prdtId);
+	void addNewChat(String roomId, String prdtId, String userId);
 
-	void sendMessage(ChatMessageDTO message);
+	void saveMessage(ChatMessageVO message);
 
 	void deleteChat(String roomId);
 
-	List<ChatRoomDTO> getChatList();
+	List<ChatRoomVO> getChatList();
 	
 	String getRoomId(String prdtId);
 	

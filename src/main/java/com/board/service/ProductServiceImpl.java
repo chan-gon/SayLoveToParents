@@ -211,4 +211,11 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
+	@Override
+	public String getUserName() {
+		String userId = LoginUserUtils.getUserId();
+		String accountId = userMapper.getAccountId(userId);
+		return productMapper.getUserName(accountId);
+	}
+
 }

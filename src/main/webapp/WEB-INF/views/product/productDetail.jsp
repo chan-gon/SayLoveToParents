@@ -19,7 +19,8 @@
 </style>
 </head>
 <body>
-	<input type="text" hidden="hidden" id="prdtId" name="prdtId" value="<c:out value='${product.prdtId}'/>" >	
+	<input type="text" hidden="hidden" id="prdtId" name="prdtId" value="<c:out value='${product.prdtId}'/>" >
+	<input type="text" hidden="hidden" id="userName" name="userName" value="<c:out value='${userName}'/>" >
 	<a href="javascript:history.back()" id="backBtn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">BACK</a>
 	<main class="container">
 		<div class="left-column">
@@ -137,7 +138,15 @@
 		});
 	});
 	
-	$("#chatBtn").on("click", function(e) {
+	$("#chatBtn").on("click", function(e){
+		var prdtId = $("#prdtId").val();
+		var userName = $("#userName").val();
+		location.href = "/chat/room?userName="+userName+"&prdtId="+prdtId;
+		
+	});
+	
+	
+	/* $("#chatBtn").on("click", function(e) {
 		var prdtId = $("#prdtId").val();
 		var result = confirm("연락하시겠습니까");
 		if (result) {
@@ -154,7 +163,7 @@
 				}
 			});
 		}
-	});
+	}); */
 	
 	</script>
 </body>

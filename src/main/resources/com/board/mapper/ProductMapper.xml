@@ -137,6 +137,13 @@
 			a.product_reg_date DESC
 	</select>
 	
+	<select id="getUserName" parameterType="String" resultType="String">
+		SELECT DISTINCT a.user_name
+		FROM site_user a LEFT OUTER JOIN product b
+		ON a.account_id = b.account_id
+		WHERE a.account_id = #{accountId}
+	</select>
+	
 	<update id="likeProuct">
 		UPDATE product
 		SET product_like_cnt = product_like_cnt+1

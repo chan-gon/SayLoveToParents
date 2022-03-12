@@ -33,4 +33,6 @@ public interface ProductMapper {
 	
 	int getProductCount(Criteria cri);
 	
+	String getUserName(String accountId);
+	
 }
