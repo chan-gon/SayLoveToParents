@@ -37,7 +37,6 @@ public class HomeController {
 
 		List<ProductVO> productList = productService.getProductList(cri);
 		int productCnt = productService.getProductCount(cri);
-		System.err.println(productCnt);
 		model.addAttribute("imagePath", "/productImages/");
 		model.addAttribute("products", productList);
 		model.addAttribute("pageMaker", new PageDTO(cri, productCnt));

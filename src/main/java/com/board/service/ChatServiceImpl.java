@@ -3,13 +3,15 @@ package com.board.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.board.domain.ChatMessageDTO;
-import com.board.domain.ChatRoomDTO;
+import com.board.domain.ChatMessageVO;
+import com.board.domain.ChatRoomVO;
+import com.board.exception.chat.ChattingExceptionMessange;
+import com.board.exception.chat.ChattingNotFoundException;
+import com.board.exception.chat.InsertChattingException;
 import com.board.mapper.ChatMapper;
 import com.board.mapper.UserMapper;
 import com.board.util.LoginUserUtils;
@@ -26,32 +28,32 @@ public class ChatServiceImpl implements ChatService {
 
 	@Override
 	@Transactional
-	public void addNewChat(String prdtId) {
-		String userId = LoginUserUtils.getUserId();
-		String accountId = userMapper.getAccountId(userId);
-		String checkRoomDup = chatMapper.isChatRoomExist(prdtId, accountId);
-		if (checkRoomDup.equals("EXISTED")) {
-			throw new RuntimeException();
+	public void addNewChat(ChatRoomVO value, String roomId) {
+		try {
+			String buyerId = LoginUserUtils.getUserId();
+			ChatRoomVO newRoom = ChatRoomVO.builder()
+					.roomId(roomId)
+					.buyer(buyerId)
+					.seller(value.getSeller())
+					.prdtId(value.getPrdtId())
+					.build();
+			chatMapper.addNewChat(newRoom);
+		} catch (RuntimeException e) {
+			throw new InsertChattingException(ChattingExceptionMessange.INSERT_FAIL);
 		}
-		ChatRoomDTO newRoom = ChatRoomDTO.builder()
-				.roomId(UUID.randomUUID().toString())
-				.accountId(accountId)
-				.prdtId(prdtId)
-				.build();
-		chatMapper.addNewChat(newRoom);
 	}
 
 	@Override
 	@Transactional
-	public void sendMessage(ChatMessageDTO message) {
+	public void saveMessage(ChatMessageVO message) {
 		String userId = LoginUserUtils.getUserId();
 		String accountId = userMapper.getAccountId(userId);
-		ChatMessageDTO sendMessage = ChatMessageDTO.builder()
+		ChatMessageVO sendMessage = ChatMessageVO.builder()
 				.roomId(message.getRoomId())
-				.writer(accountId)
-				.message(message.getMessage())
+				.sender(accountId)
+				.content(message.getContent())
 				.build();
-		chatMapper.sendMessage(sendMessage);
+		chatMapper.saveMessage(sendMessage);
 	}
 
 	/**
@@ -63,26 +65,39 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public List<ChatRoomDTO> getChatList() {
-		String userId = LoginUserUtils.getUserId();
-		String accountId = userMapper.getAccountId(userId);
-		List<ChatRoomDTO> list = new ArrayList<ChatRoomDTO>(chatMapper.getChatList(accountId));
-		Collections.reverse(list);
-		return list;
+	public List<ChatRoomVO> getChatList() {
+		try {
+			String buyer = LoginUserUtils.getUserId();
+			List<ChatRoomVO> list = new ArrayList<ChatRoomVO>(chatMapper.getChatList(buyer));
+			Collections.reverse(list);
+			return list;
+		} catch (RuntimeException e) {
+			throw new ChattingNotFoundException(ChattingExceptionMessange.NOT_FOUND);
+		}
 	}
 
 	@Override
-	public String getRoomId(String prdtId) {
-		String userId = LoginUserUtils.getUserId();
-		String accountId = userMapper.getAccountId(userId);
-		return chatMapper.getRoomId(prdtId, accountId);
+	public String getRoomId(String prdtId, String seller) {
+		try {
+			String buyer = LoginUserUtils.getUserId();
+			return chatMapper.getRoomId(prdtId, buyer, seller);
+		} catch (RuntimeException e) {
+			throw new ChattingNotFoundException(ChattingExceptionMessange.NOT_FOUND);
+		}
 	}
 
 	@Override
-	public String isChatRoomExist(String prdtId) {
-		String userId = LoginUserUtils.getUserId();
-		String accountId = userMapper.getAccountId(userId);
-		return chatMapper.isChatRoomExist(prdtId, accountId);
+	public boolean isChatRoomExist(ChatRoomVO params) {
+		try {
+			String buyerId = LoginUserUtils.getUserId();
+			String result = chatMapper.isChatRoomExist(params.getPrdtId(), buyerId, params.getSeller());
+			if (result.equals("EXISTED")) {
+				return true;
+			}
+			return false;
+		} catch (RuntimeException e) {
+			throw new ChattingNotFoundException(ChattingExceptionMessange.NOT_FOUND);
+		}
 	}
 
 }

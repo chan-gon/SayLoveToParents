@@ -2,21 +2,21 @@ package com.board.service;
 
 import java.util.List;
 
-import com.board.domain.ChatMessageDTO;
-import com.board.domain.ChatRoomDTO;
+import com.board.domain.ChatMessageVO;
+import com.board.domain.ChatRoomVO;
 
 public interface ChatService {
 
-	void addNewChat(String prdtId);
+	void addNewChat(ChatRoomVO params, String roomId);
 
-	void sendMessage(ChatMessageDTO message);
+	void saveMessage(ChatMessageVO params);
 
 	void deleteChat(String roomId);
 
-	List<ChatRoomDTO> getChatList();
+	List<ChatRoomVO> getChatList();
 	
-	String getRoomId(String prdtId);
+	String getRoomId(String prdtId, String seller);
 	
-	String isChatRoomExist(String prdtId);
+	boolean isChatRoomExist(ChatRoomVO params);
 	
 }
