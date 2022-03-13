@@ -1,5 +1,6 @@
 package com.board.controller;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,6 +19,7 @@ import com.board.domain.ChatMessageVO;
 import com.board.domain.ChatRoomVO;
 import com.board.service.ChatService;
 import com.board.util.LoginUserUtils;
+import com.board.util.TextFileUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -74,6 +76,11 @@ public class ChatController {
 		mv.addObject("chatList", chatService.getChatList());
 		return mv;
 	}
+	
+	@PostMapping("/chat/delete")
+	public void deleteChat(@RequestParam("roomId") String roomId) {
+		chatService.deleteChat(roomId);
+	}
 
 	/*
 	 * WebSocket
@@ -83,13 +90,15 @@ public class ChatController {
 	public void joinUser(@Payload ChatMessageVO message, SimpMessageHeaderAccessor headerAccessor) {
 		System.err.println("joinUser");
 		// 웹소켓 세션에 사용자 이름 등록
+		System.err.println(message);
 		headerAccessor.getSessionAttributes().put("username", message.getSender());
 		simpMessagingTemplate.convertAndSend("/topic/join/" + message.getRoomId(), message);
 	}
 
 	@MessageMapping("/message")
-	public void sendMessage(@Payload ChatMessageVO message) {
+	public void sendMessage(@Payload ChatMessageVO message) throws IOException {
 		// chatService.saveMessage(message);
+		TextFileUtils.saveMessages(message.getRoomId(), message.getContent());
 		simpMessagingTemplate.convertAndSend("/topic/join/" + message.getRoomId(), message);
 	}
 
