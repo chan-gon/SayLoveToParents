@@ -9,16 +9,16 @@ import com.board.domain.ChatRoomVO;
 
 public interface ChatMapper {
 
-	void addNewChat(ChatRoomVO room);
+	void addNewChat(ChatRoomVO params);
 
 	void saveMessage(ChatMessageVO message);
 
 	void deleteChat(String roomId);
 
-	List<ChatRoomVO> getChatList(String accountId);
+	List<ChatRoomVO> getChatList(String buyer);
 
-	String getRoomId(@Param("prdtId") String prdtId, @Param("accountId") String accountId);
+	String getRoomId(@Param("prdtId") String prdtId, @Param("buyer") String buyer, @Param("seller") String seller);
 
-	String isChatRoomExist(@Param("prdtId") String prdtId, @Param("accountId") String accountId);
+	String isChatRoomExist(@Param("prdtId") String prdtId, @Param("buyer") String buyer, @Param("seller") String seller);
 
 }

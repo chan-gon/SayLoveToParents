@@ -7,16 +7,16 @@ import com.board.domain.ChatRoomVO;
 
 public interface ChatService {
 
-	void addNewChat(String roomId, String prdtId, String userId);
+	void addNewChat(ChatRoomVO params, String roomId);
 
-	void saveMessage(ChatMessageVO message);
+	void saveMessage(ChatMessageVO params);
 
 	void deleteChat(String roomId);
 
 	List<ChatRoomVO> getChatList();
 	
-	String getRoomId(String prdtId);
+	String getRoomId(String prdtId, String seller);
 	
-	String isChatRoomExist(String prdtId);
+	boolean isChatRoomExist(ChatRoomVO params);
 	
 }

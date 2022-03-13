@@ -29,5 +29,6 @@ public class ProductVO {
 	private final String prdtTradeStatus;
 	
 	private final ImageVO imageVO;
+	private final UserVO userVO;
 
 }

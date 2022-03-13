@@ -22,11 +22,16 @@
 		<result property="prdtTradeStatus" column="product_trade_status" />
 		
 		<collection property="imageVO" resultMap="imageSelectRM" />
+		<collection property="userVO" resultMap="userSelectRM"></collection>
 	</resultMap>
 	
 	<resultMap type="com.board.domain.ImageVO" id="imageSelectRM">
 		<result property="fileName" column="file_name" />
 		<result property="filePath" column="file_path" />
+	</resultMap>
+	
+	<resultMap type="com.board.domain.UserVO" id="userSelectRM">
+		<result property="userId" column="user_id"/>
 	</resultMap>
 
 	<insert id="addNewProduct">
@@ -74,11 +79,15 @@
 			a.product_trade_loc,
 			a.product_trade_status,
 			b.file_name,
-			b.file_path
+			b.file_path,
+			c.user_id
 		FROM 
-			product a LEFT OUTER JOIN image_file b
+			product a INNER JOIN image_file b
 		ON
 			a.product_id = b.product_id
+		INNER JOIN site_user c
+		ON 
+			a.account_id = c.account_id
 		WHERE 
 			a.product_id = #{prdtId}
 	</select>
@@ -135,13 +144,6 @@
 			a.product_id = b.product_id
 		ORDER BY 
 			a.product_reg_date DESC
-	</select>
-	
-	<select id="getUserName" parameterType="String" resultType="String">
-		SELECT DISTINCT a.user_name
-		FROM site_user a LEFT OUTER JOIN product b
-		ON a.account_id = b.account_id
-		WHERE a.account_id = #{accountId}
 	</select>
 	
 	<update id="likeProuct">

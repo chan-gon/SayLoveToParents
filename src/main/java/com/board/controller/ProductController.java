@@ -90,11 +90,9 @@ public class ProductController {
 		ProductVO selectedProduct = productService.getProductById(prdtId);
 		List<ImageVO> productImages = imageService.getImagesById(prdtId);
 		ProductLikeVO productLike = productLikeService.isLikedOrNot(prdtId);
-		String userName = productService.getUserName();
 		model.addAttribute("productLike", productLike);
 		model.addAttribute("images", productImages);
 		model.addAttribute("product", selectedProduct);
-		model.addAttribute("userName", userName);
 		return new ModelAndView("product/productDetail");
 	}
 	

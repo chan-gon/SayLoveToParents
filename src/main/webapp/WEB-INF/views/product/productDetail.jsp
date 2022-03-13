@@ -20,7 +20,7 @@
 </head>
 <body>
 	<input type="text" hidden="hidden" id="prdtId" name="prdtId" value="<c:out value='${product.prdtId}'/>" >
-	<input type="text" hidden="hidden" id="userName" name="userName" value="<c:out value='${userName}'/>" >
+	<input type="text" hidden="hidden" id="seller" name="seller" value="<c:out value='${product.userVO.userId}'/>" >
 	<a href="javascript:history.back()" id="backBtn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">BACK</a>
 	<main class="container">
 		<div class="left-column">
@@ -32,10 +32,8 @@
 				</c:forEach>
 			</div>
 		</div>
-		<!-- Right Column -->
 		<div class="right-column">
 
-			<!-- Product Description -->
 			<div class="product-description">
 				<h1>
 					<c:out value="${product.prdtName }" />
@@ -89,7 +87,6 @@
 				</div>
 			</div>
 
-			<!-- Product Pricing -->
 			<div class="product-price">
 				<span><c:out value="${product.prdtPrice }" />원</span>
 			</div>
@@ -101,6 +98,7 @@
 	$(document).ready(function() {
 		$('.slider').bxSlider();
 	});
+	// 찜하기
 	$(document).on("click", "#likeBtn", function(e) {
 		e.preventDefault();
 		var prdtId = $("#prdtId").val();
@@ -119,6 +117,7 @@
 			}
 		});
 	});
+	// 찜하기 취소
 	$(document).on("click", "#unlikeBtn", function(e) {
 		e.preventDefault();
 		var prdtId = $("#prdtId").val();
@@ -137,34 +136,34 @@
 			}
 		});
 	});
-	
-	$("#chatBtn").on("click", function(e){
+	// 연락하기
+	$("#chatBtn").on("click", function(e) {
 		var prdtId = $("#prdtId").val();
-		var userName = $("#userName").val();
-		location.href = "/chat/room?userName="+userName+"&prdtId="+prdtId;
-		
-	});
-	
-	
-	/* $("#chatBtn").on("click", function(e) {
-		var prdtId = $("#prdtId").val();
-		var result = confirm("연락하시겠습니까");
+		var seller = $("#seller").val();
+		var sendData = {prdtId:prdtId,seller:seller};
+		var result = confirm("연락하시겠습니까?");
 		if (result) {
 			$.ajax({
 				type: "post",
 				url: "/chat/room",
-				data: {"prdtId":prdtId},
+				data: JSON.stringify(sendData),
+				contentType: "application/json; UTF-8",
 				success: function(data) {
-					alert("연락 페이지로 이동합니다.");
-					location.href = "/chat/room?prdtId="+prdtId;
+					if(data == "EXISTED") {
+						alert("기존 연락 페이지로 이동합니다.");
+						newChatRoom(data);
+						location.href = "/chat/room-exist?prdtId="+prdtId+"&seller="+seller;
+					} else {
+						alert("연락 페이지로 이동합니다 = " + data);
+						location.href = "/chat/room?roomId="+data;
+					}
 				},
 				error: function(e) {
-					alert("기존 연락 페이지로 이동합니다.");
+					alert("에러 발생. 다시 요청해주세요.");
 				}
 			});
 		}
-	}); */
-	
+	});
 	</script>
 </body>
 </html>

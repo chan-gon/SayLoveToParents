@@ -28,19 +28,19 @@ public class ChatServiceImpl implements ChatService {
 
 	@Override
 	@Transactional
-	public void addNewChat(String roomId, String prdtId, String userId) {
-			String accountId = userMapper.getAccountId(userId);
-			System.err.println("accountId = " + accountId);
-			String checkRoomDup = chatMapper.isChatRoomExist(prdtId, accountId);
-			if (checkRoomDup.equals("EXISTED")) {
-				throw new RuntimeException();
-			}
+	public void addNewChat(ChatRoomVO value, String roomId) {
+		try {
+			String buyerId = LoginUserUtils.getUserId();
 			ChatRoomVO newRoom = ChatRoomVO.builder()
 					.roomId(roomId)
-					.accountId(accountId)
-					.prdtId(prdtId)
+					.buyer(buyerId)
+					.seller(value.getSeller())
+					.prdtId(value.getPrdtId())
 					.build();
 			chatMapper.addNewChat(newRoom);
+		} catch (RuntimeException e) {
+			throw new InsertChattingException(ChattingExceptionMessange.INSERT_FAIL);
+		}
 	}
 
 	@Override
@@ -66,29 +66,38 @@ public class ChatServiceImpl implements ChatService {
 
 	@Override
 	public List<ChatRoomVO> getChatList() {
-		String userId = LoginUserUtils.getUserId();
-		String accountId = userMapper.getAccountId(userId);
-		List<ChatRoomVO> list = new ArrayList<ChatRoomVO>(chatMapper.getChatList(accountId));
-		Collections.reverse(list);
-		return list;
-	}
-
-	@Override
-	public String getRoomId(String prdtId) {
 		try {
-			String userId = LoginUserUtils.getUserId();
-			String accountId = userMapper.getAccountId(userId);
-			return chatMapper.getRoomId(prdtId, accountId);
+			String buyer = LoginUserUtils.getUserId();
+			List<ChatRoomVO> list = new ArrayList<ChatRoomVO>(chatMapper.getChatList(buyer));
+			Collections.reverse(list);
+			return list;
 		} catch (RuntimeException e) {
 			throw new ChattingNotFoundException(ChattingExceptionMessange.NOT_FOUND);
 		}
 	}
 
 	@Override
-	public String isChatRoomExist(String prdtId) {
-		String userId = LoginUserUtils.getUserId();
-		String accountId = userMapper.getAccountId(userId);
-		return chatMapper.isChatRoomExist(prdtId, accountId);
+	public String getRoomId(String prdtId, String seller) {
+		try {
+			String buyer = LoginUserUtils.getUserId();
+			return chatMapper.getRoomId(prdtId, buyer, seller);
+		} catch (RuntimeException e) {
+			throw new ChattingNotFoundException(ChattingExceptionMessange.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public boolean isChatRoomExist(ChatRoomVO params) {
+		try {
+			String buyerId = LoginUserUtils.getUserId();
+			String result = chatMapper.isChatRoomExist(params.getPrdtId(), buyerId, params.getSeller());
+			if (result.equals("EXISTED")) {
+				return true;
+			}
+			return false;
+		} catch (RuntimeException e) {
+			throw new ChattingNotFoundException(ChattingExceptionMessange.NOT_FOUND);
+		}
 	}
 
 }

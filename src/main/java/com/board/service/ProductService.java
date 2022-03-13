@@ -27,6 +27,4 @@ public interface ProductService {
 	
 	int getProductCount(Criteria cri);
 	
-	String getUserName();
-	
 }

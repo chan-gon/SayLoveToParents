@@ -1,7 +1,5 @@
 package com.board.domain;
 
-import java.util.Date;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 public class ChatRoomVO {
 
 	private final String roomId;
-	private final String accountId;
 	private final String prdtId;
-	private final Date regDate;
+	private final String buyer;
+	private final String seller;
+	
+	private final ProductVO productVO;
 
 }

@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.board.controller.ChatRoomController;
+import com.board.controller.ChatController;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RestControllerAdvice(basePackageClasses = { ChatRoomController.class })
+@RestControllerAdvice(basePackageClasses = { ChatController.class })
 public class ChattingExceptionHandler {
 
 	@ExceptionHandler(ChattingException.class)

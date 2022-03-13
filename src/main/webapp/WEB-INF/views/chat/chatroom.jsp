@@ -8,10 +8,8 @@
 <link rel="stylesheet" href="/resources/chat/chat.css" />
 </head>
 <body>
-	<input hidden="hidden" id="userId" name="userId" value='<c:out value="${userId}"/>'>
 	<input hidden="hidden" id="roomId" name="roomId" value='<c:out value="${roomId}"/>'>
-	<input hidden="hidden" id="prdtId" name="prdtId" value='<c:out value="${prdtId}"/>'>
-	<input hidden="hidden" id="userName" name="userName" value='<c:out value="${userName}"/>'>
+	<input hidden="hidden" id="userName" name="userName" value='<c:out value="${buyer}"/>'>
 	<div id="chat-page">
 		<div class="chat-container">
 			<div class="chat-header">
@@ -44,8 +42,6 @@
 		var connectingElement = document.querySelector('.connecting');
 		
 		var roomId = document.querySelector("#roomId").value;
-		var prdtId = document.querySelector("#prdtId").value;
-		var userId = document.querySelector("#userId").value;
 
 		var stompClient = null;
 		var username = null;
@@ -68,7 +64,7 @@
 			stompClient.subscribe('/topic/join/'+roomId, onMessageReceived);
 			
 			// Tell your username to the server
-			stompClient.send("/app/chat/join", {}, JSON.stringify({
+			stompClient.send("/app/join", {}, JSON.stringify({
 				roomId : roomId,
 				sender : username,
 				type : 'JOIN'
@@ -93,7 +89,7 @@
 					type : 'CHAT'
 				};
 
-				stompClient.send("/app/chat/message", {}, JSON
+				stompClient.send("/app/message", {}, JSON
 						.stringify(chatMessage));
 				messageInput.value = '';
 			}

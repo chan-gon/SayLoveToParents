@@ -7,9 +7,10 @@
 
 	<resultMap type="com.board.domain.ChatRoomVO" id="chatRoomRM">
 		<result property="roomId" column="room_id" />
-		<result property="accountId" column="account_id" />
+		<result property="buyer" column="buyer" />
+		<result property="seller" column="seller" />
 		<result property="prdtId" column="room_id" />
-		<result property="regDate" column="reg_date" />
+		<collection property="productVO" resultMap="productSelectRM"></collection>
 	</resultMap>
 	
 	<resultMap type="com.board.domain.ChatMessageVO" id="chatMessageRM">
@@ -18,10 +19,16 @@
 		<result property="content" column="content" />
 		<result property="sendDate" column="send_date" />
 	</resultMap>
+	
+	<resultMap type="com.board.domain.ProductVO" id="productSelectRM">
+		<result property="prdtName" column="product_name" />
+		<result property="prdtPrice" column="product_price" />
+		<result property="prdtTradeStatus" column="product_trade_status" />
+	</resultMap>
 
 	<insert id="addNewChat">
-		INSERT INTO chat_room(room_id, account_id, product_id, reg_date)
-		VALUES(#{roomId}, #{accountId},#{prdtId}, sysdate)
+		INSERT INTO chat_room(room_id, product_id, buyer, seller)
+		VALUES(#{roomId}, #{prdtId}, #{buyer}, #{seller})
 	</insert>
 
 	<insert id="saveMessage">
@@ -35,14 +42,22 @@
 	</delete>
 	
 	<select id="getChatList" parameterType="String" resultType="com.board.domain.ChatRoomVO" resultMap="chatRoomRM">
-		SELECT room_id, product_id, reg_date
-		FROM chat_room
-		WHERE account_id = #{accountId}
+		SELECT 
+			a.product_name, 
+			a.product_price, 
+			a.product_trade_status, 
+			b.seller
+		FROM 
+			product a INNER JOIN chat_room b
+		ON 
+			a.product_id = b.product_id
+		WHERE 
+			b.buyer = #{buyer}
 	</select>
 	
-	<select id="getRoomId" parameterType="map" resultType="String">
+	<select id="getRoomId" parameterType="String" resultType="String">
 		SELECT room_id FROM chat_room
-		WHERE product_id = #{prdtId} AND account_id = #{accountId}
+		WHERE product_id = #{prdtId} AND buyer = #{buyer} AND seller = #{seller}
 	</select>
 	
 	<select id="isChatRoomExist" parameterType="String" resultType="String">
@@ -50,7 +65,7 @@
 			when count(room_id) >= 1 then 'EXISTED'
 			else 'NOT_EXISTED' end as isexisted_room_id
 		FROM chat_room
-		WHERE product_id = #{prdtId} AND account_id = #{accountId}
+		WHERE product_id = #{prdtId} AND buyer = #{buyer} AND seller = #{seller}
 	</select>
 
 </mapper>
