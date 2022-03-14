@@ -150,11 +150,8 @@
 				contentType: "application/json; UTF-8",
 				success: function(data) {
 					if(data == "EXISTED") {
-						alert("기존 연락 페이지로 이동합니다.");
-						newChatRoom(data);
 						location.href = "/chat/room-exist?prdtId="+prdtId+"&seller="+seller;
 					} else {
-						alert("연락 페이지로 이동합니다 = " + data);
 						location.href = "/chat/room?roomId="+data;
 					}
 				},

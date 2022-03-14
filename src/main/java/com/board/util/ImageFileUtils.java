@@ -7,9 +7,9 @@ import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.board.domain.ImageVO;
-import com.board.exception.ImageUploadFailException;
+import com.board.exception.file.ImageUploadFailException;
 
-public class FileUtils {
+public class ImageFileUtils {
 	
 	private static final String DEFAULT_FILE_PATH = "C:\\joonggo_market\\images";
 	
@@ -39,7 +39,7 @@ public class FileUtils {
 		try {
 			multipartFile.transferTo(saveImages);
 		} catch (IOException e) {
-			throw new ImageUploadFailException("에러 발생. 다시 요청해주세요.");
+			throw new ImageUploadFailException("이미지 등록에 실패했습니다.");
 		} 
 	}
 

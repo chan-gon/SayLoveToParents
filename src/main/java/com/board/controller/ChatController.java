@@ -1,5 +1,8 @@
 package com.board.controller;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,9 +21,9 @@ import com.board.domain.ChatMessageVO;
 import com.board.domain.ChatRoomVO;
 import com.board.service.ChatService;
 import com.board.util.LoginUserUtils;
+import com.board.util.TextFileUtils;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 
 /**
  * WebSocket으로 들어오는 메시지 발행을 처리한다. 클라이언트에서 prefix를 붙여서 처리한다. 현재 설정값은 "/topic"이므로
@@ -30,12 +33,13 @@ import lombok.extern.log4j.Log4j;
  */
 @RestController
 @RequiredArgsConstructor
-@Log4j
 public class ChatController {
 
 	private final ChatService chatService;
 
 	private final SimpMessagingTemplate simpMessagingTemplate;
+	
+	private static final String DEFAULT_FILE_PATH = "C:\\joonggo_market\\messages";
 
 	/*
 	 * 비즈니스 로직 & 페이지 호출
@@ -74,22 +78,38 @@ public class ChatController {
 		mv.addObject("chatList", chatService.getChatList());
 		return mv;
 	}
+	
+	@PostMapping("/chat/delete")
+	public void deleteChat(@RequestParam("roomId") String roomId) {
+		chatService.deleteChat(roomId);
+	}
 
 	/*
 	 * WebSocket
 	 */
 
 	@MessageMapping("/join")
-	public void joinUser(@Payload ChatMessageVO message, SimpMessageHeaderAccessor headerAccessor) {
-		System.err.println("joinUser");
+	public void joinUser(@Payload ChatMessageVO message, SimpMessageHeaderAccessor headerAccessor) throws IOException {
 		// 웹소켓 세션에 사용자 이름 등록
+		BufferedReader reader = new BufferedReader(new FileReader(DEFAULT_FILE_PATH + "\\" + message.getRoomId() + ".txt"));
+		String str;
+		while((str=reader.readLine()) != null) {
+			ChatMessageVO msg = ChatMessageVO.builder()
+					.roomId(message.getRoomId())
+					.sender(message.getSender())
+					.content(str)
+					.build();
+		simpMessagingTemplate.convertAndSend("/topic/join/" + msg.getRoomId(), msg);
+		}
+		
+		reader.close();
 		headerAccessor.getSessionAttributes().put("username", message.getSender());
-		simpMessagingTemplate.convertAndSend("/topic/join/" + message.getRoomId(), message);
 	}
 
 	@MessageMapping("/message")
 	public void sendMessage(@Payload ChatMessageVO message) {
-		// chatService.saveMessage(message);
+		chatService.saveMessage(message);
+		TextFileUtils.saveMessages(message.getRoomId(), message.getContent());
 		simpMessagingTemplate.convertAndSend("/topic/join/" + message.getRoomId(), message);
 	}
 
