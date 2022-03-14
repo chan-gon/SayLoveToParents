@@ -3,6 +3,8 @@ package com.board.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -93,8 +95,10 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	@Cacheable("productListCache")
 	public List<ProductVO> getProductList(Criteria cri) {
 		try {
+			System.err.println("productListCache");
 			return productMapper.getListWithPaging(cri);
 		} catch (RuntimeException e) {
 			throw new ProductNotFoundException(ProductExceptionMessage.NOT_FOUND);

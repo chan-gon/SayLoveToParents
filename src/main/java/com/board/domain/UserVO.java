@@ -1,5 +1,6 @@
 package com.board.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -9,11 +10,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 /*
  * @Builder
@@ -33,7 +32,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
-public class UserVO implements UserDetails {
+public class UserVO implements UserDetails, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

@@ -1,5 +1,7 @@
 package com.board.domain;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.ToString;
 
@@ -10,7 +12,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
-public class PageDTO {
+public class PageDTO implements Serializable {
 
 	private int startPage;
 	private int endPage;
