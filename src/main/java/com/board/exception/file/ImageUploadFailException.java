@@ -1,17 +1,11 @@
-package com.board.exception;
-
-import java.io.IOException;
+package com.board.exception.file;
 
 public class ImageUploadFailException extends RuntimeException {
 
-	public ImageUploadFailException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	public ImageUploadFailException() {}
 
 	public ImageUploadFailException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 }

@@ -19,7 +19,7 @@ import com.board.exception.product.UpdateProductException;
 import com.board.mapper.ImageMapper;
 import com.board.mapper.ProductMapper;
 import com.board.mapper.UserMapper;
-import com.board.util.FileUtils;
+import com.board.util.ImageFileUtils;
 import com.board.util.LoginUserUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -64,9 +64,9 @@ public class ProductServiceImpl implements ProductService {
 			
 			// 이미지 등록
 			for (int i = 0; i < productImage.size(); i++) {
-				String filePath = FileUtils.getFilePath();
-				String fileName = FileUtils.getFileName(productImage.get(i));
-				FileUtils.saveImages(filePath, fileName, productImage.get(i));
+				String filePath = ImageFileUtils.getFilePath();
+				String fileName = ImageFileUtils.getFileName(productImage.get(i));
+				ImageFileUtils.saveImages(filePath, fileName, productImage.get(i));
 				ImageVO newImage = ImageVO.builder()
 						.prdtId(productId)
 						.fileName(fileName)
@@ -154,7 +154,7 @@ public class ProductServiceImpl implements ProductService {
 			String accountId = userMapper.getAccountId(userId);
 			List<ImageVO> localImages = imageMapper.getImagesById(prdtId);
 			for (int i = 0; i < localImages.size(); i++) {
-				FileUtils.deleteImages(localImages.get(i));
+				ImageFileUtils.deleteImages(localImages.get(i));
 			}
 			imageMapper.deleteImages(prdtId);
 			productMapper.deleteProduct(accountId, prdtId);
@@ -164,6 +164,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	@Transactional
 	public void updateProduct(ProductVO product, List<MultipartFile> productImage) {
 		ProductVO updateProduct = ProductVO.builder()
 				.prdtId(product.getPrdtId())
@@ -180,18 +181,18 @@ public class ProductServiceImpl implements ProductService {
 		
 		String prdtId = product.getPrdtId();
 		if (!productImage.isEmpty()) {
-			// 이미지 삭제
+			// 기존 이미지 삭제
 			List<ImageVO> localImages = imageMapper.getImagesById(prdtId);
 			for (int i = 0; i < localImages.size(); i++) {
-				FileUtils.deleteImages(localImages.get(i));
+				ImageFileUtils.deleteImages(localImages.get(i));
 			}
 			imageMapper.deleteImages(prdtId);
 			
 			// 업데이트 이미지 등록
 			for (int i = 0; i < productImage.size(); i++) {
-				String filePath = FileUtils.getFilePath();
-				String fileName = FileUtils.getFileName(productImage.get(i));
-				FileUtils.saveImages(filePath, fileName, productImage.get(i));
+				String filePath = ImageFileUtils.getFilePath();
+				String fileName = ImageFileUtils.getFileName(productImage.get(i));
+				ImageFileUtils.saveImages(filePath, fileName, productImage.get(i));
 				ImageVO newImage = ImageVO.builder()
 						.prdtId(prdtId)
 						.fileName(fileName)
