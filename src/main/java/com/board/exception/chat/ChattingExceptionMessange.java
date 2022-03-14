@@ -11,6 +11,7 @@ public enum ChattingExceptionMessange {
     NOT_FOUND ("채팅방 조회에 실패했습니다."),
     DELETE_FAIL ("채팅방 삭제에 실패했습니다."),
     ALREADY_EXISTS ("이미 존재하는 채팅방 입니다."),
+    SAVE_FAIL("채팅 메시지 저장에 실패했습니다.")
 
 	;
 

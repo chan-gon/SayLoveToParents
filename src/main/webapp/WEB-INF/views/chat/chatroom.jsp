@@ -102,7 +102,7 @@
 
 			if (message.type === 'JOIN') {
 				messageElement.classList.add('event-message');
-				message.content = message.sender + '님 입장';
+				message.content = message.sender + '님 접속중';
 			} else if (message.type === 'LEAVE') {
 				messageElement.classList.add('event-message');
 				message.content = message.sender + '님 퇴장';
@@ -123,7 +123,7 @@
 			}
 
 			var textElement = document.createElement('p');
-			var messageText = document.createTextNode(message.content);
+			var messageText = document.createTextNode(message.sender + " : " + message.content);
 			textElement.appendChild(messageText);
 
 			messageElement.appendChild(textElement);

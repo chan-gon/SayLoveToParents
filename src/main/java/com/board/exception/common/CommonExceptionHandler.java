@@ -1,5 +1,7 @@
 package com.board.exception.common;
 
+import java.io.IOException;
+
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,7 +16,7 @@ import lombok.extern.log4j.Log4j;
  * 애플리케이션 내부에서 발생하는 에러를 제어하는 컨트롤러.
  * 대상을 지정하지 않으면 모든 컨트롤러에 적용된다.
  * 
- * 서비스 전체에서 발생하는 에러를 관리한다.
+ * 서비스 전역에서 발생하는 에러를 관리한다.
  *
  */
 @RestControllerAdvice
@@ -36,6 +38,12 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(NullPointerException.class)
 	public ModelAndView NullPointer(NullPointerException ex) {
 		log.info("Exception-Null = " + ex.getMessage());
+		return new ModelAndView("error/500");
+	}
+	
+	@ExceptionHandler(IOException.class)
+	public ModelAndView NullPointer(IOException ex) {
+		log.info("IO-Exception = " + ex.getMessage());
 		return new ModelAndView("error/500");
 	}
 	

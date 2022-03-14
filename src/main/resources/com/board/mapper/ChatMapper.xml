@@ -46,13 +46,16 @@
 			a.product_name, 
 			a.product_price, 
 			a.product_trade_status, 
-			b.seller
+			b.seller,
+			b.room_Id
 		FROM 
 			product a INNER JOIN chat_room b
 		ON 
 			a.product_id = b.product_id
 		WHERE 
 			b.buyer = #{buyer}
+		OR
+			b.seller = #{buyer}
 	</select>
 	
 	<select id="getRoomId" parameterType="String" resultType="String">

@@ -11,10 +11,12 @@ import com.board.domain.ChatMessageVO;
 import com.board.domain.ChatRoomVO;
 import com.board.exception.chat.ChattingExceptionMessange;
 import com.board.exception.chat.ChattingNotFoundException;
+import com.board.exception.chat.DeleteChattingException;
 import com.board.exception.chat.InsertChattingException;
+import com.board.exception.chat.SaveChattingMsgException;
 import com.board.mapper.ChatMapper;
-import com.board.mapper.UserMapper;
 import com.board.util.LoginUserUtils;
+import com.board.util.TextFileUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,8 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class ChatServiceImpl implements ChatService {
 
 	private final ChatMapper chatMapper;
-	
-	private final UserMapper userMapper;
 
 	@Override
 	@Transactional
@@ -46,22 +46,30 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	@Transactional
 	public void saveMessage(ChatMessageVO message) {
-		String userId = LoginUserUtils.getUserId();
-		String accountId = userMapper.getAccountId(userId);
-		ChatMessageVO sendMessage = ChatMessageVO.builder()
-				.roomId(message.getRoomId())
-				.sender(accountId)
-				.content(message.getContent())
-				.build();
-		chatMapper.saveMessage(sendMessage);
+		try {
+			ChatMessageVO sendMessage = ChatMessageVO.builder()
+					.roomId(message.getRoomId())
+					.sender(message.getSender())
+					.content(message.getContent())
+					.build();
+			chatMapper.saveMessage(sendMessage);
+		} catch (RuntimeException e) {
+			throw new SaveChattingMsgException(ChattingExceptionMessange.SAVE_FAIL);
+		}
 	}
 
 	/**
 	 *	채팅방과 채팅방 메시지 두 개 삭제
 	 */
 	@Override
+	@Transactional
 	public void deleteChat(String roomId) {
-		chatMapper.deleteChat(roomId);
+		try {
+			chatMapper.deleteChat(roomId);
+			TextFileUtils.deleteFile(roomId);
+		} catch (RuntimeException e) {
+			throw new DeleteChattingException(ChattingExceptionMessange.DELETE_FAIL);
+		}
 	}
 
 	@Override
