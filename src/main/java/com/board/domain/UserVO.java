@@ -1,6 +1,5 @@
 package com.board.domain;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -32,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
-public class UserVO implements UserDetails, Serializable {
+public class UserVO implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 	

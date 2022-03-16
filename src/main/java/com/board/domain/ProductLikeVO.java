@@ -1,6 +1,5 @@
 package com.board.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
-public class ProductLikeVO implements Serializable {
+public class ProductLikeVO {
 	
 	private final String prdtId;
 	private final String accountId;
