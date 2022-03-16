@@ -9,8 +9,7 @@
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-	<annotation-driven />
-
+	<annotation-driven/>
 	<resources mapping="/resources/**" location="/resources/" />
 	
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -19,10 +18,11 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.board.controller" />
+	<context:component-scan base-package="com.board.service" />
 	<context:component-scan base-package="com.board.exception" />
-	<context:component-scan base-package="com.board.util" />
+	<context:component-scan base-package="com.board.redis" />
 	
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
 	
-	<beans:import resource="socket-context.xml"/>	
+	<beans:import resource="socket-context.xml"/>
 </beans:beans>
