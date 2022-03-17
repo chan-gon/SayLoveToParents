@@ -82,7 +82,7 @@ div.desc {
 	                    <sec:authorize access="isAuthenticated()">
 	                        <li><a href="/products/shop"><i class="fa fa-gear fa-fw"></i>내상점</a>
 	                        </li>
-	                        <li><a href="/chat/list"><i class="fa fa-gear fa-fw"></i>채팅내역</a>
+	                        <li><a href="/message/list"><i class="fa fa-gear fa-fw"></i>메시지함</a>
 	                        </li>
 	                        <li><a href="/products/new"><i class="fa fa-gear fa-fw"></i>판매하기</a>
 	                        </li>

@@ -9,12 +9,12 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
-public class ChatRoomVO {
+public class MessageVO {
 
-	private final String roomId;
 	private final String prdtId;
 	private final String buyer;
 	private final String seller;
+	private final String content;
 	
 	private final ProductVO productVO;
 

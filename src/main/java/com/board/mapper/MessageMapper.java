@@ -4,18 +4,15 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.board.domain.ChatMessageVO;
-import com.board.domain.ChatRoomVO;
+import com.board.domain.MessageVO;
 
-public interface ChatMapper {
+public interface MessageMapper {
 
-	void addNewChat(ChatRoomVO params);
-
-	void saveMessage(ChatMessageVO message);
+	void sendMessage(MessageVO message);
 
 	void deleteChat(String roomId);
 
-	List<ChatRoomVO> getChatList(String buyer);
+	List<MessageVO> getChatList(String buyer);
 
 	String getRoomId(@Param("prdtId") String prdtId, @Param("buyer") String buyer, @Param("seller") String seller);
 

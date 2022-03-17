@@ -7,14 +7,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.board.domain.ChatMessageVO;
-import com.board.domain.ChatRoomVO;
+import com.board.domain.MessageVO;
 import com.board.exception.chat.ChattingExceptionMessange;
 import com.board.exception.chat.ChattingNotFoundException;
 import com.board.exception.chat.DeleteChattingException;
-import com.board.exception.chat.InsertChattingException;
-import com.board.exception.chat.SaveChattingMsgException;
-import com.board.mapper.ChatMapper;
+import com.board.mapper.MessageMapper;
 import com.board.util.LoginUserUtils;
 import com.board.util.TextFileUtils;
 
@@ -22,40 +19,21 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ChatServiceImpl implements ChatService {
+public class MessageServiceImpl implements MessageService {
 
-	private final ChatMapper chatMapper;
-
-	@Override
-	@Transactional
-	public void addNewChat(ChatRoomVO value, String roomId) {
-		try {
-			String buyerId = LoginUserUtils.getUserId();
-			ChatRoomVO newRoom = ChatRoomVO.builder()
-					.roomId(roomId)
-					.buyer(buyerId)
-					.seller(value.getSeller())
-					.prdtId(value.getPrdtId())
-					.build();
-			chatMapper.addNewChat(newRoom);
-		} catch (RuntimeException e) {
-			throw new InsertChattingException(ChattingExceptionMessange.INSERT_FAIL);
-		}
-	}
+	private final MessageMapper messageMapper;
 
 	@Override
 	@Transactional
-	public void saveMessage(ChatMessageVO message) {
-		try {
-			ChatMessageVO sendMessage = ChatMessageVO.builder()
-					.roomId(message.getRoomId())
-					.sender(message.getSender())
-					.content(message.getContent())
-					.build();
-			chatMapper.saveMessage(sendMessage);
-		} catch (RuntimeException e) {
-			throw new SaveChattingMsgException(ChattingExceptionMessange.SAVE_FAIL);
-		}
+	public void sendMessage(MessageVO message) {
+		String loginUser = LoginUserUtils.getUserId();
+		MessageVO newMessage = MessageVO.builder()
+				.prdtId(message.getPrdtId())
+				.buyer(loginUser)
+				.seller(message.getSeller())
+				.content(message.getContent())
+				.build();
+		messageMapper.sendMessage(newMessage);
 	}
 
 	/**
@@ -65,7 +43,7 @@ public class ChatServiceImpl implements ChatService {
 	@Transactional
 	public void deleteChat(String roomId) {
 		try {
-			chatMapper.deleteChat(roomId);
+			messageMapper.deleteChat(roomId);
 			TextFileUtils.deleteFile(roomId);
 		} catch (RuntimeException e) {
 			throw new DeleteChattingException(ChattingExceptionMessange.DELETE_FAIL);
@@ -73,10 +51,10 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public List<ChatRoomVO> getChatList() {
+	public List<MessageVO> getChatList() {
 		try {
 			String buyer = LoginUserUtils.getUserId();
-			List<ChatRoomVO> list = new ArrayList<ChatRoomVO>(chatMapper.getChatList(buyer));
+			List<MessageVO> list = new ArrayList<MessageVO>(messageMapper.getChatList(buyer));
 			Collections.reverse(list);
 			return list;
 		} catch (RuntimeException e) {
@@ -88,17 +66,17 @@ public class ChatServiceImpl implements ChatService {
 	public String getRoomId(String prdtId, String seller) {
 		try {
 			String buyer = LoginUserUtils.getUserId();
-			return chatMapper.getRoomId(prdtId, buyer, seller);
+			return messageMapper.getRoomId(prdtId, buyer, seller);
 		} catch (RuntimeException e) {
 			throw new ChattingNotFoundException(ChattingExceptionMessange.NOT_FOUND);
 		}
 	}
 
 	@Override
-	public boolean isChatRoomExist(ChatRoomVO params) {
+	public boolean isChatRoomExist(MessageVO params) {
 		try {
 			String buyerId = LoginUserUtils.getUserId();
-			String result = chatMapper.isChatRoomExist(params.getPrdtId(), buyerId, params.getSeller());
+			String result = messageMapper.isChatRoomExist(params.getPrdtId(), buyerId, params.getSeller());
 			if (result.equals("EXISTED")) {
 				return true;
 			}
