@@ -18,6 +18,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -27,10 +28,14 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 @EnableCaching
 @Log4j
-public class RedisCacheConfig extends CachingConfigurerSupport {
+public class RedisConfig extends CachingConfigurerSupport {
+	
+	/*
+	 * 캐시 설정
+	 */
 
 	/**
-	 * redis 2.0 버전 이후부터 RedisStandaloneConfiguration 클래스로 설정해야 된다.
+	 * redis 2.0 버전 이후부터 RedisStandaloneConfiguration 클래스로 설정해야 합니다.
 	 */
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
@@ -74,10 +79,10 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
 		template.setConnectionFactory(redisConnectionFactory());
 		template.setKeySerializer(new StringRedisSerializer());
 		template.setHashKeySerializer(new GenericToStringSerializer<Object>(Object.class));
-		template.setValueSerializer(new GenericToStringSerializer<Object>(Object.class));
+		template.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
 		return template;
 	}
-
+	
 	@Bean
 	public KeyGenerator keyGenerator() {
 		return new KeyGenerator() {
@@ -93,6 +98,8 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
 				log.debug("KeyGenerator: " + sb);
 				return sb.toString();
 			}
+
 		};
 	}
+	
 }

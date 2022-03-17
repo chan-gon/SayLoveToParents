@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.board.mapper.MessageMapper">
+
+	<resultMap type="com.board.domain.MessageVO" id="MessageSelectRM">
+		<result property="content" column="content" />
+		<result property="prdtId" column="product_id" />
+		<result property="buyer" column="buyer" />
+		<result property="seller" column="seller" />
+		<result property="sendDate" column="send_date" />
+		<result property="type" column="type" />
+		<collection property="productVO" resultMap="productSelectRM"/>
+	</resultMap>
+	
+	<resultMap type="com.board.domain.ProductVO" id="productSelectRM">
+		<result property="prdtName" column="product_name" />
+		<result property="prdtPrice" column="product_price" />
+		<result property="prdtTradeStatus" column="product_trade_status" />
+	</resultMap>
+
+	<insert id="sendMessage">
+		INSERT INTO message(product_id, buyer, seller, content, type, send_date)
+		VALUES(#{prdtId}, #{buyer}, #{seller}, #{content}, #{type}, sysdate)
+	</insert>
+	
+	<insert id="sendResponse">
+		INSERT INTO message(product_id, buyer, seller, content, type, send_date)
+		VALUES(#{prdtId}, #{buyer}, #{seller}, #{content}, #{type}, sysdate)
+	</insert>
+	
+	<select id="getReceivedMsg" parameterType="String" resultType="com.board.domain.MessageVO" resultMap="MessageSelectRM">
+		SELECT DISTINCT a.product_id, a.buyer, a.seller, b.product_name
+		FROM message a INNER JOIN product b
+		ON a.product_id = b.product_id
+		WHERE a.seller = #{seller}
+	</select>
+	
+	<select id="getSentMsg" parameterType="String" resultType="com.board.domain.MessageVO" resultMap="MessageSelectRM">
+		SELECT DISTINCT a.product_id, a.buyer, a.seller, b.product_name
+		FROM message a INNER JOIN product b
+		ON a.product_id = b.product_id
+		WHERE a.buyer = #{buyer}
+	</select>
+	
+	<select id="getReceivedMsgList" parameterType="String" resultType="com.board.domain.MessageVO" resultMap="MessageSelectRM">
+		SELECT distinct a.product_id, a.buyer, a.seller, a.content, a.send_date, a.type, b.product_name
+		FROM message a INNER JOIN product b
+		ON a.product_id = b.product_id
+		WHERE a.seller = #{seller}
+		AND a.buyer = #{buyer}
+		ORDER by a.send_date
+	</select>
+	
+	<select id="getSentMsgList" parameterType="String" resultType="com.board.domain.MessageVO" resultMap="MessageSelectRM">
+		SELECT a.product_id, a.buyer, a.seller, a.content, a.send_date, a.type, b.product_name
+		FROM message a INNER JOIN product b
+		ON a.product_id = b.product_id
+		WHERE a.buyer = #{buyer}
+		AND a.seller = #{seller}
+		ORDER by a.send_date
+	</select>
+	
+	<select id="getMessage" parameterType="String" resultType="String">
+		SELECT room_id FROM message
+		WHERE product_id = #{prdtId} AND buyer = #{buyer} AND seller = #{seller}
+	</select>
+
+</mapper>

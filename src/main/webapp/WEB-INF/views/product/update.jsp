@@ -23,6 +23,10 @@
   color: white;
   cursor: pointer;
 }
+
+#backBtn {
+	margin: 0 10px 0 0;
+}
 </style>
 
 <div class="jumbotron">
@@ -124,6 +128,7 @@
 		<div class="form-group row">
 			<div class="col-sm-offset-2 col-sm-10">
 				<input type="button" id="uploadBtn" class="btn btn-primary pull-right" value="수정">
+				<input type="button" id="backBtn" class="btn btn-primary pull-right" value="뒤로가기" onclick="location.href='javascript:history.back()'">
 			</div>
 		</div>
 	</form>

@@ -27,7 +27,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<h3 class="h5 mb-4 text-center">등록된 상품</h3>
+					<h3 class="h5 mb-4 text-center">내가 판매중인 상품</h3>
 					<div class="table-wrap">
 						<table class="table">
 							<thead class="thead-primary">
@@ -38,10 +38,62 @@
 									<th>등록일</th>
 									<th>상태</th>
 									<th>삭제</th>
+									<th>수정</th>
 								</tr>
 							</thead>
 							<tbody>
 							<c:forEach var="product" items="${products }">
+								<tr class="alert" role="alert">
+									<td>
+										<input hidden="hidden" type="text" id="prdtId" name="prdtId" value="<c:out value="${product.prdtId}"/>">
+										<div class="img" style="background-image: url(/productImages/${product.imageVO.fileName}); cursor:pointer;" title="클릭하면 상품으로 이동합니다." onclick="showProduct(this)"></div>
+									</td>
+									<td>
+										<div class="email">
+											<c:out value="${product.prdtName }" />
+										</div>
+									</td>
+									<td><c:out value="${product.prdtPrice }" /> </td>
+									<td><fmt:formatDate value="${product.prdtRegDate }" pattern="yyyy-MM-dd" /></td>
+									<td>
+										<c:out value="${product.prdtTradeStatus }" />
+									</td>
+									<td>
+										<input hidden="hidden" type="text" id="prdtId" name="prdtId" value="<c:out value="${product.prdtId}"/>">
+										<button type="button" id="deleteBtn" onclick="deleteProduct(this)">삭제</button>
+									</td>
+									<td>
+										<input hidden="hidden" type="text" id="prdtId" name="prdtId" value="<c:out value="${product.prdtId}"/>">
+										<button type="button" id="updateBtn" onclick="updateProduct(this)">수정</button>
+									</td>
+								</tr>
+							</c:forEach>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3 class="h5 mb-4 text-center">내가 찜한 상품</h3>
+					<div class="table-wrap">
+						<table class="table">
+							<thead class="thead-primary">
+								<tr>
+									<th>사진</th>
+									<th>이름</th>
+									<th>가격</th>
+									<th>등록일</th>
+									<th>상태</th>
+									<th>삭제</th>
+									<th>수정</th>
+								</tr>
+							</thead>
+							<tbody>
+							<%-- <c:forEach var="product" items="${products }">
 								<tr class="alert" role="alert">
 									<td>
 										<div class="img" style="background-image: url(/productImages/${product.imageVO.fileName });"></div>
@@ -64,7 +116,7 @@
 									</form>
 									</td>
 								</tr>
-							</c:forEach>
+							</c:forEach> --%>
 							</tbody>
 						</table>
 					</div>
@@ -75,6 +127,12 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
+	
+		function showProduct(e) {
+			var prdtId = $(e).prev("input").val();
+			location.href = "/products/"+prdtId;
+		}
+	
 		function deleteProduct(e) {
 			var result = confirm("해당 상품을 삭제하시겠습니까?");
 			if (result) {
@@ -94,7 +152,7 @@
 		}
 		
 		function updateProduct(e) {
-			var prdtId = $(e).prev().prev().val();
+			var prdtId = $(e).prev("input").val();
 			location.href = "/products/update/"+prdtId;
 		}
 	</script>
