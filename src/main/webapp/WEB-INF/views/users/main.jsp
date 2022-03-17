@@ -37,7 +37,7 @@ padding-left: 13px;
 						<c:forEach var="product" items="${products }">
 							<input hidden="hidden" type="text" id="prdtId" name="prdtId" value='<c:out value="${product.prdtId }" />'>
 							<div class="gallery">
-								<a href="/products/${product.prdtId }" id="imageBtn"><img src='${imagePath }${product.imageVO.fileName }' alt="Cinque Terre"> </a>
+								<a href="/products/${product.prdtId }" id="imageBtn"><img src='${imagePath }${product.imageVO.fileName }' alt="NO IMAGE FOUND"> </a>
 								<div class="desc">
 									<c:out value="${product.prdtName }" />
 								</div>

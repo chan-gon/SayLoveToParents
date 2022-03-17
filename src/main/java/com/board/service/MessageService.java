@@ -7,13 +7,15 @@ import com.board.domain.MessageVO;
 public interface MessageService {
 
 	void sendMessage(MessageVO message);
+	
+	void sendResponse(MessageVO message);
 
-	void deleteChat(String roomId);
+	List<MessageVO> getReceivedMsg(String seller);
 
-	List<MessageVO> getChatList();
-	
-	String getRoomId(String prdtId, String seller);
-	
-	boolean isChatRoomExist(MessageVO params);
-	
+	List<MessageVO> getSentMsg(String buyer);
+
+	List<MessageVO> getReceivedMsgList(String seller, String buyer);
+
+	List<MessageVO> getSentMsgList(String buyer, String seller);
+
 }

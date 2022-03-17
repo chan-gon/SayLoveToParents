@@ -1,12 +1,9 @@
 package com.board.controller;
 
-import java.util.UUID;
+import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +17,6 @@ import com.board.util.LoginUserUtils;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- * WebSocket으로 들어오는 메시지 발행을 처리한다. 클라이언트에서 prefix를 붙여서 처리한다. 현재 설정값은 "/topic"이므로
- * 클라이언트에서 "/topic/message"로 발행 요청을 하면 Controller가 해당 값을 가진 MessageMapping 메소드를
- * 찾아서 처리한다.
- *
- */
 @RestController
 @RequestMapping("/messages")
 @RequiredArgsConstructor
@@ -34,52 +25,52 @@ public class MessageController {
 	private final MessageService messageService;
 
 	/*
-	 * 비즈니스 로직 & 페이지 호출
+	 * 요청 처리
 	 */
-
 	@PostMapping
 	public void sendMessage(@RequestBody MessageVO message) {
 		messageService.sendMessage(message);
 	}
-
-	@GetMapping("/chat/room")
-	public ModelAndView newChatRoom(@RequestParam("roomId") String roomId, Model model) {
-		String buyer = LoginUserUtils.getUserId();
-		model.addAttribute("roomId", roomId);
-		model.addAttribute("buyer", buyer);
-		//return new ModelAndView("chat/chatroom");
-		return new ModelAndView("chat/chattemp");
-	}
-
-	@GetMapping("/chat/room-exist")
-	public ModelAndView existedChatRoom(@RequestParam("prdtId") String prdtId,@RequestParam("seller") String seller, Model model) {
-		String buyer = LoginUserUtils.getUserId();
-		String roomId = messageService.getRoomId(prdtId, seller);
-		model.addAttribute("roomId", roomId);
-		model.addAttribute("buyer", buyer);
-		return new ModelAndView("chat/chatroom");
-	}
-
-	@GetMapping("/chat/list")
-	public ModelAndView chatList() {
-		ModelAndView mv = new ModelAndView("chat/list");
-		mv.addObject("chatList", messageService.getChatList());
-		return mv;
-	}
 	
-	@PostMapping("/chat/delete")
-	public void deleteChat(@RequestParam("roomId") String roomId) {
-		messageService.deleteChat(roomId);
+	@PostMapping("/response")
+	public void sendResponse(@RequestBody MessageVO message) {
+		messageService.sendResponse(message);
 	}
 
 	/*
-	 * WebSocket
+	 * 페이지 이동
 	 */
-	
-	@GetMapping("/chat/room/{roomId}")
-	public String roomInfo(@PathVariable("roomId") String roomId) {
-		System.err.println("subscribe");
-		return roomId;
+	@GetMapping("/list")
+	public ModelAndView messageList(Model model) {
+		String currentUser = LoginUserUtils.getUserId();
+		List<MessageVO> sentMessages = messageService.getSentMsg(currentUser);
+		List<MessageVO> receivedMessages = messageService.getReceivedMsg(currentUser);
+		model.addAttribute("sentMessages", sentMessages);
+		model.addAttribute("receivedMessages", receivedMessages);
+		return new ModelAndView("message/list");
 	}
 
+	@GetMapping("/received")
+	public ModelAndView receivedMsg(@RequestParam("seller") String seller, @RequestParam("buyer") String buyer
+			, @RequestParam("prdtId") String prdtId, @RequestParam("prdtName") String prdtName, Model model) {
+		List<MessageVO> receivedMessages = messageService.getReceivedMsgList(seller, buyer);
+		model.addAttribute("receivedMessages", receivedMessages);
+		model.addAttribute("prdtId", prdtId);
+		model.addAttribute("prdtName", prdtName);
+		model.addAttribute("buyer", buyer);
+		model.addAttribute("seller", seller);
+		return new ModelAndView("message/receivedMsg");
+	}
+
+	@GetMapping("/sent")
+	public ModelAndView sentMsg(@RequestParam("buyer") String buyer, @RequestParam("seller") String seller
+			, @RequestParam("prdtId") String prdtId, @RequestParam("prdtName") String prdtName, Model model) {
+		List<MessageVO> sentMessages = messageService.getSentMsgList(buyer, seller);
+		model.addAttribute("sentMessages", sentMessages);
+		model.addAttribute("prdtId", prdtId);
+		model.addAttribute("prdtName", prdtName);
+		model.addAttribute("buyer", buyer);
+		model.addAttribute("seller", seller);
+		return new ModelAndView("message/sentMsg");
+	}
 }
