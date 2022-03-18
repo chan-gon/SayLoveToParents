@@ -1,10 +1,16 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<link href="/resources/css/profile.css" rel="stylesheet">
 <title>중고거래사이트</title>
+<link href="/resources/css/profile.css" rel="stylesheet">
+<link href="/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<style>
+#backBtn {
+	margin: 20px auto auto 20px;
+}
+</style>
 </head>
 <body>
+<a href="javascript:history.back()" id="backBtn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">BACK</a>
 <div class="container">
     <div class="card">
         <div class="info"><span></span> 
@@ -32,9 +38,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
-	var savebutton = document.getElementById('savebutton');
-	var readonly = true;
-	var inputs = document.querySelectorAll('input[type="text"]');
+	const savebutton = document.getElementById('savebutton');
+	const readonly = true;
+	const inputs = document.querySelectorAll('input[type="text"]');
 	savebutton.addEventListener('click', function() {
 		
 		for (var i = 0; i < inputs.length; i++) {
@@ -48,7 +54,7 @@
 		}
 	});
 	
-	var homeBtn = document.getElementById('homeBtn');
+	const homeBtn = document.getElementById('homeBtn');
 		homeBtn.addEventListener('click', function() {
 		location.href = "/main";
 	});
@@ -66,12 +72,12 @@
 		
 		// 수정 내용 저장
 		$('#saveBtn').click(function() {
-			var userEmail = $('#userEmail').val();
-			var userPhone = $('#userPhone').val();
-			var userAddr = $('#userAddr').val();
-			var userId = $('#userId').val();
+			const userEmail = $('#userEmail').val();
+			const userPhone = $('#userPhone').val();
+			const userAddr = $('#userAddr').val();
+			const userId = $('#userId').val();
 			
-			var formData = {
+			const formData = {
 					"userEmail" : userEmail,
 					"userPhone" : userPhone,
 					"userAddr" : userAddr,
@@ -86,6 +92,7 @@
 					contentType: "application/json; charset=utf8",
 					success: function(data) {
 						alert("수정 완료.");
+						location.reload();
 					},
 					error: function(xhr) {
 						alert("에러 발생. 다시 요청해주세요.");

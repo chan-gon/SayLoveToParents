@@ -30,5 +30,6 @@ public class ProductVO {
 	
 	private final ImageVO imageVO;
 	private final UserVO userVO;
+	private final ProductLikeVO productLikeVO;
 
 }

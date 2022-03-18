@@ -169,9 +169,4 @@ public class UserServiceTest {
 				.build();
 		userService.changeUserPwd(user);
 	}
-	
-	@Test(expected = None.class)
-	public void 회원_탈퇴_테스트() {
-		userService.deleteUser(TEST_PWD, testUser);
-	}
 }

@@ -14,7 +14,7 @@ public interface UserService {
 
 	void isValidIdAndEmail(String userId, String userEmail);
 
-	void deleteUser(String userPwdm, UserVO user);
+	void deleteUserPermanent(String userId, String userEmail);
 
 	String getIdByNameAndPhone(UserVO user);
 	

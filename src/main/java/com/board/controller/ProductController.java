@@ -23,12 +23,10 @@ import com.board.service.UserService;
 import com.board.util.LoginUserUtils;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
-@Log4j
 public class ProductController {
 	
 	private final UserService userService;
@@ -99,7 +97,9 @@ public class ProductController {
 	@GetMapping("/shop")
 	public ModelAndView myShop(Model model) {
 		List<ProductVO> productList = productService.getProductListById();
+		List<ProductVO> likeProductList = productService.getLikeProduct();
 		model.addAttribute("products", productList);
+		model.addAttribute("likeProductList", likeProductList);
 		return new ModelAndView("product/shop");
 	}
 	

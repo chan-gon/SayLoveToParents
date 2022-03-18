@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.board.domain.UserVO;
+import com.board.service.ProductService;
 import com.board.service.UserService;
 import com.board.util.EmailUtils;
 
@@ -38,6 +39,8 @@ import lombok.extern.log4j.Log4j;
 public class UserController {
 
 	private final UserService userService;
+	
+	private final ProductService productService;
 
 	/*
 	 * 사용자 요청 처리
@@ -58,9 +61,9 @@ public class UserController {
 		userService.isExistUserEmail(userEmail);
 	}
 
-	@DeleteMapping("/{userId}")
-	public void deleteUser(@PathVariable("userId") String userId, @RequestParam("userPwd") String inputPwd, @RequestBody UserVO user) {
-		userService.deleteUser(inputPwd, user);
+	@DeleteMapping
+	public void deleteUser(@RequestBody UserVO user) {
+		userService.deleteUserPermanent(user.getUserId(), user.getUserEmail());
 	}
 
 	@PostMapping(value = "/help/id", produces = "application/text; charset=UTF-8")
@@ -142,5 +145,10 @@ public class UserController {
 	@GetMapping("/accessdenied")
 	public ModelAndView accessDeniedErrorPage() {
 		return new ModelAndView("error/403");
+	}
+	
+	@GetMapping("/delete")
+	public ModelAndView deletePage() {
+		return new ModelAndView("users/delete");
 	}
 }

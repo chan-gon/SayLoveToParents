@@ -1,20 +1,20 @@
-package com.board.exception.chat;
+package com.board.exception.message;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.board.controller.ChatController;
+import com.board.controller.MessageController;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RestControllerAdvice(basePackageClasses = { ChatController.class })
-public class ChattingExceptionHandler {
+@RestControllerAdvice(basePackageClasses = { MessageController.class })
+public class MessageExceptionHandler {
 
-	@ExceptionHandler(ChattingException.class)
-	public ModelAndView chattingExceptionHandler(ChattingException e, Model model) {
+	@ExceptionHandler(MessageException.class)
+	public ModelAndView chattingExceptionHandler(MessageException e, Model model) {
 		log.warn("===== START =====");
 		log.warn("{}...", e.getClass(), e);
 		log.warn("===== END =====");

@@ -49,5 +49,12 @@ public class ImageFileUtils {
 			file.delete();
 		} 			
 	}
+	
+	public static void deleteImagesPermanent(String fileName) {
+		File file = new File(DEFAULT_FILE_PATH + "\\" + fileName);
+		if (file.exists()) {
+			file.delete();
+		} 			
+	}
 
 }

@@ -27,10 +27,20 @@ public interface ProductMapper {
 	
 	void deleteLikeProduct(ProductVO product);
 	
+	List<ProductVO> getProductId(String accountId);
+	
+	List<ProductVO> getLikeProduct(String accountId);
+	
 	void updateProduct(ProductVO product);
 	
 	List<ProductVO> getListWithPaging(Criteria cri);
 	
 	int getProductCount(Criteria cri);
 	
+	/*
+	 * 회원 탈퇴 관련
+	 */
+	void deleteProductPermanent(String accountId);
+	
+	void deleteProductLikePermanent(String prdtId);
 }

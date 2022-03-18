@@ -23,6 +23,8 @@ public interface ProductService {
 
 	void deleteProduct(String prdtId);
 	
+	List<ProductVO> getLikeProduct();
+	
 	void updateProduct(ProductVO product, List<MultipartFile> productImage);
 	
 	int getProductCount(Criteria cri);

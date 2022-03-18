@@ -136,7 +136,7 @@
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script type="text/javascript" src="/resources/js/product/image-load.js"></script>
+<script type="text/javascript" src="/resources/product/image-load.js"></script>
 <script type="text/javascript">
 
 // 가져온 상품의 카테고리/상태/교환여부/배송비포함여부 세팅 함수
