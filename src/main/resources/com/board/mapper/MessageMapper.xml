@@ -46,7 +46,7 @@
 	</select>
 	
 	<select id="getReceivedMsgList" parameterType="String" resultType="com.board.domain.MessageVO" resultMap="MessageSelectRM">
-		SELECT distinct a.product_id, a.buyer, a.seller, a.content, a.send_date, a.type, b.product_name
+		SELECT a.product_id, a.buyer, a.seller, a.content, a.send_date, a.type, b.product_name
 		FROM message a INNER JOIN product b
 		ON a.product_id = b.product_id
 		WHERE a.seller = #{seller}
@@ -67,5 +67,10 @@
 		SELECT room_id FROM message
 		WHERE product_id = #{prdtId} AND buyer = #{buyer} AND seller = #{seller}
 	</select>
+	
+	<delete id="deleteMessagesPermanent">
+		DELETE FROM message
+		WHERE buyer = #{userId} OR seller = #{userId}
+	</delete>
 
 </mapper>

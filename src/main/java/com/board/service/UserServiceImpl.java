@@ -1,7 +1,12 @@
 package com.board.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.board.domain.ImageVO;
+import com.board.domain.ProductVO;
 import com.board.domain.UserVO;
 import com.board.exception.user.DeleteUserException;
 import com.board.exception.user.InsertUserException;
@@ -9,11 +14,14 @@ import com.board.exception.user.UpdateUserException;
 import com.board.exception.user.UserExceptionMessage;
 import com.board.exception.user.UserExistsException;
 import com.board.exception.user.UserNotFoundException;
+import com.board.mapper.ImageMapper;
+import com.board.mapper.MessageMapper;
+import com.board.mapper.ProductMapper;
 import com.board.mapper.UserMapper;
+import com.board.util.ImageFileUtils;
 import com.board.util.PasswordEncryptor;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 
 /*
  * @RequiredArgsConstructor
@@ -26,13 +34,18 @@ import lombok.extern.log4j.Log4j;
 
 @Service
 @RequiredArgsConstructor
-@Log4j
 public class UserServiceImpl implements UserService {
 
 	private static final String EXISTED = "EXISTED";
 	private static final String INVALID = "INVALID";
 
 	private final UserMapper userMapper;
+	
+	private final ProductMapper productMapper;
+	
+	private final MessageMapper messageMapper;
+	
+	private final ImageMapper imageMapper;
 
 	@Override
 	public void signUpUser(UserVO user) {
@@ -70,8 +83,8 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	/*
-	 * 이메일 인증번호 전송을 위해
-	 * 사용자 아이디/이메일 존재 여부 확인하는 메소드
+	 *	이메일 인증번호 전송을 위해
+	 *  사용자 아이디/이메일 존재 여부 확인하는 메소드
 	 */
 	@Override
 	public void isValidIdAndEmail(String userId, String userEmail) {
@@ -80,13 +93,39 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	/**
+	 *	회원 탈퇴.
+	 *	DB의 모든 사용자 정보를 제거하기 위해 여러건의 삭제 작업이 필요.
+	 *	좀 더 효율적인 로직을 고민할 필요가 있음.
+	 */
 	@Override
-	public void deleteUser(String inputPwd, UserVO currentUser) {
-		boolean isValidPassword = PasswordEncryptor.isMatch(inputPwd, currentUser.getUserPwd());
-		if (!isValidPassword) {
+	@Transactional
+	public void deleteUserPermanent(String userId, String userEmail) {
+		if (!userMapper.isExistUserId(userId).equals(EXISTED) || !userMapper.isExistUserEmail(userEmail).equals(EXISTED)) {
+			throw new IllegalArgumentException("올바른 아이디/이메일을 입력해주세요.");
+		}
+		try {
+			String accountId = userMapper.getAccountId(userId);
+			// 메시지 삭제
+			messageMapper.deleteMessagesPermanent(userId);
+			// 이미지 삭제
+			List<ProductVO> userProductIdList = productMapper.getProductId(accountId);
+			for (ProductVO product : userProductIdList) {
+				List<ImageVO> localImages = imageMapper.getImagesById(product.getPrdtId());
+				imageMapper.deleteImagesPermanent(product.getPrdtId());
+				for (ImageVO image : localImages) {
+					ImageFileUtils.deleteImagesPermanent(image.getFileName());
+				}
+				// 상품 좋아요 삭제
+				productMapper.deleteProductLikePermanent(product.getPrdtId());
+			}
+			// 상품 삭제
+			productMapper.deleteProductPermanent(accountId);
+			// 유저 삭제
+			userMapper.deleteUserPermanent(userId, userEmail);
+		} catch (RuntimeException e) {
 			throw new DeleteUserException(UserExceptionMessage.DELETE_FAIL);
 		}
-		userMapper.deleteUser(currentUser.getUserId());
 	}
 
 	@Override

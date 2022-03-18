@@ -1,6 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,38 +14,31 @@
 <link href="/resources/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
 <link href="/resources/dist/css/sb-admin-2.css" rel="stylesheet">
 <link href="/resources/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<style>
+#backBtn {
+	margin: 20px auto auto 20px;
+}
+</style>
 </head>
 <body>
-		<button type="button" class="btn btn-primary md-3" id="signUpBtn">회원가입</button>
+<a href="javascript:history.back()" id="backBtn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">BACK</a>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4 col-md-offset-4">
 					<div class="login-panel panel panel-default">
 						<div class="panel-heading">
-							<h3 class="panel-title">로그인</h3>
-							<c:if test="${not empty errormsg}">
-								<font color="red">
-									<p>
-										<c:out value="${errormsg }" />
-									</p>
-								</font>
-							</c:if>
+							<h3 class="panel-title">회원 탈퇴</h3>
 						</div>
 						<div class="panel-body">
-							<form role="form" name="FormLogin" action="/loginProcess" method="POST" onsubmit="return checkInput()">
-								<sec:csrfInput />
+							<form role="form" name="FormLogin">
 								<fieldset>
 									<div class="form-group">
 										<input class="form-control" placeholder="아이디" id="userId" name="userId" type="text" autofocus>
 									</div>
 									<div class="form-group">
-										<input class="form-control" placeholder="비밀번호" id="userPwd" name="userPwd" type="password">
+										<input class="form-control" placeholder="이메일" id="userEmail" name="userEmail" type="text">
 									</div>
-									<div class="form-group">
-										<button class="btn btn-block" id="idInquiry" type="button">아이디찾기</button>
-										<button class="btn btn-block" id="pwdInquiry" type="button">비밀번호찾기</button>
-									</div>
-									<button type="submit" class="btn btn-lg btn-success btn-block">로그인</button>
+									<button type="button" id="deleteUserBtn" class="btn btn-lg btn-success btn-block">탈퇴</button>
 								</fieldset>
 							</form>
 						</div>
@@ -58,40 +49,42 @@
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script type="text/javascript">
-			function checkInput() {
-
-				if (FormLogin.userId.value == "") {
+		
+			const userId = $("#userId");
+			const userEmail = $("#userEmail");
+			
+			$("#deleteUserBtn").on("click", function() {
+				if (userId.val() == "") {
 					alert("아이디 입력하세요.");
-					FormLogin.userId.focus();
+					userId.focus();
 					return false;
-				} else if (FormLogin.userPwd.value == "") {
-					alert("비밀번호 입력하세요.");
-					FormLogin.userId.focus();
-					return false;
-				} else {
-					return true;
 				}
-			}
-
-			$(function() {
-				// 아이디 찾기
-				$('#idInquiry').click(function() {
-					window.open("/users/help/id");
-				});
-
-				// 비밀번호 찾기
-				$('#pwdInquiry').click(function() {
-					window.open("/users/help/pwd");
-				});
-			});
-
-			$('#signUpBtn').css("margin", "10px 0 0 10px");
-			$('#signUpBtn').click(function() {
-				location.href = "/users/signup";
+				if (userEmail.val() == "") {
+					alert("비밀번호 입력하세요.");
+					userEmail.focus();
+					return false;
+				}
+				
+				const result = confirm("사이트를 탈퇴하시겠습니까?");
+				if (result) {
+					const formData = {userId : userId.val(), userEmail : userEmail.val()};
+					$.ajax({
+						type: "delete",
+						url: "/users",
+						data: JSON.stringify(formData),
+						contentType: "application/json; UTF-8",
+						success: function(data) {
+							alert("탈퇴 성공.");
+							location.href = "/";
+						},
+						error: function(e) {
+							alert("올바른 아이디/이메일을 입력해주세요.");
+						}
+					});
+				}
 			});
 		</script>
 
 		<%@ include file="../includes/footer.jsp"%>
 </body>
-
 </html>

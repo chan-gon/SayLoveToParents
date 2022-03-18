@@ -22,7 +22,12 @@ public interface UserMapper {
 	
 	void changeUserPwd(UserVO user);
 	
+	String getUserPwd(String userId);
+	
 	void changeUserProfile(UserVO user);
 
-	void deleteUser(String accountId);
+	/*
+	 * 회원 탈퇴 관련
+	 */
+	void deleteUserPermanent(@Param("userId") String userId, @Param("userEmail") String userEmail);
 }

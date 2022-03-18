@@ -19,14 +19,10 @@ public interface MessageMapper {
 	List<MessageVO> getReceivedMsgList(@Param("seller") String seller, @Param("buyer") String buyer);
 
 	List<MessageVO> getSentMsgList(@Param("buyer") String buyer, @Param("seller") String seller);
-
-	void deleteChat(String roomId);
-
-	List<MessageVO> getChatList(String buyer);
-
-	String getRoomId(@Param("prdtId") String prdtId, @Param("buyer") String buyer, @Param("seller") String seller);
-
-	String isChatRoomExist(@Param("prdtId") String prdtId, @Param("buyer") String buyer,
-			@Param("seller") String seller);
+	
+	/*
+	 * 회원 탈퇴 관련
+	 */
+	void deleteMessagesPermanent(String userId);
 
 }
