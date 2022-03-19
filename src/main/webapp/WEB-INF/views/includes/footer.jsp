@@ -43,6 +43,11 @@
         	searchForm.submit();
         });
         
+        function searchProduct() {
+        	searchForm.find("input[name='category']").prop('disabled',true);
+        	searchForm.submit();
+        }
+        
         var lists = document.querySelectorAll('#category');
         for (var i = 0; i<lists.length; i++) {
         	lists[i].addEventListener("click", function(e) {
@@ -56,7 +61,18 @@
         	});
         }
     });
+    
+    // 키워드 검색(엔터키로 검색했을 때)
+    function searchProduct() {
+    	const searchForm = $("#searchForm");
+    	if (!searchForm.find("input[name='keyword']").val().replace(/\s/g, "")) {
+    		searchForm.find("input[name='keyword']").prop('disabled',true);
+    		alert("상품명을 입력하세요.");
+			location.reload();
+    	}
+    	searchForm.find("input[name='category']").prop('disabled',true);
+    	searchForm.submit();
+    }
     </script>
-
 </body>
 </html>
