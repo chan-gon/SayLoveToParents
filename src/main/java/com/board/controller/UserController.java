@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.board.domain.UserVO;
-import com.board.service.ProductService;
 import com.board.service.UserService;
 import com.board.util.EmailUtils;
 
@@ -39,8 +38,6 @@ import lombok.extern.log4j.Log4j;
 public class UserController {
 
 	private final UserService userService;
-	
-	private final ProductService productService;
 
 	/*
 	 * 사용자 요청 처리
@@ -53,7 +50,7 @@ public class UserController {
 
 	@GetMapping("/signup/id")
 	public void checkUserId(@RequestParam("userId") String userId) {
-		userService.isExistUserId(userId); 
+		userService.isExistUserId(userId);
 	}
 
 	@GetMapping("/signup/email")

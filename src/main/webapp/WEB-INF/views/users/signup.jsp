@@ -193,7 +193,7 @@
 		
 		// 아이디 중복 체크
 		$('#checkUserId').on('click', function() {
-			var userId = $('#userId').val();
+			const userId = $('#userId').val();
 			if (userId == null || userId == "") {
 				alert("아이디 입력하세요.");
 				return;
@@ -201,17 +201,12 @@
 			$.ajax({
 				type: "get",
 				url: "/users/signup/id",
-				data: {"userId":userId},
-				headers: {
-					Accept: "text/html; charset=utf-8"
-				},
+				data: {userId:userId},
 				success: function(data) {
-						// Http Status 200에 대해서는 success로 이동
 						alert("사용 가능한 아이디.");
 						$('#idCheckResult').val("1");
 				},
 				error: function(e) {
-					// Controller 설정에 따라 Http Status 409는 여기로
 					alert("이미 존재하는 아이디.");
 				}
 			});
@@ -226,16 +221,13 @@
 			}
 			var emailCheck = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 			if (!emailCheck.test(userEmail)) {
-				alert("이메일 주소는 @가 포함되어야 합니다.");
+				alert("이메일 주소 형식에 맞게 작성해주세요.");
 				return;
 			}
 			$.ajax({
 				type: "get",
 				url: "/users/signup/email",
-				data: {"userEmail":userEmail},
-				headers: {
-					Accept: "text/html; charset=utf-8"
-				},
+				data: {userEmail:userEmail},
 				success: function(data) {
 					alert("사용 가능한 이메일.");
 					$('#emailCheckResult').val("1");

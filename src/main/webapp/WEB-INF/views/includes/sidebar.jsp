@@ -6,7 +6,7 @@
 		<ul class="nav" id="side-menu">
 			<li class="sidebar-search">
 				<div class="input-group custom-search-form">
-					<input type="text" class="form-control" id="keyword" name="keyword" placeholder="상품명 입력"> 
+					<input type="text" class="form-control" id="keyword" name="keyword" placeholder="상품명 입력" onkeypress="if(window.event.keyCode==13){searchProduct()}"> 
 					<span class="input-group-btn">
 						<button class="btn btn-default" type="button" name="keywordBtn">
 							<i class="fa fa-search"></i>

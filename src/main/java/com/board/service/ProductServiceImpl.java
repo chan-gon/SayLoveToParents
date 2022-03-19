@@ -62,10 +62,10 @@ public class ProductServiceImpl implements ProductService {
 			productMapper.addNewProduct(newProduct);
 			
 			// 이미지 등록
-			for (int i = 0; i < productImage.size(); i++) {
+			for (MultipartFile image : productImage) {
 				String filePath = ImageFileUtils.getFilePath();
-				String fileName = ImageFileUtils.getFileName(productImage.get(i));
-				ImageFileUtils.saveImages(filePath, fileName, productImage.get(i));
+				String fileName = ImageFileUtils.getFileName(image);
+				ImageFileUtils.saveImages(filePath, fileName, image);
 				ImageVO newImage = ImageVO.builder()
 						.prdtId(productId)
 						.fileName(fileName)
@@ -73,6 +73,18 @@ public class ProductServiceImpl implements ProductService {
 						.build();
 				imageMapper.addImages(newImage);
 			}
+//			// 이미지 등록
+//			for (int i = 0; i < productImage.size(); i++) {
+//				String filePath = ImageFileUtils.getFilePath();
+//				String fileName = ImageFileUtils.getFileName(productImage.get(i));
+//				ImageFileUtils.saveImages(filePath, fileName, productImage.get(i));
+//				ImageVO newImage = ImageVO.builder()
+//						.prdtId(productId)
+//						.fileName(fileName)
+//						.filePath(filePath)
+//						.build();
+//				imageMapper.addImages(newImage);
+//			}
 		} catch (RuntimeException e) {
 			throw new InsertProductException(ProductExceptionMessage.INSERT_FAIL);
 		}
