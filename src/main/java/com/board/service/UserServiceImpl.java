@@ -22,6 +22,7 @@ import com.board.util.ImageFileUtils;
 import com.board.util.PasswordEncryptor;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 /*
  * @RequiredArgsConstructor
@@ -49,36 +50,36 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void signUpUser(UserVO user) {
-
-		if (userMapper.isExistUserId(user.getUserId()).equals(EXISTED)) {
+		if (userMapper.isExistUserId(user.getUserId()).equals(EXISTED) || userMapper.isExistUserEmail(user.getUserEmail()).equals(EXISTED)) {
+			throw new IllegalAccessError("아이디 또는 이메일 주소가 중복되었습니다.");
+		}
+		try {
+			String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
+			UserVO encryptedUser = UserVO.builder()
+					.userId(user.getUserId())
+					.userPwd(encodedPwd)
+					.userName(user.getUserName())
+					.userEmail(user.getUserEmail())
+					.userPhone(user.getUserPhone())
+					.userAddr(user.getUserAddr())
+					.build();
+			userMapper.signUpUser(encryptedUser);
+		} catch (RuntimeException e) {
 			throw new InsertUserException(UserExceptionMessage.INSERT_FAIL);
 		}
-
-		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
-
-		UserVO encryptedUser = UserVO.builder()
-				.userId(user.getUserId())
-				.userPwd(encodedPwd)
-				.userName(user.getUserName())
-				.userEmail(user.getUserEmail())
-				.userPhone(user.getUserPhone())
-				.userAddr(user.getUserAddr())
-				.build();
-
-		userMapper.signUpUser(encryptedUser);
 	}
 
 	@Override
 	public void isExistUserId(String userId) {
 		if (userMapper.isExistUserId(userId).equals(EXISTED)) {
-			throw new UserExistsException(UserExceptionMessage.ALREADY_EXISTS);
+			throw new IllegalArgumentException("이미 존재하는 아이디.");
 		}
 	}
 
 	@Override
 	public void isExistUserEmail(String userEmail) {
 		if (userMapper.isExistUserEmail(userEmail).equals(EXISTED)) {
-			throw new UserExistsException(UserExceptionMessage.ALREADY_EXISTS);
+			throw new IllegalArgumentException("이미 존재하는 이메일.");
 		}
 	}
 	
@@ -132,7 +133,7 @@ public class UserServiceImpl implements UserService {
 	public String getIdByNameAndPhone(UserVO user) {
 		String findUserId = userMapper.getIdByNameAndPhone(user);
 		if (findUserId == null) {
-			throw new UserNotFoundException(UserExceptionMessage.NOT_FOUND);
+			throw new IllegalArgumentException("입력하신 정보를 가진 유저가 없음.");
 		}
 		return findUserId;
 	}
