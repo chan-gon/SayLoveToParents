@@ -13,6 +13,9 @@ public class ImageFileUtils {
 	
 	private static final String DEFAULT_FILE_PATH = "C:\\joonggo_market\\images";
 	
+	/**
+	 * 파일 이름 생성
+	 */
 	public static String getFileName(MultipartFile multipartFile) {
 		StringBuilder builder = new StringBuilder();
 		UUID uuid = UUID.randomUUID();
@@ -21,11 +24,18 @@ public class ImageFileUtils {
 		return builder.toString();
 	}
 
+	/**
+	 * 첨부하는 파일의 확장자 제거
+	 */
 	private static String getExtension(String fileName) {
 		int ext = fileName.lastIndexOf(".");
 		return fileName.substring(ext + 1);
 	}
 
+	/**
+	 * 파일 경로 가져오기.
+	 * 경로가 없다면 새로운 경로를 생성한다.
+	 */
 	public static String getFilePath() {
 		File imageDir = new File(DEFAULT_FILE_PATH);
 		if (!imageDir.exists()) {
@@ -34,6 +44,9 @@ public class ImageFileUtils {
 		return DEFAULT_FILE_PATH;
 	}
 
+	/**
+	 * 로컬 경로에 이미지 저장.
+	 */
 	public static void saveImages(String filePath, String fileName, MultipartFile multipartFile) {
 		File saveImages = new File(filePath, fileName);
 		try {
@@ -50,6 +63,9 @@ public class ImageFileUtils {
 		} 			
 	}
 	
+	/**
+	 * 회원 탈퇴 작업에 사용되는 메소드.
+	 */
 	public static void deleteImagesPermanent(String fileName) {
 		File file = new File(DEFAULT_FILE_PATH + "\\" + fileName);
 		if (file.exists()) {
