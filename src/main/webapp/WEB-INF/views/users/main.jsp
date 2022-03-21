@@ -19,7 +19,7 @@ padding-left: 13px;
 					<h1 class="page-header">판매중인 상품이 없습니다</h1>
 				</c:when>
 				<c:otherwise>
-					<h1 class="page-header">판매중인 상품test</h1>
+					<h1 class="page-header">판매중인 상품</h1>
 				</c:otherwise>
 			</c:choose>
 		</div>
