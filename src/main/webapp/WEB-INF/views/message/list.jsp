@@ -23,23 +23,37 @@ button {
 <a href="javascript:history.back()" id="backBtn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">BACK</a>
 
 	<div class="container">
-		<h2>내가 받은 메시지</h2>
-		<c:forEach var="list" items="${receivedMessages }">
-			<ul class="list-group">
-				<li class="list-group-item"><b>문의 상품: </b>${list.productVO.prdtName} <b>\ 보낸 사람: </b>${list.buyer }
-				<button type="button" onclick="location.href='/messages/received?seller=${list.seller}&buyer=${list.buyer}&prdtId=${list.prdtId}&prdtName=${list.productVO.prdtName}'">답장 보내기</button></li>
-			</ul>
-		</c:forEach>
+		<h3 class="h5 mb-4 text-center">내가 받은 메시지</h3>
+		<c:choose>
+			<c:when test="${empty receivedMessages }">
+				<h2 style="text-align: center">받은 메시지가 없습니다.</h2>
+			</c:when>
+			<c:otherwise>
+				<c:forEach var="list" items="${receivedMessages }">
+					<ul class="list-group">
+						<li class="list-group-item"><b>문의 상품: </b>${list.productVO.prdtName} <b>\ 보낸 사람: </b>${list.buyer }
+						<button type="button" onclick="location.href='/messages/received?seller=${list.seller}&buyer=${list.buyer}&prdtId=${list.prdtId}&prdtName=${list.productVO.prdtName}'">답장 보내기</button></li>
+					</ul>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>
 	</div>
 	
 	<div class="container">
-		<h2>내가 보낸 메시지</h2>
-		<c:forEach var="list" items="${sentMessages }">
-			<ul class="list-group">
-				<li class="list-group-item"><b>문의 상품: </b>${list.productVO.prdtName}
-				<button type="button" onclick="location.href='/messages/sent?buyer=${list.buyer}&seller=${list.seller}&prdtId=${list.prdtId}&prdtName=${list.productVO.prdtName}'">답장 확인</button></li>
-			</ul>
-		</c:forEach>
+		<h3 class="h5 mb-4 text-center">내가 보낸 메시지</h3>
+		<c:choose>
+			<c:when test="${empty sentMessages }">
+				<h2 style="text-align: center">보낸 메시지가 없습니다.</h2>
+			</c:when>
+			<c:otherwise>
+				<c:forEach var="list" items="${sentMessages }">
+					<ul class="list-group">
+						<li class="list-group-item"><b>문의 상품: </b>${list.productVO.prdtName}
+						<button type="button" onclick="location.href='/messages/sent?buyer=${list.buyer}&seller=${list.seller}&prdtId=${list.prdtId}&prdtName=${list.productVO.prdtName}'">답장 확인</button></li>
+					</ul>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>
 	</div>
 </body>
 </html>
