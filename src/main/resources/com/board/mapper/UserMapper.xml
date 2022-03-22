@@ -33,8 +33,8 @@
 	</select>
 	
 	<insert id="signUpUser">
-		INSERT INTO site_user(user_id, user_pwd, user_name, user_email, user_phone, user_addr, user_reg_date, user_auth, user_enabled)
-		VALUES(#{userId}, #{userPwd}, #{userName}, #{userEmail}, #{userPhone}, #{userAddr}, sysdate, default, default)
+		INSERT INTO site_user(account_id, user_id, user_pwd, user_name, user_email, user_phone, user_addr, user_reg_date, user_auth, user_enabled)
+		VALUES(uuid(), #{userId}, #{userPwd}, #{userName}, #{userEmail}, #{userPhone}, #{userAddr}, now(), default, default)
 	</insert>
 	
 	<select id="isExistUserId" parameterType="String" resultType="String">

@@ -63,7 +63,7 @@
 			#{prdtInfo},
 			#{prdtCondition},
 			#{prdtIsTradeable},
-			sysdate,
+			now(),
 			#{prdtIsDeliveryFree},
 			#{prdtTradeLoc}
 		)
@@ -167,7 +167,7 @@
 	
 	<insert id="addLikeProduct">
 		INSERT INTO product_like(product_id, account_id, create_date)
-		VALUES(#{prdtId}, #{accountId}, sysdate)
+		VALUES(#{prdtId}, #{accountId}, now())
 	</insert>
 	
 	<delete id="deleteLikeProduct">
@@ -271,14 +271,14 @@
 							a.product_id = b.product_id ]]>
 						<trim prefix="WHERE">
 							<if test="keyword != null">
-								a.product_name like '%'||#{keyword}||'%'
+								a.product_name like CONCAT('%',#{keyword},'%')
 							</if>
 							<if test="category != null">
-								a.product_category like '%'||#{category}||'%'
+								a.product_category like CONCAT('%',#{category},'%')
 							</if>
 						</trim>
 						<![CDATA[ ORDER BY a.product_id) A
-					WHERE @ROWNUM <= #{pageNum} * #{amount}
+					WHERE @ROWNUM:=0 <= #{pageNum} * #{amount}
 			) B WHERE RN > (#{pageNum}-1) * #{amount} ]]>
 	</select>
 	
