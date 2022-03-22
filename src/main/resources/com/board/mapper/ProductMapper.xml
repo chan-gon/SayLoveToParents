@@ -246,7 +246,7 @@
 		<![CDATA[
 		SELECT 
 			*
-			FROM (SELECT A.*, ROWNUM AS RN
+			FROM (SELECT A.*, @ROWNUM:=@ROWNUM+1 AS RN
 					FROM (
 						SELECT 
 							a.product_id,
@@ -278,8 +278,8 @@
 							</if>
 						</trim>
 						<![CDATA[ ORDER BY a.product_id) A
-					WHERE rownum <= #{pageNum} * #{amount}
-			) WHERE RN > (#{pageNum}-1) * #{amount} ]]>
+					WHERE @ROWNUM <= #{pageNum} * #{amount}
+			) B WHERE RN > (#{pageNum}-1) * #{amount} ]]>
 	</select>
 	
 	<select id="getProductCount" resultType="int">

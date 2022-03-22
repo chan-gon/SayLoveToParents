@@ -16,9 +16,9 @@
 	
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
-		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@3.39.53.227:1521:XE"></property>
-		<property name="username" value="system"></property>
-		<property name="password" value="system"></property>
+		<property name="jdbcUrl" value="jdbc:log4jdbc:mysql://localhost:3306/joonggo?characterEncoding=UTF-8&amp;serverTimezone=UTC"/>
+		<property name="username" value="joonggo"></property>
+		<property name="password" value="Joonggo1234"></property>
 	</bean>	
 	
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
