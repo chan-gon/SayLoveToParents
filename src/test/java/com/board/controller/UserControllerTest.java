@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.board.domain.UserVO;
-import com.board.exception.user.InsertUserException;
 import com.board.exception.user.UserExistsException;
 import com.board.util.PasswordEncryptor;
 import com.google.gson.Gson;
@@ -56,14 +55,6 @@ public class UserControllerTest {
 				.userPhone("01077777777")
 				.userAddr("미국 조지아")
 				.build();
-	}
-	
-	@Test
-	public void 회원가입_테스트_실패() throws Exception {
-		String jsonStr = new Gson().toJson(testUser);
-
-		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
-				.andExpect(result -> assertTrue(result.getResolvedException() instanceof InsertUserException));
 	}
 	
 	@Test
