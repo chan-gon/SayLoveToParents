@@ -8,11 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.board.domain.ImageVO;
 import com.board.domain.ProductVO;
 import com.board.domain.UserVO;
-import com.board.exception.user.DeleteUserException;
-import com.board.exception.user.InsertUserException;
-import com.board.exception.user.UpdateUserException;
 import com.board.exception.user.UserExceptionMessage;
-import com.board.exception.user.UserExistsException;
 import com.board.exception.user.UserNotFoundException;
 import com.board.mapper.ImageMapper;
 import com.board.mapper.MessageMapper;
@@ -22,7 +18,6 @@ import com.board.util.ImageFileUtils;
 import com.board.util.PasswordEncryptor;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 
 /*
  * @RequiredArgsConstructor
@@ -49,24 +44,21 @@ public class UserServiceImpl implements UserService {
 	private final ImageMapper imageMapper;
 
 	@Override
+	@Transactional
 	public void signUpUser(UserVO user) {
 		if (userMapper.isExistUserId(user.getUserId()).equals(EXISTED) || userMapper.isExistUserEmail(user.getUserEmail()).equals(EXISTED)) {
 			throw new IllegalAccessError("아이디 또는 이메일 주소가 중복되었습니다.");
 		}
-		try {
-			String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
-			UserVO encryptedUser = UserVO.builder()
-					.userId(user.getUserId())
-					.userPwd(encodedPwd)
-					.userName(user.getUserName())
-					.userEmail(user.getUserEmail())
-					.userPhone(user.getUserPhone())
-					.userAddr(user.getUserAddr())
-					.build();
-			userMapper.signUpUser(encryptedUser);
-		} catch (RuntimeException e) {
-			throw new InsertUserException(UserExceptionMessage.INSERT_FAIL);
-		}
+		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
+		UserVO encryptedUser = UserVO.builder()
+				.userId(user.getUserId())
+				.userPwd(encodedPwd)
+				.userName(user.getUserName())
+				.userEmail(user.getUserEmail())
+				.userPhone(user.getUserPhone())
+				.userAddr(user.getUserAddr())
+				.build();
+		userMapper.signUpUser(encryptedUser);
 	}
 
 	@Override
@@ -105,28 +97,24 @@ public class UserServiceImpl implements UserService {
 		if (!userMapper.isExistUserId(userId).equals(EXISTED) || !userMapper.isExistUserEmail(userEmail).equals(EXISTED)) {
 			throw new IllegalArgumentException("올바른 아이디/이메일을 입력해주세요.");
 		}
-		try {
-			String accountId = userMapper.getAccountId(userId);
-			// 메시지 삭제
-			messageMapper.deleteMessagesPermanent(userId);
-			// 이미지 삭제
-			List<ProductVO> userProductIdList = productMapper.getProductId(accountId);
-			for (ProductVO product : userProductIdList) {
-				List<ImageVO> localImages = imageMapper.getImagesById(product.getPrdtId());
-				imageMapper.deleteImagesPermanent(product.getPrdtId());
-				for (ImageVO image : localImages) {
-					ImageFileUtils.deleteImagesPermanent(image.getFileName());
-				}
-				// 상품 좋아요 삭제
-				productMapper.deleteProductLikePermanent(product.getPrdtId());
+		String accountId = userMapper.getAccountId(userId);
+		// 메시지 삭제
+		messageMapper.deleteMessagesPermanent(userId);
+		// 이미지 삭제
+		List<ProductVO> userProductIdList = productMapper.getProductId(accountId);
+		for (ProductVO product : userProductIdList) {
+			List<ImageVO> localImages = imageMapper.getImagesById(product.getPrdtId());
+			imageMapper.deleteImagesPermanent(product.getPrdtId());
+			for (ImageVO image : localImages) {
+				ImageFileUtils.deleteImagesPermanent(image.getFileName());
 			}
-			// 상품 삭제
-			productMapper.deleteProductPermanent(accountId);
-			// 유저 삭제
-			userMapper.deleteUserPermanent(userId, userEmail);
-		} catch (RuntimeException e) {
-			throw new DeleteUserException(UserExceptionMessage.DELETE_FAIL);
+			// 상품 좋아요 삭제
+			productMapper.deleteProductLikePermanent(product.getPrdtId());
 		}
+		// 상품 삭제
+		productMapper.deleteProductPermanent(accountId);
+		// 유저 삭제
+		userMapper.deleteUserPermanent(userId, userEmail);
 	}
 
 	@Override
@@ -145,43 +133,34 @@ public class UserServiceImpl implements UserService {
 	 * 심어서 가져오는 방법은 보안에 취약하므로 Controller 계층의 메소드에 의존하더라도 이 방법이 안전하다고 판단했다
 	 */
 	@Override
+	@Transactional
 	public void changeUserPwd(UserVO user) {
-		try {
-			UserVO newUser = userMapper.getUserById(user.getUserId());
-			String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
-			UserVO changeUser = UserVO.builder()
-					.accountId(newUser.getAccountId())
-					.userPwd(encodedPwd)
-					.build();
-			userMapper.changeUserPwd(changeUser);
-		} catch (RuntimeException e) {
-			throw new UpdateUserException(UserExceptionMessage.PWD_UPDATE_FAIL);
-		}
+		UserVO newUser = userMapper.getUserById(user.getUserId());
+		String encodedPwd = PasswordEncryptor.encrypt(user.getUserPwd());
+		UserVO changeUser = UserVO.builder()
+				.accountId(newUser.getAccountId())
+				.userPwd(encodedPwd)
+				.build();
+		userMapper.changeUserPwd(changeUser);
 	}
 
 	@Override
+	@Transactional
 	public void changeUserProfile(UserVO user) {
-		try {
-			String accountId = userMapper.getAccountId(user.getUserId());
-			UserVO editUser = UserVO.builder()
-					.accountId(accountId)
-					.userEmail(user.getUserEmail())
-					.userPhone(user.getUserPhone())
-					.userAddr(user.getUserAddr())
-					.build();
-			userMapper.changeUserProfile(editUser);
-		} catch (RuntimeException e) {
-			throw new UpdateUserException(UserExceptionMessage.UPDATE_FAIL);
-		}
+		String accountId = userMapper.getAccountId(user.getUserId());
+		UserVO editUser = UserVO.builder()
+				.accountId(accountId)
+				.userEmail(user.getUserEmail())
+				.userPhone(user.getUserPhone())
+				.userAddr(user.getUserAddr())
+				.build();
+		userMapper.changeUserProfile(editUser);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public UserVO getUserById(String userId) {
-		try {
-			return userMapper.getUserById(userId);
-		} catch (RuntimeException e) {
-			throw new UserNotFoundException(UserExceptionMessage.NOT_FOUND);
-		}
+		return userMapper.getUserById(userId);
 	}
 
 }
