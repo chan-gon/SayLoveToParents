@@ -28,11 +28,7 @@ padding-left: 13px;
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-body">
-				<c:choose>
-					<c:when test="${empty products }">
-						<img src='/resources/images/product-not-found.png' alt="NOT FOUND" style="width:100%">
-					</c:when>
-					<c:otherwise>
+					<c:if test="${not empty products}">
 						<!-- 판매 상품 리스트 -->
 						<c:forEach var="product" items="${products }">
 							<input hidden="hidden" type="text" id="prdtId" name="prdtId" value='<c:out value="${product.prdtId }" />'>
@@ -44,26 +40,27 @@ padding-left: 13px;
 							</div>
 						</c:forEach>
 						<!-- End of 판매 상품 리스트 -->
-					</c:otherwise>
-				</c:choose>
+					</c:if>
 				</div>
 			</div>
 		</div>
-		<!-- 페이징 -->
-		<ul class="pagination">
-			<c:if test="${pageMaker.prev }">
-				<li class="paginate_button previous"><a href='<c:out value="${pageMaker.startPage - 1}" />'>Previous</a></li>
-			</c:if>
-
-			<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">
-				<li class="paginate_button ${pageMaker.cri.pageNum == num ? "active":""} "><a href="${num }">${num }</a></li>
-			</c:forEach>
-
-			<c:if test="${pageMaker.next }">
-				<li class="paginate_button next"><a href='<c:out value="${pageMaker.endPage + 1}" />'>Next</a></li>
-			</c:if>
-		</ul>
-		<!-- End of 페이징 -->
+		<c:if test="${not empty products}">
+			<!-- 페이징 -->
+			<ul class="pagination">
+				<c:if test="${pageMaker.prev }">
+					<li class="paginate_button previous"><a href='<c:out value="${pageMaker.startPage - 1}" />'>Previous</a></li>
+				</c:if>
+	
+				<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">
+					<li class="paginate_button ${pageMaker.cri.pageNum == num ? "active":""} "><a href="${num }">${num }</a></li>
+				</c:forEach>
+	
+				<c:if test="${pageMaker.next }">
+					<li class="paginate_button next"><a href='<c:out value="${pageMaker.endPage + 1}" />'>Next</a></li>
+				</c:if>
+			</ul>
+			<!-- End of 페이징 -->
+		</c:if>
 	</div>
 </div>
 <!-- 페이징 번호 클릭에 따른 페이지 이동 처리를 위한 form -->

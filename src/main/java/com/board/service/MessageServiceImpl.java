@@ -6,9 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.board.domain.MessageVO;
-import com.board.exception.message.MessageExceptionMessange;
-import com.board.exception.message.MessageInsertException;
-import com.board.exception.message.MessageNotFoundException;
 import com.board.mapper.MessageMapper;
 import com.board.util.LoginUserUtils;
 
@@ -23,63 +20,47 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	@Transactional
 	public void sendMessage(MessageVO message) {
-		try {
-			String loginUser = LoginUserUtils.getUserId();
-			MessageVO newMessage = MessageVO.builder()
-					.prdtId(message.getPrdtId())
-					.buyer(loginUser)
-					.seller(message.getSeller())
-					.content(message.getContent())
-					.build();
-			messageMapper.sendMessage(newMessage);
-		} catch (RuntimeException e) {
-			throw new MessageInsertException(MessageExceptionMessange.INSERT_FAIL);
+		String loginUser = LoginUserUtils.getUserId();
+		if (loginUser.equals(message.getSeller())) {
+			throw new IllegalArgumentException("본인에게 메시지를 보낼 수 없습니다.");
 		}
+		MessageVO newMessage = MessageVO.builder()
+				.prdtId(message.getPrdtId())
+				.buyer(loginUser)
+				.seller(message.getSeller())
+				.content(message.getContent())
+				.build();
+		messageMapper.sendMessage(newMessage);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<MessageVO> getReceivedMsg(String seller) {
-		try {
-			return messageMapper.getReceivedMsg(seller);
-		} catch (RuntimeException e) {
-			throw new MessageNotFoundException(MessageExceptionMessange.NOT_FOUND);
-		}
+		return messageMapper.getReceivedMsg(seller);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<MessageVO> getSentMsg(String buyer) {
-		try {
-			return messageMapper.getSentMsg(buyer);
-		} catch (RuntimeException e) {
-			throw new MessageNotFoundException(MessageExceptionMessange.NOT_FOUND);
-		}
+		return messageMapper.getSentMsg(buyer);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<MessageVO> getReceivedMsgList(String seller, String buyer) {
-		try {
-			return messageMapper.getReceivedMsgList(seller, buyer);
-		} catch (RuntimeException e) {
-			throw new MessageNotFoundException(MessageExceptionMessange.NOT_FOUND);
-		}
+		return messageMapper.getReceivedMsgList(seller, buyer);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<MessageVO> getSentMsgList(String buyer, String seller) {
-		try {
-			return messageMapper.getSentMsgList(buyer, seller);
-		} catch (RuntimeException e) {
-			throw new MessageNotFoundException(MessageExceptionMessange.NOT_FOUND);
-		}
+		return messageMapper.getSentMsgList(buyer, seller);
 	}
 
 	@Override
+	@Transactional
 	public void sendResponse(MessageVO message) {
-		try {
-			messageMapper.sendResponse(message);
-		} catch (RuntimeException e) {
-			throw new MessageNotFoundException(MessageExceptionMessange.NOT_FOUND);
-		}
+		messageMapper.sendResponse(message);
 	}
 
 }

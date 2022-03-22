@@ -16,9 +16,9 @@
 	
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
-		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE"></property>
-		<property name="username" value="joonggo"></property>
-		<property name="password" value="joonggo"></property>
+		<property name="jdbcUrl" value="jdbc:log4jdbc:mysql://localhost:3306/joonggo?characterEncoding=UTF-8&amp;serverTimezone=UTC"/>
+		<property name="username" value="joonggo"/>
+		<property name="password" value="Joonggo1234"/>
 	</bean>	
 	
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
@@ -26,17 +26,17 @@
 	</bean>
 	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource"></property>
+		<property name="dataSource" ref="dataSource"/>
 	</bean>
 	
 	<mybatis-spring:scan base-package="com.board.mapper" />
 	<context:component-scan base-package="com.board.service" />
-
+	<context:component-scan base-package="com.board.exception" />
+	
 	<tx:annotation-driven/>
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"></property>
+		<property name="dataSource" ref="dataSource"/>
 	</bean>
-	
-	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	<aop:aspectj-autoproxy/>
 	
 </beans>

@@ -12,8 +12,8 @@
 	</resultMap>
 
 	<insert id="addImages">
-		INSERT INTO image_file(product_id, file_name, file_path)
-		VALUES(#{prdtId}, #{fileName}, #{filePath})
+		INSERT INTO image_file(file_id, product_id, file_name, file_path)
+		VALUES(uuid(), #{prdtId}, #{fileName}, #{filePath})
 	</insert>
 
 	<select id="getImagesById" parameterType="String" resultType="com.board.domain.ImageVO" resultMap="imageSelectRM">

@@ -1,11 +1,9 @@
 package com.board.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.board.domain.ProductLikeVO;
-import com.board.domain.ProductVO;
-import com.board.exception.product.ProductExceptionMessage;
-import com.board.exception.product.ProductNotFoundException;
 import com.board.mapper.ProductLikeMapper;
 import com.board.mapper.UserMapper;
 import com.board.util.LoginUserUtils;
@@ -24,18 +22,15 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 	 *	현재 로그인한 사용자가 해당 상품을 찜했는지 안했는지 여부 확인
 	 */
 	@Override
+	@Transactional
 	public ProductLikeVO isLikedOrNot(String prdtId) {
-		try {
-			String username = LoginUserUtils.getUserId();
-			String accountId = userMapper.getAccountId(username);
-			ProductLikeVO like = ProductLikeVO.builder()
-					.prdtId(prdtId)
-					.accountId(accountId)
-					.build();
-			return productLikeMapper.isLikedOrNot(like);
-		} catch (RuntimeException e) {
-			throw new ProductNotFoundException(ProductExceptionMessage.NOT_FOUND);
-		}
+		String username = LoginUserUtils.getUserId();
+		String accountId = userMapper.getAccountId(username);
+		ProductLikeVO like = ProductLikeVO.builder()
+				.prdtId(prdtId)
+				.accountId(accountId)
+				.build();
+		return productLikeMapper.isLikedOrNot(like);
 	}
 
 }

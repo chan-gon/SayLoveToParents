@@ -23,12 +23,12 @@
 
 	<insert id="sendMessage">
 		INSERT INTO message(product_id, buyer, seller, content, type, send_date)
-		VALUES(#{prdtId}, #{buyer}, #{seller}, #{content}, #{type}, sysdate)
+		VALUES(#{prdtId}, #{buyer}, #{seller}, #{content}, #{type}, now())
 	</insert>
 	
 	<insert id="sendResponse">
 		INSERT INTO message(product_id, buyer, seller, content, type, send_date)
-		VALUES(#{prdtId}, #{buyer}, #{seller}, #{content}, #{type}, sysdate)
+		VALUES(#{prdtId}, #{buyer}, #{seller}, #{content}, #{type}, now())
 	</insert>
 	
 	<select id="getReceivedMsg" parameterType="String" resultType="com.board.domain.MessageVO" resultMap="MessageSelectRM">

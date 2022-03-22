@@ -14,7 +14,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.board.domain.UserVO;
-import com.board.exception.user.UpdateUserException;
 import com.board.exception.user.UserExistsException;
 import com.board.exception.user.UserNotFoundException;
 import com.board.util.PasswordEncryptor;
@@ -120,18 +119,6 @@ public class UserServiceTest {
 	public void 아이디_찾기_테스트_성공() {
 		String id = userService.getIdByNameAndPhone(testUser);
 		assertTrue(id.equals("test"));
-	}
-	
-	@Test
-	public void 비밀번호_변경_테스트_실패() {
-		exceptionRule.expect(UpdateUserException.class);
-		exceptionRule.expectMessage("비밀번호 변경에 실패했습니다.");
-		UserVO user = UserVO.builder()
-				.accountId("none")
-				.userId(NOT_EXIST_ID)
-				.userPwd("newPwd")
-				.build();
-		userService.changeUserPwd(user);
 	}
 	
 	/*
