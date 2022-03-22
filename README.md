@@ -9,13 +9,8 @@
 
 - Spring 5
 - JDK 1.8
-- Oracle 11g
-- MyBatis
-- 추가 업로드 예정
-
-### 주요기능
-
-업로드 예정
+- MySQL
+- AWS
 
 ### 유스케이스
 
@@ -25,7 +20,7 @@
 
 [Click](https://github.com/chan-gon/joonggo-market-service/wiki/ERD)
 
-### Refactoring
+### Study&Refactoring
 
 [Click](https://github.com/chan-gon/joonggo-market-service/wiki/Refactoring)
 
