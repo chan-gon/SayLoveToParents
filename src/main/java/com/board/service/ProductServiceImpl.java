@@ -1,5 +1,6 @@
 package com.board.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.SdkClientException;
 import com.board.domain.Criteria;
 import com.board.domain.ImageVO;
 import com.board.domain.ProductVO;
@@ -63,15 +65,17 @@ public class ProductServiceImpl implements ProductService {
 		}
 		// 이미지 등록
 		for (MultipartFile image : productImage) {
-			String filePath = ImageFileUtils.getFilePath();
-			String fileName = ImageFileUtils.getFileName(image);
-			ImageFileUtils.saveImages(filePath, fileName, image);
-			ImageVO newImage = ImageVO.builder()
-					.prdtId(productId)
-					.fileName(fileName)
-					.filePath(filePath)
-					.build();
-			imageMapper.addImages(newImage);
+			try {
+				ImageFileUtils.saveImages(image);
+				String imageFileName = ImageFileUtils.getFileName(image);
+				ImageVO newImage = ImageVO.builder()
+						.prdtId(productId)
+						.fileName(imageFileName)
+						.build();
+				imageMapper.addImages(newImage);
+			} catch (SdkClientException | IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -172,15 +176,17 @@ public class ProductServiceImpl implements ProductService {
 			
 			// 업데이트 이미지 등록
 			for (int i = 0; i < productImage.size(); i++) {
-				String filePath = ImageFileUtils.getFilePath();
-				String fileName = ImageFileUtils.getFileName(productImage.get(i));
-				ImageFileUtils.saveImages(filePath, fileName, productImage.get(i));
-				ImageVO newImage = ImageVO.builder()
-						.prdtId(prdtId)
-						.fileName(fileName)
-						.filePath(filePath)
-						.build();
-				imageMapper.addImages(newImage);
+				try {
+					ImageFileUtils.saveImages(productImage.get(i));
+					String imageFileName = ImageFileUtils.getFileName(productImage.get(i));
+					ImageVO newImage = ImageVO.builder()
+							.prdtId(prdtId)
+							.fileName(imageFileName)
+							.build();
+					imageMapper.addImages(newImage);
+				} catch (SdkClientException | IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

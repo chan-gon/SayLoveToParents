@@ -6,8 +6,14 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.board.domain.ImageVO;
-import com.board.exception.file.ImageUploadFailException;
 
 public class ImageFileUtils {
 	
@@ -46,14 +52,20 @@ public class ImageFileUtils {
 
 	/**
 	 * 로컬 경로에 이미지 저장.
+	 * @throws IOException 
+	 * @throws SdkClientException 
+	 * @throws AmazonServiceException 
 	 */
-	public static void saveImages(String filePath, String fileName, MultipartFile multipartFile) {
-		File saveImages = new File(filePath, fileName);
-		try {
-			multipartFile.transferTo(saveImages);
-		} catch (IOException e) {
-			throw new ImageUploadFailException("이미지 등록에 실패했습니다.");
-		} 
+	public static void saveImages(MultipartFile multipartFile) throws AmazonServiceException, SdkClientException, IOException {
+		ObjectMetadata data = new ObjectMetadata();
+		data.setContentDisposition(multipartFile.getContentType());
+		data.setContentLength(multipartFile.getSize());
+		AmazonS3 s3client = AmazonS3ClientBuilder.standard()
+				.withRegion(Regions.AP_NORTHEAST_2)
+				.build();
+		String imageFileName = getFileName(multipartFile);
+		PutObjectResult objectResult = s3client.putObject("joonggo-bucket", imageFileName, multipartFile.getInputStream(), data);
+		System.out.println(objectResult.getContentMd5());
 	}
 
 	public static void deleteImages(ImageVO imageVO) {
