@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="../includes/header.jsp"%>
-
 <style>
 #att_zone {
 	width: 660px;
@@ -44,8 +42,8 @@
 					<b>상품이미지</b>
 				</h5>
 				<label class="input-file-button" for="fileName">업로드</label>
-				<input type='file' id="fileName" name="fileName" style="display:none" multiple='multiple' />
-				<div id='att_zone' data-placeholder='파일 선택 버튼을 클릭하거나 파일을 끌어다 놓으세요.'></div>
+				<input type='file' id="fileName" name="fileName" style="display:none" multiple='multiple'/>
+				<div id='att_zone' data-placeholder='업로드 버튼을 클릭해서 이미지를 업로드 하세요.' draggable="false"></div>
 			</div>
 		</div>
 

@@ -47,9 +47,9 @@
 	<main class="container">
 		<div class="left-column">
 			<div class="slider">
-				<c:forEach var="image" items="${images }">
+				<c:forEach var="image" items="${images}">
 					<div>
-						<img src="/productImages/${image.fileName }">
+						<img src="${s3URL}${image.fileName}">
 					</div>
 				</c:forEach>
 			</div>
@@ -58,51 +58,51 @@
 
 			<div class="product-description">
 				<h1>
-					<c:out value="${product.prdtName }" />
+					<c:out value="${product.prdtName}" />
 				</h1>
 				<p>
-					<c:out value="${product.prdtInfo }" />
+					<c:out value="${product.prdtInfo}" />
 				</p>
 			</div>
 
 			<div class="product-configuration">
 				<div class="product-color">
 					<span>등록일: </span>
-					<fmt:formatDate value="${product.prdtRegDate }" pattern="yyyy-MM-dd" />
+					<fmt:formatDate value="${product.prdtRegDate}" pattern="yyyy-MM-dd" />
 					<c:if test="${not empty product.prdtUpdateDate}">
 						/
 						<span>수정일: </span>
-						<fmt:formatDate value="${product.prdtUpdateDate }" pattern="yyyy-MM-dd" />
+						<fmt:formatDate value="${product.prdtUpdateDate}" pattern="yyyy-MM-dd" />
 					</c:if>
 				</div>
 				<div class="product-color">
 					<span>찜한개수: </span>
-					<c:out value="${product.prdtLikeCnt }" />
+					<c:out value="${product.prdtLikeCnt}" />
 				</div>
 				<div class="product-color">
 					<span>상품상태: </span>
-					<c:out value="${product.prdtCondition }" />
+					<c:out value="${product.prdtCondition}" />
 				</div>
 				<div class="product-color">
 					<span>교환여부: </span>
-					<c:out value="${product.prdtIsTradeable }" />
+					<c:out value="${product.prdtIsTradeable}" />
 				</div>
 				<div class="product-color">
 					<span>배송비: </span>
-					<c:out value="${product.prdtIsDeliveryFree }" />
+					<c:out value="${product.prdtIsDeliveryFree}" />
 				</div>
 				<div class="product-color">
 					<span>거래지역: </span>
-					<c:out value="${product.prdtTradeLoc }" />
+					<c:out value="${product.prdtTradeLoc}" />
 				</div>
 
 				<div class="cable-config">
 					<div class="cable-choose">
 						<sec:authorize access="isAuthenticated()">
-							<c:if test="${empty productLike }">
+							<c:if test="${empty productLike}">
 								<button type="button" id="likeBtn">찜하기</button>
 							</c:if>
-							<c:if test="${not empty productLike }">
+							<c:if test="${not empty productLike}">
 								<button type="button" id="unlikeBtn">찜하기 취소</button>
 							</c:if>
 							<button type="button" onclick="openMessageBox()">메시지 보내기</button>

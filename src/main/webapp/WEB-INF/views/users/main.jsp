@@ -28,19 +28,24 @@ padding-left: 13px;
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<c:if test="${not empty products}">
+				<c:choose>
+					<c:when test="${not empty products}">
 						<!-- 판매 상품 리스트 -->
 						<c:forEach var="product" items="${products }">
 							<input hidden="hidden" type="text" id="prdtId" name="prdtId" value='<c:out value="${product.prdtId }" />'>
 							<div class="gallery">
-								<a href="/products/${product.prdtId }" id="imageBtn"><img src='${imagePath }${product.imageVO.fileName }' alt="NO IMAGE FOUND"> </a>
+								<a href="/products/${product.prdtId }" id="imageBtn"><img src='${s3URL}${product.imageVO.fileName}' alt="NO IMAGE FOUND"></a>
 								<div class="desc">
 									<c:out value="${product.prdtName }" />
 								</div>
 							</div>
 						</c:forEach>
 						<!-- End of 판매 상품 리스트 -->
-					</c:if>
+					</c:when>
+					<c:otherwise>
+						<img src='/resources/images/product-not-found.png' alt="NOT FOUND" style="width:100%">
+					</c:otherwise>
+				</c:choose>
 				</div>
 			</div>
 		</div>

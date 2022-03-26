@@ -66,8 +66,8 @@ public class ProductServiceImpl implements ProductService {
 		// 이미지 등록
 		for (MultipartFile image : productImage) {
 			try {
-				ImageFileUtils.saveImages(image);
 				String imageFileName = ImageFileUtils.getFileName(image);
+				ImageFileUtils.saveImages(image, imageFileName);
 				ImageVO newImage = ImageVO.builder()
 						.prdtId(productId)
 						.fileName(imageFileName)
@@ -143,10 +143,10 @@ public class ProductServiceImpl implements ProductService {
 		String userId = LoginUserUtils.getUserId();
 		String accountId = userMapper.getAccountId(userId);
 		List<ImageVO> localImages = imageMapper.getImagesById(prdtId);
-		for (int i = 0; i < localImages.size(); i++) {
-			ImageFileUtils.deleteImages(localImages.get(i));
-		}
 		imageMapper.deleteImages(prdtId);
+		for (ImageVO image : localImages) {
+			ImageFileUtils.deleteImages(image);
+		}
 		productMapper.deleteProduct(accountId, prdtId);
 	}
 
@@ -169,16 +169,15 @@ public class ProductServiceImpl implements ProductService {
 		String prdtId = product.getPrdtId();
 		if (!productImage.isEmpty()) {
 			List<ImageVO> localImages = imageMapper.getImagesById(prdtId);
-			for (ImageVO image : localImages) {
-				ImageFileUtils.deleteImagesPermanent(image.getFileName());
-			}
 			imageMapper.deleteImages(prdtId);
-			
+			for (ImageVO image : localImages) {
+				ImageFileUtils.deleteImages(image);
+			}
 			// 업데이트 이미지 등록
 			for (int i = 0; i < productImage.size(); i++) {
 				try {
-					ImageFileUtils.saveImages(productImage.get(i));
 					String imageFileName = ImageFileUtils.getFileName(productImage.get(i));
+					ImageFileUtils.saveImages(productImage.get(i), imageFileName);
 					ImageVO newImage = ImageVO.builder()
 							.prdtId(prdtId)
 							.fileName(imageFileName)

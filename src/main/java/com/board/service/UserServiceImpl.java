@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
 			List<ImageVO> localImages = imageMapper.getImagesById(product.getPrdtId());
 			imageMapper.deleteImagesPermanent(product.getPrdtId());
 			for (ImageVO image : localImages) {
-				ImageFileUtils.deleteImagesPermanent(image.getFileName());
+				ImageFileUtils.deleteImages(image);
 			}
 			// 상품 좋아요 삭제
 			productMapper.deleteProductLikePermanent(product.getPrdtId());

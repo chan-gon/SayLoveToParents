@@ -14,6 +14,5 @@ public class ImageVO {
 	private final String fileId;
 	private final String prdtId;
 	private final String fileName;
-	private final String filePath;
 
 }
