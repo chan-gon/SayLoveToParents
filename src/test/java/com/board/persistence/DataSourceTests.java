@@ -27,6 +27,9 @@ public class DataSourceTests {
 	@Setter(onMethod_ = { @Autowired })
 	private SqlSessionFactory sqlSessionFactory;
 	
+	/**
+	 * Spring에 Bean으로 등록된 DataSource를 이용해서 Connection을 제대로 처리할 수 있는지 테스트.
+	 */
 	@Test
 	public void testConnection() {
 		try (Connection con = dataSource.getConnection()) {
