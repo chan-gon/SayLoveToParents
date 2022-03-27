@@ -4,7 +4,7 @@ import com.board.domain.UserVO;
 
 public interface UserService {
 	
-	UserVO getUserById(String accountId);
+	UserVO getUserById(String userId);
 
 	void signUpUser(UserVO user);
 
