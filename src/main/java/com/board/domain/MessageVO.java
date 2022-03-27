@@ -19,7 +19,6 @@ public class MessageVO {
 	private final String content;
 	private final Date sendDate;
 	private final String type;
-	
 	private final ProductVO productVO;
 
 }

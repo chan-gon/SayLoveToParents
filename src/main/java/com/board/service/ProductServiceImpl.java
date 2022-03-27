@@ -13,11 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.SdkClientException;
 import com.board.domain.Criteria;
 import com.board.domain.ImageVO;
+import com.board.domain.MessageVO;
 import com.board.domain.ProductVO;
 import com.board.domain.UserVO;
 import com.board.exception.product.ProductExceptionMessage;
 import com.board.exception.product.ProductNotFoundException;
 import com.board.mapper.ImageMapper;
+import com.board.mapper.MessageMapper;
 import com.board.mapper.ProductMapper;
 import com.board.mapper.UserMapper;
 import com.board.util.ImageFileUtils;
@@ -34,6 +36,8 @@ public class ProductServiceImpl implements ProductService {
 	private final ProductMapper productMapper;
 	
 	private final ImageMapper imageMapper;
+	
+	private final MessageMapper messageMapper;
 	
 	/**
 	 * 	파일 등록 작업에 productId가 사용되기 때문에 테이블 PK인 productId의 난수값 생성을 
@@ -146,6 +150,10 @@ public class ProductServiceImpl implements ProductService {
 		imageMapper.deleteImages(prdtId);
 		for (ImageVO image : localImages) {
 			ImageFileUtils.deleteImages(image);
+		}
+		List<MessageVO> productRelatedMessages = messageMapper.getMessagesById(prdtId);
+		for (MessageVO message : productRelatedMessages) {
+			messageMapper.deleteMessagesById(message.getPrdtId());
 		}
 		productMapper.deleteProduct(accountId, prdtId);
 	}

@@ -19,7 +19,7 @@
 		<property name="jdbcUrl" value="jdbc:log4jdbc:mysql://joonggo-rds-mysql.chagb5t1righ.ap-northeast-2.rds.amazonaws.com:3306/joonggo_market?characterEncoding=UTF-8&amp;serverTimezone=Asia/Seoul"/>
 		<property name="username" value="joonggo_market"/>
 		<property name="password" value="joonggo1234"/>
-	</bean>	
+	</bean>		
 	
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
 		<constructor-arg ref="hikariConfig" />

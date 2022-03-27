@@ -29,6 +29,7 @@ public class MessageServiceImpl implements MessageService {
 				.buyer(loginUser)
 				.seller(message.getSeller())
 				.content(message.getContent())
+				.type(message.getType())
 				.build();
 		messageMapper.sendMessage(newMessage);
 	}
