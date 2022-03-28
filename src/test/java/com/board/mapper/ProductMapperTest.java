@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j;
 /**
  * User 데이터를 다루는 쿼리가 제대로 작성 되었는지 / 주어진 환경에서 제대로 동작하는지 확인.
  * 
- * 테스트 네이밍 규칙 : [SQL 작업 내용]_[테스트 내용(Mapper 클래스 메소드 이름을 사용했음)]_[테스트 결과]
+ * 테스트 네이밍 규칙 : [SQL 작업 내용]_[테스트 내용(Mapper 클래스 메소드 이름을 사용했음)]
  * 
  * @Transactional : 트랜잭션 테스트 후 트랜잭션을 강제 롤백해서 DB에 반영되지 않도록 한다.
  *
@@ -56,7 +56,7 @@ public class ProductMapperTest {
 	 * user 정보를 생성 -> product 등록 순서로 진행.
 	 */
 	@Before
-	public void insert_addNewProduct_addOneNewProduct() {
+	public void insert_addNewProduct() {
 		// user 생성
 		user = UserVO.builder()
 				.userId(TEST_VALUE)
@@ -98,7 +98,7 @@ public class ProductMapperTest {
 	}
 
 	@Test
-	public void select_getListWithPaging_productListWithPaging() {
+	public void select_getListWithPaging() {
 		cri.setPageNum(2);
 		cri.setAmount(10);
 		List<ProductVO> list = productMapper.getListWithPaging(cri);
@@ -106,7 +106,7 @@ public class ProductMapperTest {
 	}
 
 	@Test
-	public void select_getListWithPaging_productListByCategory() {
+	public void select_getListWithPagingByCategory() {
 		cri.setPageNum(1);
 		cri.setAmount(10);
 		cri.setCategory("디지털");
@@ -115,7 +115,7 @@ public class ProductMapperTest {
 	}
 
 	@Test
-	public void select_getListWithPaging_productListByKeyword() {
+	public void select_getListWithPagingByKeyword() {
 		cri.setPageNum(1);
 		cri.setAmount(10);
 		cri.setKeyword("나이키");
@@ -124,17 +124,17 @@ public class ProductMapperTest {
 	}
 	
 	@Test
-	public void select_getProductById_showProductByid() {
+	public void select_getProductById() {
 		productMapper.getProductById(product.getPrdtId());
 	}
 	
 	@Test
-	public void select_getProductList_showAllProduct() {
+	public void select_getProductList() {
 		productMapper.getProductList();
 	}
 	
 	@Test
-	public void update_likeProuct_unlikeProuct_addSubtractLikeCnt() {
+	public void update_likeProuct_unlikeProuct() {
 		productMapper.likeProuct(product.getPrdtId());
 		ProductVO insertProduct1 = productMapper.getProductById(product.getPrdtId());
 		assertEquals(1, insertProduct1.getPrdtLikeCnt());
@@ -145,17 +145,17 @@ public class ProductMapperTest {
 	}
 	
 	@Test
-	public void select_getProductId_showProductIds() {
+	public void select_getProductId() {
 		productMapper.getProductId(user.getAccountId());
 	}
 	
 	@Test
-	public void select_getLikeProduct_showLikeProducts() {
+	public void select_getLikeProduct() {
 		productMapper.getLikeProduct(user.getAccountId());
 	}
 	
 	@Test
-	public void update_updateProduct_updateProductInfo() {
+	public void update_updateProduct() {
 		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
 		String updateVal  = "update";
 		product = ProductVO.builder()
@@ -173,28 +173,28 @@ public class ProductMapperTest {
 	}
 	
 	@Test
-	public void insert_addLikeProduct_addLikeProduct() {
+	public void insert_addLikeProduct() {
 		productMapper.addLikeProduct(product);
 	}
 	
 	@Test
-	public void delete_deleteLikeProduct_deleteLikeProduct() {
+	public void delete_deleteLikeProduct() {
 		productMapper.addLikeProduct(product);
 		productMapper.deleteLikeProduct(product);
 	}
 	
 	@Test
-	public void delete_deleteProduct_deleteProduct() {
+	public void delete_deleteProduct() {
 		productMapper.deleteProduct(product.getAccountId(), product.getPrdtId());
 	}
 	
 	@Test
-	public void delete_deleteProductPermanent_signOutService() {
+	public void delete_deleteProductPermanent() {
 		productMapper.deleteProductPermanent(product.getAccountId());
 	}
 	
 	@Test
-	public void delete_deleteProductLikePermanent_signOutService() {
+	public void delete_deleteProductLikePermanent() {
 		productMapper.addLikeProduct(product);
 		productMapper.deleteProductLikePermanent(product.getPrdtId());
 	}
