@@ -194,6 +194,7 @@
 				prdtId : prdtId,
 				seller : seller,
 				content : content.val(),
+				type : "BUYER"
 			}
 			if (content.val() == null || content.val() == "") {
 				alert("메시지를 입력하세요.");
