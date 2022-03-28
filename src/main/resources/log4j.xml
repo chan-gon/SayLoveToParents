@@ -15,6 +15,14 @@
 		<level value="info" />
 	</logger>
 	
+	<logger name="com.board.common">
+		<level value="info" />
+	</logger>
+	
+	<logger name="com.board.handler">
+		<level value="info" />
+	</logger>
+	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
 		<level value="info" />
@@ -31,11 +39,23 @@
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
-
+	
 	<!-- Root Logger -->
 	<root>
 		<priority value="warn" />
 		<appender-ref ref="console" />
 	</root>
+	
+	<logger name="jdbc.audit">
+		<level value="info" />
+	</logger>
+	
+	<logger name="jdbc.resultset">
+		<level value="warn" />
+	</logger>
+	
+	<logger name="jdbc.connection">
+		<level value="warn" />
+	</logger>
 	
 </log4j:configuration>

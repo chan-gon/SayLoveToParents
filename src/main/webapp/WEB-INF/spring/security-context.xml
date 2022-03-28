@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	 <security:http pattern="/resources/**" security="none" />
+	
+	<security:http auto-config="true" use-expressions="true" >
+	
+		<security:intercept-url pattern="/" access="permitAll" />
+		<security:intercept-url pattern="/users" access="permitAll" />
+		<security:intercept-url pattern="/users/login" access="permitAll" />
+		<security:intercept-url pattern="/users/signup" access="permitAll" />
+		<security:intercept-url pattern="/users/signup/**" access="permitAll" />
+		<security:intercept-url pattern="/users/help/**" access="permitAll" />
+		<security:intercept-url pattern="/main" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/products/**" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/products/new" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/products/shop" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/messages/**" access="hasRole('ROLE_USER')" />
+
+		<security:access-denied-handler error-page="/users/accessdenied" />
+	
+		<security:form-login
+			login-page="/users/login"
+			login-processing-url="/loginProcess"
+			username-parameter="userId"
+			password-parameter="userPwd"
+			authentication-failure-url="/users/login"
+			authentication-success-handler-ref="customLoginSuccess"
+			authentication-failure-handler-ref="customLoginFailure"
+		/>
+		
+		<security:logout
+			logout-url="/logout"
+			invalidate-session="true"
+			delete-cookies="JSESSIONID"
+		/>
+		
+		<security:csrf disabled="true"/>
+		
+		<security:session-management invalid-session-url="/">
+			<security:concurrency-control 
+				max-sessions="1"
+				expired-url="/"
+				error-if-maximum-exceeded="false"
+			/>
+		</security:session-management>
+		
+	</security:http>
+	
+	<security:authentication-manager>
+	
+		<security:authentication-provider ref="customAuthProvider" />
+		<security:authentication-provider user-service-ref="customUserDetailsService" >
+			<security:password-encoder ref="bcryptPasswordEncoder" hash="bcrypt" />
+		</security:authentication-provider>
+		
+	</security:authentication-manager>
+	
+	<bean id="customAccessDenied" class="com.board.security.CustomAccessDeniedHandler"></bean>
+	<bean id="customLoginSuccess" class="com.board.security.CustomLoginSuccessHandler" ></bean>
+	<bean id="customLoginFailure" class="com.board.security.CustomLoginFailureHandler" ></bean>
+	
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<bean id="customUserDetailsService" class="com.board.security.CustomUserDetailsService" ></bean>
+	<bean id="customAuthProvider" class="com.board.security.CustomAuthenticationProvider" ></bean>
+</beans>

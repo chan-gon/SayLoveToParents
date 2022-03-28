@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.board.mapper.ProductMapper">
+
+	<resultMap type="com.board.domain.ProductVO" id="productSelectRM">
+		<result property="prdtId" column="product_id" />
+		<result property="accountId" column="account_id" />
+		<result property="prdtName" column="product_name" />
+		<result property="prdtPrice" column="product_price" />
+		<result property="prdtCategory" column="product_category" />
+		<result property="prdtInfo" column="product_info" />
+		<result property="prdtCondition" column="product_condition" />
+		<result property="prdtIsTradeable" column="product_is_tradeable" />
+		<result property="prdtRegDate" column="product_reg_date" />
+		<result property="prdtUpdateDate" column="product_update_date" />
+		<result property="prdtIsDeliveryFree" column="product_is_delivery_free" />
+		<result property="prdtLikeCnt" column="product_like_cnt" />
+		<result property="prdtTradeLoc" column="product_trade_loc" />
+		<result property="prdtTradeStatus" column="product_trade_status" />
+		
+		<collection property="imageVO" resultMap="imageSelectRM" />
+		<collection property="userVO" resultMap="userSelectRM"/>
+		<collection property="productLikeVO" resultMap="productLikeSelectRM"/>
+	</resultMap>
+	
+	<resultMap type="com.board.domain.ImageVO" id="imageSelectRM">
+		<result property="fileName" column="file_name" />
+		
+	</resultMap>
+	
+	<resultMap type="com.board.domain.UserVO" id="userSelectRM">
+		<result property="userId" column="user_id"/>
+	</resultMap>
+	
+	<resultMap type="com.board.domain.ProductLikeVO" id="productLikeSelectRM">
+		<result property="prdtId" column="product_id"/>
+		<result property="accountId" column="account_id"/>
+		<result property="createDate" column="create_date"/>
+	</resultMap>
+
+	<insert id="addNewProduct">
+		INSERT INTO product(
+			product_id,
+			account_id, 
+			product_name, 
+			product_price, 
+			product_category,
+			product_info, 
+			product_condition, 
+			product_is_tradeable,
+			product_reg_date,
+			product_is_delivery_free,
+			product_trade_loc)
+		VALUES(
+			#{prdtId},
+			#{accountId},
+			#{prdtName},
+			#{prdtPrice},
+			#{prdtCategory},
+			#{prdtInfo},
+			#{prdtCondition},
+			#{prdtIsTradeable},
+			now(),
+			#{prdtIsDeliveryFree},
+			#{prdtTradeLoc}
+		)
+	</insert>
+	
+	<select id="getProductById" parameterType="String" resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
+		SELECT
+			a.product_id,
+			a.account_id,
+			a.product_name, 
+			a.product_price, 
+			a.product_category,
+			a.product_info, 
+			a.product_condition, 
+			a.product_is_tradeable,
+			a.product_reg_date,
+			a.product_update_date,
+			a.product_is_delivery_free,
+			a.product_like_cnt,
+			a.product_trade_loc,
+			a.product_trade_status,
+			b.file_name,
+			c.user_id
+		FROM 
+			product a INNER JOIN image_file b
+		ON
+			a.product_id = b.product_id
+		INNER JOIN site_user c
+		ON 
+			a.account_id = c.account_id
+		WHERE 
+			a.product_id = #{prdtId}
+	</select>
+	
+	<select id="getProductListById" parameterType="String" resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
+		SELECT
+			a.product_id,
+			a.account_id,
+			a.product_name, 
+			a.product_price, 
+			a.product_category,
+			a.product_info, 
+			a.product_condition, 
+			a.product_is_tradeable,
+			a.product_reg_date,
+			a.product_update_date,
+			a.product_is_delivery_free,
+			a.product_like_cnt,
+			a.product_trade_loc,
+			a.product_trade_status,
+			b.file_name
+		FROM 
+			product a LEFT OUTER JOIN image_file b
+		ON
+			a.product_id = b.product_id
+		WHERE 
+			a.account_id = #{accountId}
+		ORDER BY 
+			a.product_reg_date DESC
+	</select>
+	
+	<select id="getProductList" resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
+		SELECT
+			a.product_id,
+			a.account_id,
+			a.product_name, 
+			a.product_price, 
+			a.product_category,
+			a.product_info, 
+			a.product_condition, 
+			a.product_is_tradeable,
+			a.product_reg_date,
+			a.product_update_date,
+			a.product_is_delivery_free,
+			a.product_like_cnt,
+			a.product_trade_loc,
+			a.product_trade_status,
+			b.file_name
+		FROM 
+			product a INNER JOIN image_file b
+		ON
+			a.product_id = b.product_id
+		ORDER BY 
+			a.product_reg_date DESC
+	</select>
+	
+	<update id="likeProuct">
+		UPDATE product
+		SET product_like_cnt = product_like_cnt+1
+		WHERE product_id = #{prdtId}
+	</update>
+	
+	<update id="unlikeProuct">
+		UPDATE product
+		SET product_like_cnt = product_like_cnt-1
+		WHERE product_id = #{prdtId}
+	</update>
+	
+	<insert id="addLikeProduct">
+		INSERT INTO product_like(product_id, account_id, create_date)
+		VALUES(#{prdtId}, #{accountId}, now())
+	</insert>
+	
+	<delete id="deleteLikeProduct">
+		DELETE FROM product_like
+		WHERE product_id = #{prdtId} AND account_id = #{accountId}
+	</delete>
+	
+	<delete id="deleteProduct">
+		DELETE FROM product
+		WHERE account_id = #{accountId}
+		AND product_id = #{prdtId}
+	</delete>
+	
+	<delete id="deleteProductPermanent">
+		DELETE FROM product
+		WHERE account_id = #{accountId}
+	</delete>
+	
+	<delete id="deleteProductLikePermanent">
+		DELETE FROM product_like
+		WHERE product_id = #{prdtId}
+	</delete>
+	
+	<select id="getProductId" parameterType="String"  resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
+		SELECT product_id FROM product WHERE account_id = #{accountId}
+	</select>
+	
+	<select id="getLikeProduct" resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
+		SELECT
+			a.product_id,
+			a.account_id,
+			a.product_name, 
+			a.product_price, 
+			a.product_category,
+			a.product_info, 
+			a.product_condition, 
+			a.product_is_tradeable,
+			a.product_reg_date,
+			a.product_update_date,
+			a.product_is_delivery_free,
+			a.product_like_cnt,
+			a.product_trade_loc,
+			a.product_trade_status,
+			b.file_name,
+            c.create_date
+		FROM 
+			product a LEFT OUTER JOIN image_file b
+		ON
+			a.product_id = b.product_id LEFT OUTER JOIN product_like c
+        ON 
+        	b.product_id = c.product_id
+		WHERE 
+			c.account_id = #{accountId}
+		ORDER BY 
+			c.create_date DESC
+	</select>
+	
+	<update id="updateProduct">
+		UPDATE product
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="prdtName != null">product_name = #{prdtName},</if>
+			<if test="prdtPrice != null">product_price = #{prdtPrice},</if>
+			<if test="prdtCategory != null">product_category = #{prdtCategory},</if>
+			<if test="prdtTradeLoc != null">product_trade_loc = #{prdtTradeLoc},</if>
+			<if test="prdtCondition != null">product_condition = #{prdtCondition},</if>
+			<if test="prdtIsTradeable != null">product_is_tradeable = #{prdtIsTradeable},</if>
+			<if test="prdtIsDeliveryFree != null">product_is_delivery_free = #{prdtIsDeliveryFree},</if>
+			<if test="prdtInfo != null">product_info = #{prdtInfo},</if>
+			product_update_date = default
+		</trim>
+		WHERE product_id = #{prdtId} 
+	</update>
+	
+	<select id="getListWithPaging" resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
+		<![CDATA[
+		SELECT 
+			*
+			FROM (SELECT A.*, @ROWNUM:=@ROWNUM+1 AS RN
+					FROM (
+						SELECT 
+							a.product_id,
+							a.account_id,
+							a.product_name, 
+							a.product_price, 
+							a.product_category,
+							a.product_info, 
+							a.product_condition, 
+							a.product_is_tradeable,
+							a.product_reg_date,
+							a.product_update_date,
+							a.product_is_delivery_free,
+							a.product_like_cnt,
+							a.product_trade_loc,
+							a.product_trade_status,
+							b.file_name
+						FROM
+							product a LEFT OUTER JOIN image_file b
+						ON
+							a.product_id = b.product_id ]]>
+						<trim prefix="WHERE">
+							<if test="keyword != null">
+								a.product_name like CONCAT('%',#{keyword},'%')
+							</if>
+							<if test="category != null">
+								a.product_category like CONCAT('%',#{category},'%')
+							</if>
+						</trim>
+						<![CDATA[ ORDER BY a.product_id) A
+					WHERE @ROWNUM:=0 <= #{pageNum} * #{amount}
+			) B WHERE RN > (#{pageNum}-1) * #{amount} ]]>
+	</select>
+	
+	<select id="getProductCount" resultType="int">
+		SELECT DISTINCT COUNT(*) FROM product
+		<trim prefix="WHERE">
+			<if test="keyword != null">
+				product_name like CONCAT('%',#{keyword},'%')
+			</if>
+			<if test="category != null">
+				product_category like CONCAT('%',#{category},'%')
+			</if>
+		</trim>
+	</select>
+	
+</mapper>

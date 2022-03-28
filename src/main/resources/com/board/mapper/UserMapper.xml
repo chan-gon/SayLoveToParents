@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.mapper.UserMapper">
+
+	<resultMap type="com.board.domain.UserVO" id="userSelectRM">
+		<result property="accountId" column="account_id" />
+		<result property="userId" column="user_id" />
+		<result property="userPwd" column="user_pwd" />
+		<result property="userName" column="user_name" />
+		<result property="userEmail" column="user_email" />
+		<result property="userPhone" column="user_phone" />
+		<result property="userAddr" column="user_addr" />
+		<result property="userRegDate" column="user_reg_date" />
+		<result property="userAuth" column="user_auth" />
+		<result property="userEnabled" column="user_enabled" />
+	</resultMap>
+
+	<select id="getUserById" parameterType="String" resultType="com.board.domain.UserVO" resultMap="userSelectRM">
+		SELECT
+			account_id,
+			user_id,
+			user_pwd,
+			user_name,
+			user_email,
+			user_phone,
+			user_addr,
+			user_auth
+		FROM
+			site_user
+		WHERE user_id = #{userId}
+	</select>
+	
+	<insert id="signUpUser">
+		INSERT INTO site_user(account_id, user_id, user_pwd, user_name, user_email, user_phone, user_addr, user_reg_date, user_auth, user_enabled)
+		VALUES(uuid(), #{userId}, #{userPwd}, #{userName}, #{userEmail}, #{userPhone}, #{userAddr}, now(), default, default)
+	</insert>
+	
+	<select id="isExistUserId" parameterType="String" resultType="String">
+		SELECT case 
+				when count(user_id) >= 1 then 'EXISTED'
+				else 'NOT_EXISTED' end as isexisted_id
+		FROM site_user
+		WHERE user_id = #{userId}
+	</select>
+	
+	<select id="isExistUserEmail" parameterType="String" resultType="String">
+		SELECT case 
+				when count(user_email) >= 1 then 'EXISTED'
+				else 'NOT_EXISTED' end as isexisted_email
+		FROM site_user
+		WHERE user_email = #{userEmail}
+	</select>
+	
+	<delete id="deleteUserPermanent">
+		DELETE FROM site_user WHERE user_id = #{userId} AND user_email = #{userEmail}
+	</delete>
+	
+	<select id="getIdByNameAndPhone" parameterType="com.board.domain.UserVO" resultType="String">
+		SELECT user_id FROM site_user WHERE user_name = #{userName} AND user_phone = #{userPhone}
+	</select>
+	
+	<select id="isValidIdAndEmail" parameterType="map" resultType="String">
+		SELECT case
+			when count(*) >= 1 then 'VALID'
+			else 'INVALID' end as isvalid_id_email 
+		FROM site_user
+		WHERE user_id = #{userId} AND user_email = #{userEmail}
+	</select>
+	
+	<select id="getAccountId" parameterType="String" resultType="String">
+		SELECT account_id FROM site_user WHERE user_id = #{userId}
+	</select>
+	
+	<select id="getUserPwd" parameterType="String" resultType="String">
+		SELECT user_pwd FROM site_user WHERE user_id = #{userId}
+	</select>
+	
+	<update id="changeUserPwd">
+		UPDATE site_user SET user_pwd = #{userPwd} WHERE account_id = #{accountId}
+	</update>
+	
+	<update id="changeUserProfile">
+		UPDATE 
+			site_user
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="userEmail != null">user_email = #{userEmail},</if>
+			<if test="userPhone != null">user_phone = #{userPhone},</if>
+			<if test="userAddr != null">user_addr = #{userAddr}</if>
+		</trim>
+		WHERE 
+			account_id = #{accountId}
+	</update>
+	
+</mapper>    
