@@ -42,7 +42,7 @@ public class ImageFileUtils {
 	}
 
 	/**
-	 * 로컬 경로에 이미지 저장.
+	 * AWS S3 버킷에 이미지 저장.
 	 */
 	public static void saveImages(MultipartFile multipartFile, String imageFileName) throws AmazonServiceException, SdkClientException, IOException {
 		ObjectMetadata data = new ObjectMetadata();
