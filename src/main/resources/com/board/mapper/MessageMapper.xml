@@ -63,10 +63,16 @@
 		ORDER by a.send_date
 	</select>
 	
-	<select id="getMessage" parameterType="String" resultType="String">
-		SELECT room_id FROM message
-		WHERE product_id = #{prdtId} AND buyer = #{buyer} AND seller = #{seller}
+	<select id="getMessagesById" parameterType="String" resultType="com.board.domain.MessageVO" resultMap="MessageSelectRM">
+		SELECT product_id, buyer, seller, content, send_date, type
+		FROM message
+		WHERE product_id = #{prdtId}
 	</select>
+	
+	<delete id="deleteMessagesById">
+		DELETE FROM message
+		WHERE product_id = #{prdtId}
+	</delete>
 	
 	<delete id="deleteMessagesPermanent">
 		DELETE FROM message

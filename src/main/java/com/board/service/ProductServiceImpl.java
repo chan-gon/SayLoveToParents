@@ -1,5 +1,6 @@
 package com.board.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -9,13 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.SdkClientException;
 import com.board.domain.Criteria;
 import com.board.domain.ImageVO;
+import com.board.domain.MessageVO;
 import com.board.domain.ProductVO;
 import com.board.domain.UserVO;
 import com.board.exception.product.ProductExceptionMessage;
 import com.board.exception.product.ProductNotFoundException;
 import com.board.mapper.ImageMapper;
+import com.board.mapper.MessageMapper;
 import com.board.mapper.ProductMapper;
 import com.board.mapper.UserMapper;
 import com.board.util.ImageFileUtils;
@@ -32,6 +36,8 @@ public class ProductServiceImpl implements ProductService {
 	private final ProductMapper productMapper;
 	
 	private final ImageMapper imageMapper;
+	
+	private final MessageMapper messageMapper;
 	
 	/**
 	 * 	파일 등록 작업에 productId가 사용되기 때문에 테이블 PK인 productId의 난수값 생성을 
@@ -63,15 +69,17 @@ public class ProductServiceImpl implements ProductService {
 		}
 		// 이미지 등록
 		for (MultipartFile image : productImage) {
-			String filePath = ImageFileUtils.getFilePath();
-			String fileName = ImageFileUtils.getFileName(image);
-			ImageFileUtils.saveImages(filePath, fileName, image);
-			ImageVO newImage = ImageVO.builder()
-					.prdtId(productId)
-					.fileName(fileName)
-					.filePath(filePath)
-					.build();
-			imageMapper.addImages(newImage);
+			try {
+				String imageFileName = ImageFileUtils.getFileName(image);
+				ImageFileUtils.saveImages(image, imageFileName);
+				ImageVO newImage = ImageVO.builder()
+						.prdtId(productId)
+						.fileName(imageFileName)
+						.build();
+				imageMapper.addImages(newImage);
+			} catch (SdkClientException | IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -139,10 +147,14 @@ public class ProductServiceImpl implements ProductService {
 		String userId = LoginUserUtils.getUserId();
 		String accountId = userMapper.getAccountId(userId);
 		List<ImageVO> localImages = imageMapper.getImagesById(prdtId);
-		for (int i = 0; i < localImages.size(); i++) {
-			ImageFileUtils.deleteImages(localImages.get(i));
-		}
 		imageMapper.deleteImages(prdtId);
+		for (ImageVO image : localImages) {
+			ImageFileUtils.deleteImages(image);
+		}
+		List<MessageVO> productRelatedMessages = messageMapper.getMessagesById(prdtId);
+		for (MessageVO message : productRelatedMessages) {
+			messageMapper.deleteMessagesById(message.getPrdtId());
+		}
 		productMapper.deleteProduct(accountId, prdtId);
 	}
 
@@ -165,22 +177,23 @@ public class ProductServiceImpl implements ProductService {
 		String prdtId = product.getPrdtId();
 		if (!productImage.isEmpty()) {
 			List<ImageVO> localImages = imageMapper.getImagesById(prdtId);
-			for (ImageVO image : localImages) {
-				ImageFileUtils.deleteImagesPermanent(image.getFileName());
-			}
 			imageMapper.deleteImages(prdtId);
-			
+			for (ImageVO image : localImages) {
+				ImageFileUtils.deleteImages(image);
+			}
 			// 업데이트 이미지 등록
 			for (int i = 0; i < productImage.size(); i++) {
-				String filePath = ImageFileUtils.getFilePath();
-				String fileName = ImageFileUtils.getFileName(productImage.get(i));
-				ImageFileUtils.saveImages(filePath, fileName, productImage.get(i));
-				ImageVO newImage = ImageVO.builder()
-						.prdtId(prdtId)
-						.fileName(fileName)
-						.filePath(filePath)
-						.build();
-				imageMapper.addImages(newImage);
+				try {
+					String imageFileName = ImageFileUtils.getFileName(productImage.get(i));
+					ImageFileUtils.saveImages(productImage.get(i), imageFileName);
+					ImageVO newImage = ImageVO.builder()
+							.prdtId(prdtId)
+							.fileName(imageFileName)
+							.build();
+					imageMapper.addImages(newImage);
+				} catch (SdkClientException | IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

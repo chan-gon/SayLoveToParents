@@ -8,17 +8,16 @@
 	<resultMap type="com.board.domain.ImageVO" id="imageSelectRM">
 		<result property="prdtId" column="product_id" />
 		<result property="fileName" column="file_name" />
-		<result property="filePath" column="file_path" />
 	</resultMap>
 
 	<insert id="addImages">
-		INSERT INTO image_file(file_id, product_id, file_name, file_path)
-		VALUES(uuid(), #{prdtId}, #{fileName}, #{filePath})
+		INSERT INTO image_file(file_id, product_id, file_name)
+		VALUES(uuid(), #{prdtId}, #{fileName})
 	</insert>
 
 	<select id="getImagesById" parameterType="String" resultType="com.board.domain.ImageVO" resultMap="imageSelectRM">
 		SELECT 
-			a.product_id, a.file_name, a.file_path 
+			a.product_id, a.file_name
 		FROM 
 			image_file a LEFT OUTER JOIN product b
 		ON
@@ -29,7 +28,7 @@
 	
 	<select id="imagesById" parameterType="String" resultType="com.board.domain.ImageVO" resultMap="imageSelectRM">
 		SELECT 
-			a.product_id, a.file_name, a.file_path 
+			a.product_id, a.file_name
 		FROM 
 			image_file a LEFT OUTER JOIN product b
 		ON

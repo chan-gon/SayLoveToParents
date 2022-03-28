@@ -32,6 +32,6 @@
       
     <!-- Default Location 설정 -->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-        <property name="defaultLocale" value="ko"></property>
+        <property name="defaultLocale" value="en"></property>
     </bean>
 </beans>

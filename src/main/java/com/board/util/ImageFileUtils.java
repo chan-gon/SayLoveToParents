@@ -1,17 +1,26 @@
 package com.board.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.board.domain.ImageVO;
-import com.board.exception.file.ImageUploadFailException;
 
 public class ImageFileUtils {
 	
-	private static final String DEFAULT_FILE_PATH = "C:\\joonggo_market\\images";
+	private static final AmazonS3 s3client = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_NORTHEAST_2).build();
+	
+	private static final String AWS_BUCKET_NAME = "joonggo-bucket";
+	
+	public static String AWS_S3_URL = "https://joonggo-bucket.s3.ap-northeast-2.amazonaws.com/";
 	
 	/**
 	 * 파일 이름 생성
@@ -33,44 +42,22 @@ public class ImageFileUtils {
 	}
 
 	/**
-	 * 파일 경로 가져오기.
-	 * 경로가 없다면 새로운 경로를 생성한다.
+	 * AWS S3 버킷에 이미지 저장.
 	 */
-	public static String getFilePath() {
-		File imageDir = new File(DEFAULT_FILE_PATH);
-		if (!imageDir.exists()) {
-			imageDir.mkdirs();
-		}
-		return DEFAULT_FILE_PATH;
-	}
-
-	/**
-	 * 로컬 경로에 이미지 저장.
-	 */
-	public static void saveImages(String filePath, String fileName, MultipartFile multipartFile) {
-		File saveImages = new File(filePath, fileName);
-		try {
-			multipartFile.transferTo(saveImages);
-		} catch (IOException e) {
-			throw new ImageUploadFailException("이미지 등록에 실패했습니다.");
-		} 
+	public static void saveImages(MultipartFile multipartFile, String imageFileName) throws AmazonServiceException, SdkClientException, IOException {
+		ObjectMetadata data = new ObjectMetadata();
+		data.setContentDisposition(multipartFile.getContentType());
+		data.setContentLength(multipartFile.getSize());
+		PutObjectResult objectResult = s3client.putObject(AWS_BUCKET_NAME, imageFileName, multipartFile.getInputStream(), data);
+		System.out.println(objectResult.getContentMd5());
 	}
 
 	public static void deleteImages(ImageVO imageVO) {
-		File file = new File(DEFAULT_FILE_PATH + "\\" + imageVO.getFileName());
-		if (file.exists()) {
-			file.delete();
-		} 			
+		try {
+			s3client.deleteObject(AWS_BUCKET_NAME, imageVO.getFileName());
+		} catch (AmazonServiceException e) {
+			System.err.println(e.getErrorMessage());
+		}
 	}
 	
-	/**
-	 * 회원 탈퇴 작업에 사용되는 메소드.
-	 */
-	public static void deleteImagesPermanent(String fileName) {
-		File file = new File(DEFAULT_FILE_PATH + "\\" + fileName);
-		if (file.exists()) {
-			file.delete();
-		} 			
-	}
-
 }

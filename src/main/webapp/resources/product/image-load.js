@@ -26,7 +26,7 @@
 	      }
 	    }  
 	  
-	    // 탐색기에서 드래그앤 드롭 사용
+	    // 탐색기에서 드래그앤 드롭 사용 금지
 	    attZone.addEventListener('dragenter', function(e){
 	      e.preventDefault();
 	      e.stopPropagation();
@@ -39,22 +39,8 @@
 	    }, false)
 	  
 	    attZone.addEventListener('drop', function(e){
-	      var files = {};
 	      e.preventDefault();
 	      e.stopPropagation();
-	      var dt = e.dataTransfer;
-	      files = dt.files;
-	      if (files.length > 6) {
-	    	  alert("이미지는 최대 6개까지 업로드 가능합니다.");
-	    	  files.length = 0;
-	    	  sel_files.length = 0;
-	    	  console.log(files.length);
-	    	  console.log(sel_files.length);
-	      }
-	      for(f of files){
-	        imageLoader(f);
-	      }
-	      
 	    }, false)
 	    
 	    /* 첨부된 이미지를 배열에 넣고 미리보기 */
@@ -84,8 +70,8 @@
 	      btn.onclick = function(ev){
 	        var ele = ev.srcElement;
 	        var delFile = ele.getAttribute('delFile');
-	        for(var i=0 ;i<sel_files.length; i++){
-	          if(delFile== sel_files[i].name){
+	        for(var i=0;i<sel_files.length; i++){
+	          if(delFile == sel_files[i].name){
 	            sel_files.splice(i, 1);      
 	          }
 	        }

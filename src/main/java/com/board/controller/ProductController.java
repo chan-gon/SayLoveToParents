@@ -20,6 +20,7 @@ import com.board.service.ImageService;
 import com.board.service.ProductLikeService;
 import com.board.service.ProductService;
 import com.board.service.UserService;
+import com.board.util.ImageFileUtils;
 import com.board.util.LoginUserUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -91,6 +92,7 @@ public class ProductController {
 		model.addAttribute("productLike", productLike);
 		model.addAttribute("images", productImages);
 		model.addAttribute("product", selectedProduct);
+		model.addAttribute("s3URL", ImageFileUtils.AWS_S3_URL);
 		return new ModelAndView("product/productDetail");
 	}
 	
@@ -100,6 +102,7 @@ public class ProductController {
 		List<ProductVO> likeProductList = productService.getLikeProduct();
 		model.addAttribute("products", productList);
 		model.addAttribute("likeProductList", likeProductList);
+		model.addAttribute("s3URL", ImageFileUtils.AWS_S3_URL);
 		return new ModelAndView("product/shop");
 	}
 	

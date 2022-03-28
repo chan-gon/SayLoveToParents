@@ -28,7 +28,7 @@
 	
 	<resultMap type="com.board.domain.ImageVO" id="imageSelectRM">
 		<result property="fileName" column="file_name" />
-		<result property="filePath" column="file_path" />
+		
 	</resultMap>
 	
 	<resultMap type="com.board.domain.UserVO" id="userSelectRM">
@@ -86,7 +86,6 @@
 			a.product_trade_loc,
 			a.product_trade_status,
 			b.file_name,
-			b.file_path,
 			c.user_id
 		FROM 
 			product a INNER JOIN image_file b
@@ -115,8 +114,7 @@
 			a.product_like_cnt,
 			a.product_trade_loc,
 			a.product_trade_status,
-			b.file_name,
-			b.file_path
+			b.file_name
 		FROM 
 			product a LEFT OUTER JOIN image_file b
 		ON
@@ -143,8 +141,7 @@
 			a.product_like_cnt,
 			a.product_trade_loc,
 			a.product_trade_status,
-			b.file_name,
-			b.file_path
+			b.file_name
 		FROM 
 			product a INNER JOIN image_file b
 		ON
@@ -212,7 +209,6 @@
 			a.product_trade_loc,
 			a.product_trade_status,
 			b.file_name,
-			b.file_path,
             c.create_date
 		FROM 
 			product a LEFT OUTER JOIN image_file b
@@ -263,8 +259,7 @@
 							a.product_like_cnt,
 							a.product_trade_loc,
 							a.product_trade_status,
-							b.file_name,
-							b.file_path
+							b.file_name
 						FROM
 							product a LEFT OUTER JOIN image_file b
 						ON
@@ -286,10 +281,10 @@
 		SELECT DISTINCT COUNT(*) FROM product
 		<trim prefix="WHERE">
 			<if test="keyword != null">
-				product_name like '%'||#{keyword}||'%'
+				product_name like CONCAT('%',#{keyword},'%')
 			</if>
 			<if test="category != null">
-				product_category like '%'||#{category}||'%'
+				product_category like CONCAT('%',#{category},'%')
 			</if>
 		</trim>
 	</select>

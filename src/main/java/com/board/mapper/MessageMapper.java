@@ -20,6 +20,10 @@ public interface MessageMapper {
 
 	List<MessageVO> getSentMsgList(@Param("buyer") String buyer, @Param("seller") String seller);
 	
+	List<MessageVO> getMessagesById(String prdtId);
+	
+	void deleteMessagesById(String prdtId);
+	
 	/*
 	 * 회원 탈퇴 관련
 	 */

@@ -14,6 +14,7 @@ import com.board.domain.Criteria;
 import com.board.domain.PageDTO;
 import com.board.domain.ProductVO;
 import com.board.service.ProductService;
+import com.board.util.ImageFileUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +30,7 @@ public class HomeController {
 	private final ProductService productService;
 
 	/**
-	 *	로그인 이후의 첫 페이지
+	 * 로그인 이후의 첫 페이지
 	 */
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public String home(Locale locale, Model model, Criteria cri) {
@@ -37,15 +38,14 @@ public class HomeController {
 
 		List<ProductVO> productList = productService.getProductList(cri);
 		int productCnt = productService.getProductCount(cri);
-		model.addAttribute("imagePath", "/productImages/");
 		model.addAttribute("products", productList);
 		model.addAttribute("pageMaker", new PageDTO(cri, productCnt));
-
+		model.addAttribute("s3URL", ImageFileUtils.AWS_S3_URL);
 		return "users/main";
 	}
 
 	/**
-	 *	사이트 첫 페이지
+	 * 사이트 첫 페이지
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String login() {
