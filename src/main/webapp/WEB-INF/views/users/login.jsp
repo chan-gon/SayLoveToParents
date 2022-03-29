@@ -24,7 +24,7 @@
 				<div class="col-md-4 col-md-offset-4">
 					<div class="login-panel panel panel-default">
 						<div class="panel-heading">
-							<h3 class="panel-title">로그인</h3>
+							<h3 class="panel-title">webhook test</h3>
 							<c:if test="${not empty errormsg}">
 								<font color="red">
 									<p>
