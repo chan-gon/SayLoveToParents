@@ -26,7 +26,7 @@
 
 ***
 
-### [Study&Refactoring](https://github.com/chan-gon/joonggo-market-service/wiki/Refactoring)
+### [Study&Refactoring](https://github.com/chan-gon/joonggo-market-service/wiki/Study-&-Refactoring)
 
 ***
 
