@@ -14,12 +14,20 @@
 
 ### [유스케이스](https://github.com/chan-gon/joonggo-market-service/wiki/Use-Case)
 
+***
+
 ### [ERD](https://github.com/chan-gon/joonggo-market-service/wiki/ERD)
+
+***
 
 ### [Service Architecture](https://github.com/chan-gon/joonggo-market-service/wiki/Service-Architecture)
 
 ![서버 구조](src/main/webapp/resources/images/server-architecture.png)
 
+***
+
 ### [Study&Refactoring](https://github.com/chan-gon/joonggo-market-service/wiki/Refactoring)
+
+***
 
 ### [커밋 메시지 규칙](https://github.com/chan-gon/joonggo-market-service/wiki/Git-%EC%BB%A4%EB%B0%8B-%EB%A9%94%EC%8B%9C%EC%A7%80-%EA%B7%9C%EC%B9%99)
