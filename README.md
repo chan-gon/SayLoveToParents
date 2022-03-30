@@ -12,18 +12,14 @@
 - MySQL
 - AWS
 
-### 유스케이스
+### [유스케이스](https://github.com/chan-gon/joonggo-market-service/wiki/Use-Case)
 
-[Click](https://github.com/chan-gon/joonggo-market-service/wiki/Use-Case)
+### [ERD](https://github.com/chan-gon/joonggo-market-service/wiki/ERD)
 
-### ERD
+### [Service Architecture](https://github.com/chan-gon/joonggo-market-service/wiki/Service-Architecture)
 
-[Click](https://github.com/chan-gon/joonggo-market-service/wiki/ERD)
+![서버 구조](src/main/webapp/resources/images/server-architecture.png)
 
-### Study&Refactoring
+### [Study&Refactoring](https://github.com/chan-gon/joonggo-market-service/wiki/Refactoring)
 
-[Click](https://github.com/chan-gon/joonggo-market-service/wiki/Refactoring)
-
-### 커밋 메시지 규칙
-
-[Click](https://github.com/chan-gon/joonggo-market-service/wiki/Git-%EC%BB%A4%EB%B0%8B-%EB%A9%94%EC%8B%9C%EC%A7%80-%EA%B7%9C%EC%B9%99)
+### [커밋 메시지 규칙](https://github.com/chan-gon/joonggo-market-service/wiki/Git-%EC%BB%A4%EB%B0%8B-%EB%A9%94%EC%8B%9C%EC%A7%80-%EA%B7%9C%EC%B9%99)
