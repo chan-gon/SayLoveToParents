@@ -29,4 +29,9 @@ public interface ProductService {
 	
 	int getProductCount(Criteria cri);
 	
+	/*
+	 * JUnit 테스트 전용
+	 * - ProductControllerTest.java에서 사용.
+	 */
+	ProductVO getProductIdByName(String prdtName);
 }

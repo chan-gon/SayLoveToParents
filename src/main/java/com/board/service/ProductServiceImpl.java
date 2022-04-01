@@ -204,4 +204,13 @@ public class ProductServiceImpl implements ProductService {
 		return productMapper.getProductCount(cri);
 	}
 
+	/*
+	 * JUnit 테스트 전용
+	 * - ProductControllerTest.java에서 사용.
+	 */
+	@Override
+	public ProductVO getProductIdByName(String prdtName) {
+		return productMapper.getProductIdByName(prdtName);
+	}
+
 }

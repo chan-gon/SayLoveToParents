@@ -44,7 +44,6 @@ public class UserVO implements UserDetails {
 	private final String userAddr;
 	private final Date userRegDate;
 	private final String userAuth;
-	private final int userEnabled;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

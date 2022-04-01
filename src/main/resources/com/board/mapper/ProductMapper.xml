@@ -192,6 +192,10 @@
 		SELECT product_id FROM product WHERE account_id = #{accountId}
 	</select>
 	
+	<select id="getProductIdByName" parameterType="String"  resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
+		SELECT product_id FROM product WHERE product_name = #{prdtName}
+	</select>
+	
 	<select id="getLikeProduct" resultType="com.board.domain.ProductVO" resultMap="productSelectRM">
 		SELECT
 			a.product_id,

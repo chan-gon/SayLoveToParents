@@ -1,0 +1,125 @@
+= 📄 REST API Reference
+:toc: left
+:toclevels: 4
+
+== Introduction
+본 문서는 시스템에서 제공하는 전체 REST API에 대해 기술합니다. 각 API는 아래의 세부 목차로 구성되어 있습니다.
+
+[horizontal]
+HTTP Request:: 요청 메시지 전체를 기술
+Path Parameter:: 요청 메시지의 경로 변수를 기술
+Request Fields:: 요청 메시지의 페이로드에 포함될 수 있는 JSON 프로퍼티를 기술
+HTTP Response:: 응답 메시지 전체를 기술
+Response Fields:: 응답 메시지의 페이로드에 포함될 수 있는 JSON 프로퍼티를 기술
+
+= User
+
+=== **[POST] /users - 회원 가입**
+****
+[discrete]
+==== Description
+회원 가입 요청을 처리합니다.
+
+operation::user-controller-test/successfully_create_new_user[snippets='http-request,request-fields,http-response']
+****
+
+=== **[GET] /users/signup/id - 아이디 중복 확인**
+****
+[discrete]
+==== Description
+회원 가입을 위해 아이디 중복 여부를 확인합니다.
+
+operation::user-controller-test/can_use_this_id[snippets='http-request,request-parameters,http-response']
+****
+
+=== **[GET] /users/signup/email - 이메일 중복 확인**
+****
+[discrete]
+==== Description
+회원 가입을 위해 이메일 중복 여부를 확인합니다.
+
+operation::user-controller-test/can_use_this_email[snippets='http-request,request-parameters,http-response']
+****
+
+=== **[POST] /users/help/id - 아이디 찾기**
+****
+[discrete]
+==== Description
+회원 이름과 연락처를 통해 아이디를 조회합니다.
+
+operation::user-controller-test/able_to_retrieve_id[snippets='http-request,request-fields,http-response,response-body']
+****
+
+=== **[POST] /users/help/pwd - 비밀번호 변경**
+****
+[discrete]
+==== Description
+회원 비밀번호를 변경합니다.
+
+operation::user-controller-test/successfully_change_user_password[snippets='http-request,request-fields,http-response']
+****
+
+=== **[POST] /users/profile - 회원정보 수정**
+****
+[discrete]
+==== Description
+회원의 개인정보를 수정합니다.
+
+operation::user-controller-test/successfully_change_user_profile[snippets='http-request,request-fields,http-response']
+****
+
+=== **[DELETE] /users - 회원 탈퇴**
+****
+[discrete]
+==== Description
+회원 정보를 삭제해서 탈퇴 작업을 처리합니다.
+
+operation::user-controller-test/permanently_delete_user[snippets='http-request,request-fields,http-response']
+****
+
+= Product
+
+=== **[POST] /products/new - 상품 등록**
+****
+[discrete]
+==== Description
+판매 상품을 등록합니다.
+
+operation::product-controller-test/create-product[snippets='http-request,request-parts,request-part-user-fields,request-part-product-fields,http-response']
+****
+
+=== **[POST] /products/like/{prdtId} - 상품 찜하기**
+****
+[discrete]
+==== Description
+판매 상품을 찜하기 합니다.
+
+operation::product-controller-test/like-product[snippets='http-request,path-parameters,http-response']
+****
+
+=== **[POST] /products/unlike/{prdtId} - 상품 찜하기 취소**
+****
+[discrete]
+==== Description
+판매 상품을 찜하기를 취소 합니다.
+
+operation::product-controller-test/unlike-product[snippets='http-request,path-parameters,http-response']
+****
+
+=== **[POST] /products/update/{prdtId} - 상품 수정**
+****
+[discrete]
+==== Description
+판매 상품 정보를 수정합니다.
+
+operation::product-controller-test/update-product[snippets='http-request,request-parts,request-part-product-fields,http-response']
+****
+
+=== **[POST] /products/delete/{prdtId} - 상품 삭제**
+****
+[discrete]
+==== Description
+판매 상품을 삭제합니다.
+
+operation::product-controller-test/delete-product[snippets='http-request,path-parameters,http-response']
+****

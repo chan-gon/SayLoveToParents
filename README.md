@@ -26,6 +26,8 @@
 
 ***
 
+### [REST API 문서](http://localhost:8082/docs/api-doc.html)
+
 ### [Study&Refactoring](https://github.com/chan-gon/joonggo-market-service/wiki/Study-&-Refactoring)
 
 ***

@@ -43,4 +43,10 @@ public interface ProductMapper {
 	void deleteProductPermanent(String accountId);
 	
 	void deleteProductLikePermanent(String prdtId);
+	
+	/*
+	 * JUnit 테스트 전용
+	 * - ProductControllerTest.java에서 사용.
+	 */
+	ProductVO getProductIdByName(String prdtName);
 }
