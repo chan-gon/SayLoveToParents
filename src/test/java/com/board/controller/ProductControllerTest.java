@@ -12,10 +12,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.partWith
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
 
 import javax.servlet.ServletException;
 
@@ -91,7 +91,7 @@ public class ProductControllerTest {
 	}
 	
 	@Before
-	public void setUpUser() throws ParseException {
+	public void setUpUser() {
 		user = UserVO.builder()
 				.userId("changon")
 				.userPwd("changon1234")
@@ -161,6 +161,7 @@ public class ProductControllerTest {
 				.file(userFile)
 				.file(productFile)
 				)
+		.andDo(print())
 		.andExpect(status().isOk())
 		.andDo(document.document(
 				requestParts(
@@ -189,9 +190,9 @@ public class ProductControllerTest {
 	@Test
 	@WithMockUser(username = "bang", password = "bang1234", authorities = {"ROLE_USER"})
 	public void likeProduct() throws Exception {
-		// 사용자1 생성 및 상품 등록
+		// 회원1(changon) 생성 및 상품 등록
 		createProduct();
-		// 사용자2 생성
+		// 회원2(bang) 생성
 		createUserTwo();
 		
 		// 등록한 상품 정보 호출
@@ -263,6 +264,7 @@ public class ProductControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.multipart("/products/update/{prdtId}", insertProduct.getPrdtId())
 				.file(imageFile)
 				.file(productFile)
+				.characterEncoding("UTF-8")
 				)
 		.andExpect(status().isOk())
 		.andDo(document.document(

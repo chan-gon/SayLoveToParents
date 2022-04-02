@@ -20,7 +20,7 @@
 
 ### ERD - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/ERD)
 
-### API Documents - work in progress
+### API Documents - [Click](https://chan-gon.github.io/portfolio/assets/projects/resources/api-doc.html)
 
 ### Study&Refactoring - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/Study-&-Refactoring)
 
