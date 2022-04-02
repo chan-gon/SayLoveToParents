@@ -17,7 +17,7 @@
 
 ### ERD - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/ERD)
 
-### API Documents - [Click](src/main/webapp/resources/apidoc/api-doc.html)
+### API Documents - work in progress
 
 ### Study&Refactoring - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/Study-&-Refactoring)
 
