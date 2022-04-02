@@ -2,7 +2,7 @@
 
 ### 개발동기
 
-- 중고 거래 서비스의 기능을 직접 구현하여 백엔드 시스템에 대한 이해도를 높이고 싶었다.
+- 중고 거래 서비스의 기능을 직접 구현하여 백엔드 시스템에 대한 이해도를 높이고 싶었습니다.
 
 ### 사용 기술 - 구현
 - Spring 5
@@ -20,7 +20,7 @@
 
 ### ERD - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/ERD)
 
-### API Documents - work in progress
+### API Documents - [Click](https://chan-gon.github.io/portfolio/assets/projects/resources/api-doc.html)
 
 ### Study&Refactoring - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/Study-&-Refactoring)
 
