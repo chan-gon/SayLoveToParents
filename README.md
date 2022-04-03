@@ -4,6 +4,26 @@
 
 - 중고 거래 서비스의 기능을 직접 구현하여 백엔드 시스템에 대한 이해도를 높이고 싶었습니다.
 
+### 사용 기술 - 구현
+- Spring 5
+- Maven 3.5.2
+- JDK 1.8
+- MySQL 8.0.27
+- Redis 2.1.3
+
+### 사용 기술 - 배포
+- AWS(EC2/RDS/S3)
+- Jenkins
+- GitHub
+
+### 주요 기능
+
+- 회원 가입
+- 상품 등록
+- 상품 검색(카테고리별&상품 이름)
+- 상품 찜하기
+- 사용자간 메시지 교환
+
 ### 프로젝트 전체 구조
 
 - 자세한 내용을 [Wiki](https://github.com/chan-gon/joonggo-market-service/wiki/Service-Architecture)에서 확인할 수 있습니다.
@@ -11,6 +31,9 @@
 ![서버 구조](src/main/webapp/resources/images/server-architecture.png)
 
 ### 프로젝트의 주요 관심사
+
+<details>
+<summary>접기/펼치기</summary>
 
 ##### 공통사항
 
@@ -33,7 +56,8 @@
 ##### 브랜치 관리
 
 Git Flow를 사용하여 브랜치 관리.  
-이 프로젝트에서는 Master, Develop, Feature 세 브랜치만 사용했습니다.
+
+이 프로젝트에서는 Master, Develop, Feature, Release 브랜치를 사용했습니다.
 
 ![Git Flow](src/main/webapp/resources/images/gitflow.png)
 
@@ -58,31 +82,12 @@ Git Flow를 사용하여 브랜치 관리.
 
 - NGrinder로 성능 테스트를 하고 있습니다.
 
+</details>
 
-### 사용 기술 - 구현
-- Spring 5
-- Maven 3.5.2
-- JDK 1.8
-- MySQL 8.0.27
-- Redis 2.1.3
-
-### 사용 기술 - 배포
-- AWS(EC2/RDS/S3)
-- Jenkins
-- GitHub
-
-### 주요 기능
-
-- 회원 가입
-- 상품 등록
-- 상품 검색(카테고리별&상품 이름)
-- 상품 찜하기
-- 사용자간 메시지 교환
-
-### Folder Structure
+### 폴더 구조
 
 <details>
-<summary>보기</summary>
+<summary>접기/펼치기</summary>
 
 ```
 |   +---java
@@ -271,29 +276,26 @@ Git Flow를 사용하여 브랜치 관리.
 
 </details>
 
-### 설치 방법
+### ERD
 
-```
-git clone https://github.com/chan-gon/joonggo-market-service.git
-```
+<details>
+<summary>접기/펼치기</summary>
 
-### 실행 방법
+![ERD](src/main/webapp/resources/images/erd.png)
 
-```
-ㅇㅇㅇㅇㅇㅇㅇ
-```
+</details>
+
+### 유스케이스 - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/Use-Case)
+
+### API Documents - [Click](https://chan-gon.github.io/portfolio/assets/projects/joonggo-market/api-doc.html)
+
+### Study&Refactoring - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/Study-&-Refactoring)
 
 ## 향후 추가할 기능
 
 - 실시간 채팅 기능
 - 상품 결제 기능
 - SNS 계정을 통한 간편 로그인 기능
+- 누군가 메시지를 보내면 notification이 발송되는 기능
+- HTTPS SSL 인증서 적용
 - 대량의 요청을 처리할 수 있는 환경 구축
-
-### 유스케이스 - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/Use-Case)
-
-### ERD - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/ERD)
-
-### API Documents - [Click](https://chan-gon.github.io/portfolio/assets/projects/joonggo-market/api-doc.html)
-
-### Study&Refactoring - [Click](https://github.com/chan-gon/joonggo-market-service/wiki/Study-&-Refactoring)
