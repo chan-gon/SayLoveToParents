@@ -1,6 +1,10 @@
 package com.board.mapper;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -125,37 +129,63 @@ public class ProductMapperTest {
 	
 	@Test
 	public void select_getProductById() {
-		productMapper.getProductById(product.getPrdtId());
+		// given
+		// 상단의 insert_addNewProduct()
+		
+		// when
+		ProductVO existProduct = productMapper.getProductById(product.getPrdtId());
+		
+		// then
+		assertThat(existProduct, is(not(nullValue())));
 	}
 	
 	@Test
 	public void select_getProductList() {
-		productMapper.getProductList();
+		// given
+		// 상단의 insert_addNewProduct()
+		
+		// when
+		List<ProductVO> productList = productMapper.getProductList();
+		
+		// then
+		assertThat(productList, is(not(nullValue())));
 	}
 	
 	@Test
 	public void update_likeProuct_unlikeProuct() {
+		// given
+		// 상단의 insert_addNewProduct()
+		
+		// when
 		productMapper.likeProuct(product.getPrdtId());
 		ProductVO insertProduct1 = productMapper.getProductById(product.getPrdtId());
+		
+		// then
 		assertEquals(1, insertProduct1.getPrdtLikeCnt());
 		
+		// when
 		productMapper.unlikeProuct(product.getPrdtId());
 		ProductVO insertProduct2 = productMapper.getProductById(product.getPrdtId());
+		
+		// then
 		assertEquals(0, insertProduct2.getPrdtLikeCnt());
 	}
 	
 	@Test
 	public void select_getProductId() {
-		productMapper.getProductId(user.getAccountId());
-	}
-	
-	@Test
-	public void select_getLikeProduct() {
-		productMapper.getLikeProduct(user.getAccountId());
+		// given
+		// 상단의 insert_addNewProduct()
+		
+		// when
+		List<ProductVO> productIds = productMapper.getProductId(user.getAccountId());
+		
+		// then
+		assertThat(productIds, is(not(nullValue())));
 	}
 	
 	@Test
 	public void update_updateProduct() {
+		// given
 		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
 		String updateVal  = "update";
 		product = ProductVO.builder()
@@ -169,33 +199,81 @@ public class ProductMapperTest {
 				.prdtIsDeliveryFree(updateVal)
 				.prdtInfo(updateVal)
 				.build();
+		
+		// when
 		productMapper.updateProduct(product);
+		
+		// then
+		ProductVO updateProduct = productMapper.getProductById(product.getPrdtId());
+		assertThat(updateProduct.getPrdtName(), is(updateVal));
 	}
 	
 	@Test
 	public void insert_addLikeProduct() {
+		// given
+		// 상단의 insert_addNewProduct()
+		
+		// when
 		productMapper.addLikeProduct(product);
+		
+		// then
+		List<ProductVO> likeProducts = productMapper.getLikeProduct(userMapper.getAccountId(user.getUserId()));
+		assertThat(likeProducts, is(not(nullValue())));
 	}
 	
 	@Test
 	public void delete_deleteLikeProduct() {
+		// given
+		// 상단의 insert_addNewProduct()
+		
+		// when
 		productMapper.addLikeProduct(product);
 		productMapper.deleteLikeProduct(product);
+		
+		// then
+		List<ProductVO> likeProducts = productMapper.getLikeProduct(userMapper.getAccountId(user.getUserId()));
+		assertThat(likeProducts.size(), is(0));
 	}
 	
 	@Test
 	public void delete_deleteProduct() {
+		// given
+		// 상단의 insert_addNewProduct()
+		
+		// when
+		imageMapper.deleteImages(product.getPrdtId());
 		productMapper.deleteProduct(product.getAccountId(), product.getPrdtId());
+		
+		// then
+		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
+		assertThat(insertProduct, is(nullValue()));
 	}
 	
 	@Test
 	public void delete_deleteProductPermanent() {
-		productMapper.deleteProductPermanent(product.getAccountId());
+		// given
+		// 상단의 insert_addNewProduct()
+		
+		// when
+		imageMapper.deleteImages(product.getPrdtId());
+		productMapper.deleteProductPermanent(userMapper.getAccountId(user.getUserId()));
+		
+		// then
+		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
+		assertThat(insertProduct, is(nullValue()));
 	}
 	
 	@Test
 	public void delete_deleteProductLikePermanent() {
+		// given
+		// 상단의 insert_addNewProduct()
+		
+		// when
 		productMapper.addLikeProduct(product);
 		productMapper.deleteProductLikePermanent(product.getPrdtId());
+		
+		// then
+		List<ProductVO> likeProducts = productMapper.getLikeProduct(userMapper.getAccountId(user.getUserId()));
+		assertThat(likeProducts.size(), is(0));
 	}
 }

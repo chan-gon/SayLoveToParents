@@ -52,7 +52,7 @@ public class UserServiceTest {
 	}
 	
 	@Before
-	public void setUp() {
+	public void setUpUser() {
 		user = UserVO.builder()
 			.accountId(TEST_VALUE)
 			.userId(TEST_VALUE)
@@ -66,59 +66,78 @@ public class UserServiceTest {
 	
 	@Test
 	public void Successfully_created_new_user() {
+		// given
+		// 상단의 setUpUser()
+		
+		// when
 		userService.signUpUser(user);
+		
+		// then
+		assertThat(userService.getUserById(TEST_VALUE), is(not(nullValue())));
 	}
 	
 	@Test
 	public void Cannot_use_this_id() {
-		createUser();
+		// then
 		exceptionRule.expect(IllegalArgumentException.class);
-		userService.isExistUserId(user.getUserId());
-	}
-	
-	@Test
-	public void Can_use_this_id() {
+		exceptionRule.expectMessage("이미 존재하는 아이디.");
+
+		// given
+		createUser();
+		
+		// when
 		userService.isExistUserId(user.getUserId());
 	}
 	
 	@Test
 	public void Cannot_use_this_email() {
-		createUser();
+		// then
 		exceptionRule.expect(IllegalArgumentException.class);
-		userService.isExistUserEmail(user.getUserEmail());
-	}
-	
-	@Test
-	public void Can_use_this_email() {
-		userService.isExistUserEmail(user.getUserEmail());
-	}
-	
-	@Test
-	public void Email_and_id_are_valid() {
+		exceptionRule.expectMessage("이미 존재하는 이메일.");
+		
+		// given
 		createUser();
-		userService.isValidIdAndEmail(user.getUserId(), user.getUserEmail());
+		
+		// when
+		userService.isExistUserEmail(user.getUserEmail());
 	}
 	
 	@Test
 	public void Email_and_id_are_invalid() {
+		// then
 		exceptionRule.expect(UserNotFoundException.class);
+		
+		// when
 		userService.isValidIdAndEmail(user.getUserId(), user.getUserEmail());
+		
+		// given
+		// 상단의 setUpUser()
 	}
 	
 	@Test
 	public void Be_able_to_retrieve_id() {
+		// given
 		createUser();
-		assertThat(userService.getIdByNameAndPhone(user), is(TEST_VALUE));
+		
+		// when
+		String userId = userService.getIdByNameAndPhone(user);
+		
+		// then
+		assertThat(userId, is(TEST_VALUE));
 	}
 	
 	@Test
 	public void Not_able_to_retrieve_id() {
+		// then
 		exceptionRule.expect(IllegalArgumentException.class);
+		
+		// when
 		userService.getIdByNameAndPhone(user);
 	}
 	
 	@Test
 	public void Successfully_change_user_password() {
+		// given
 		createUser();
 		String oldPwd = user.getPassword();
 		String newPwd = "newPwd";
@@ -127,13 +146,18 @@ public class UserServiceTest {
 				.userId(TEST_VALUE)
 				.userPwd(newPwd)
 				.build();
+		
+		// when
 		userService.changeUserPwd(user);
 		UserVO updatedUser = userService.getUserById(user.getUserId());
+		
+		// then
 		assertThat(updatedUser.getPassword(), is(not(oldPwd)));
 	}
 	
 	@Test
 	public void Successfully_change_user_profile() {
+		// given
 		String updateVal = "updateVal";
 		createUser();
 		user = UserVO.builder()
@@ -143,8 +167,12 @@ public class UserServiceTest {
 				.userPhone(updateVal)
 				.userAddr(updateVal)
 				.build();
+		
+		// when
 		userService.changeUserProfile(user);
 		UserVO updatedUser = userService.getUserById(user.getUserId());
+		
+		// then
 		assertThat(updatedUser.getUserEmail(), is(updateVal));
 		assertThat(updatedUser.getUserPhone(), is(updateVal));
 		assertThat(updatedUser.getUserAddr(), is(updateVal));
