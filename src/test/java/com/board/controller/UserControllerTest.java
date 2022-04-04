@@ -91,11 +91,13 @@ public class UserControllerTest {
 	
 	@Test
 	public void Successfully_create_new_user() throws Exception {
+		// given
 		String jsonStr = new Gson().toJson(user);
-		
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonStr))
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(requestFields(
 				fieldWithPath("accountId").type(JsonFieldType.STRING).description("유저 고유 번호"),
@@ -110,7 +112,9 @@ public class UserControllerTest {
 	
 	@Test
 	public void Can_use_this_email() throws Exception {
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.get("/users/signup/email").param("userEmail", user.getUserEmail()))
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(
 				requestParameters(parameterWithName("userEmail").description("사용자 이메일"))));
@@ -118,13 +122,16 @@ public class UserControllerTest {
 	
 	@Test
 	public void Can_use_this_id() throws Exception {
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.get("/users/signup/id").param("userId", user.getUserId()))
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(requestParameters(parameterWithName("userId").description("사용자 아이디"))));
 	}
 	
 	@Test
 	public void Able_to_retrieve_id() throws Exception {
+		// given
 		Successfully_create_new_user();
 		
 		user = UserVO.builder()
@@ -133,8 +140,11 @@ public class UserControllerTest {
 				.build();
 		
 		String jsonStr = new Gson().toJson(user);
+		
+		// when
 		MvcResult result = mockMvc.perform(RestDocumentationRequestBuilders.post("/users/help/id")
 				.contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+		// then
 		.andExpect(status().isOk())
 		.andDo(print())
 		.andDo(document.document(
@@ -150,6 +160,7 @@ public class UserControllerTest {
 	
 	@Test
 	public void Successfully_change_user_password() throws Exception {
+		// given
 		Successfully_create_new_user();
 		
 		user = UserVO.builder()
@@ -158,8 +169,11 @@ public class UserControllerTest {
 				.build();
 		
 		String jsonStr = new Gson().toJson(user);
+		
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/users/help/pwd")
 				.contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(requestFields(
 				fieldWithPath("userId").type(JsonFieldType.STRING).description("아이디"),
@@ -169,6 +183,7 @@ public class UserControllerTest {
 	
 	@Test
 	public void Successfully_change_user_profile() throws Exception {
+		// given
 		Successfully_create_new_user();
 		
 		user = UserVO.builder()
@@ -180,8 +195,10 @@ public class UserControllerTest {
 		
 		String jsonStr = new Gson().toJson(user);
 		
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/users/profile")
 				.contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+		// then
 		.andExpect(status().isOk())
 		.andDo(print())
 		.andDo(document.document(requestFields(
@@ -194,6 +211,7 @@ public class UserControllerTest {
 	
 	@Test
 	public void Permanently_delete_user() throws Exception {
+		// given
 		Successfully_create_new_user();
 		
 		user = UserVO.builder()
@@ -202,8 +220,11 @@ public class UserControllerTest {
 				.build();
 		
 		String jsonStr = new Gson().toJson(user);
+		
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.delete("/users")
 				.contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(requestFields(
 				fieldWithPath("userId").type(JsonFieldType.STRING).description("아이디"),

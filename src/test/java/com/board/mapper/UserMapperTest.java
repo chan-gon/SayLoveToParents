@@ -1,6 +1,10 @@
 package com.board.mapper;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +37,7 @@ public class UserMapperTest {
 	private UserVO user;
 
 	@Before
-	public void setUp() {
+	public void setUpUser() {
 		user = UserVO.builder()
 				.userId(TEST_VALUE)
 				.userPwd(TEST_VALUE)
@@ -43,56 +47,105 @@ public class UserMapperTest {
 				.userAddr(TEST_VALUE)
 				.build();
 	}
-
-	@Test
-	public void insert_signUpUser() {
+	
+	public void createUser() {
 		userMapper.signUpUser(user);
 	}
 
 	@Test
-	public void select_isExistUserIdEXISTED() {
+	public void Successfully_create_user() {
+		// given
+		// 상단의 setUpUser()
+		
+		// when
 		userMapper.signUpUser(user);
+		
+		// then
+		assertThat(userMapper.getUserById(TEST_VALUE), is(not(nullValue())));
+	}
+
+	@Test
+	public void This_id_is_already_existed() {
+		// given
+		createUser();
+		
+		// when, then
 		assertEquals("EXISTED", userMapper.isExistUserId(user.getUserId()));
 	}
-
+	
 	@Test
-	public void select_isExistUserIdNOT_EXISTED() {
-		assertEquals("NOT_EXISTED", userMapper.isExistUserId(user.getUserId()));
+	public void This_email_is_already_existed() {
+		// given
+		createUser();
+		
+		// when, then
+		assertEquals("EXISTED", userMapper.isExistUserEmail(user.getUserEmail()));
 	}
 
 	@Test
-	public void select_getUserById() {
-		userMapper.signUpUser(user);
-		userMapper.getUserById(user.getUserId());
+	public void Successfully_retrieve_exist_user() {
+		// given
+		createUser();
+		
+		// when
+		UserVO existUser = userMapper.getUserById(user.getUserId());
+		
+		// then
+		assertThat(existUser, is(not(nullValue())));
 	}
 
 	@Test
-	public void select_getIdByNameAndPhone() {
-		userMapper.signUpUser(user);
-		assertEquals(TEST_VALUE, userMapper.getIdByNameAndPhone(user));
+	public void Successfully_retrieve_user_id() {
+		// given
+		createUser();
+		
+		// when
+		String userId = userMapper.getIdByNameAndPhone(user);
+		
+		// then
+		assertThat(user.getUserId(), is(userId));
 	}
 
 	@Test
 	public void select_getAccountId() {
-		userMapper.signUpUser(user);
+		// given
+		createUser();
+		
+		// when
 		UserVO insertUser = userMapper.getUserById(user.getUserId());
+		
+		// then
 		assertEquals(insertUser.getAccountId(), userMapper.getAccountId(TEST_VALUE));
 	}
 
 	@Test
 	public void select_isValidIdAndEmailVALID() {
-		userMapper.signUpUser(user);
-		assertEquals("VALID", userMapper.isValidIdAndEmail(user.getUserId(), user.getUserEmail()));
+		// given
+		createUser();
+		
+		// when
+		String result = userMapper.isValidIdAndEmail(user.getUserId(), user.getUserEmail());
+		
+		// then
+		assertThat(result, is("VALID"));
 	}
 
 	@Test
 	public void select_isValidIdAndEmailINVALID() {
-		assertEquals("INVALID", userMapper.isValidIdAndEmail(user.getUserId(), user.getUserEmail()));
+		// given
+		// 상단의 setUpUser()
+		
+		// when
+		String result = userMapper.isValidIdAndEmail(user.getUserId(), user.getUserEmail());
+		
+		// then
+		assertThat(result, is("INVALID"));
 	}
 
 	@Test
 	public void update_changeUserPwd() {
-		userMapper.signUpUser(user);
+		// given
+		createUser();
 		// 삽입한 유저 정보 출력
 		UserVO insertUser = userMapper.getUserById(user.getUserId());
 		// 유저 정보 수정
@@ -100,14 +153,19 @@ public class UserMapperTest {
 				.accountId(insertUser.getAccountId())
 				.userPwd("newPwd")
 				.build();
+		
+		// when
 		userMapper.changeUserPwd(updateUser);
+		
+		// then
 		// 유저 정보 수정 확인
 		assertEquals("newPwd", userMapper.getUserPwd(user.getUserId()));
 	}
 
 	@Test
 	public void update_changeUserProfile() {
-		userMapper.signUpUser(user);
+		// given
+		createUser();
 		// 삽입한 유저 정보 출력
 		UserVO insertUser = userMapper.getUserById(user.getUserId());
 		// 유저 정보 수정
@@ -117,7 +175,11 @@ public class UserMapperTest {
 				.userPhone("01077777777")
 				.userAddr("newAddr")
 				.build();
+		
+		// when
 		userMapper.changeUserProfile(updateUser);
+		
+		// then
 		// 유저 정보 수정 확인
 		assertEquals("newEmail@gmail.com", userMapper.getUserById(user.getUserId()).getUserEmail());
 		assertEquals("01077777777", userMapper.getUserById(user.getUserId()).getUserPhone());
