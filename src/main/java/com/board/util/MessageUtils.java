@@ -1,6 +1,7 @@
 package com.board.util;
 
-import org.springframework.context.i18n.LocaleContextHolder;
+import java.util.Locale;
+
 import org.springframework.context.support.MessageSourceAccessor;
 
 public class MessageUtils {
@@ -11,10 +12,10 @@ public class MessageUtils {
 	}
 
 	public static String getMessage(String code) {
-		return msAcc.getMessage(code, LocaleContextHolder.getLocale());
+		return msAcc.getMessage(code, Locale.getDefault());
 	}
 
 	public static String getMessage(String code, Object[] objs) {
-		return msAcc.getMessage(code, objs, LocaleContextHolder.getLocale());
+		return msAcc.getMessage(code, objs, Locale.getDefault());
 	}
 }
