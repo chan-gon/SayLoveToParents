@@ -1,5 +1,7 @@
 package com.board.util;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Random;
 
 import org.apache.commons.mail.EmailException;
@@ -13,7 +15,7 @@ public class EmailUtils {
 	private static final String USER_NAME = MessageUtils.getMessage("email.setAuthUserName");
 	private static final String USER_PWD = MessageUtils.getMessage("email.setAuthUserPwd");
 	private static final String EMAIL_FROM = MessageUtils.getMessage("email.setFromEmail");
-
+	
 	public static void sendEmail(String userEmail, String certNum) throws EmailException {
 		SimpleEmail email = new SimpleEmail();
 		email.setHostName("smtp.naver.com");
@@ -34,10 +36,10 @@ public class EmailUtils {
 		}
 	}
 
-	public static String getCertNum() {
-		Random random = new Random();
-		int randomNum = random.nextInt(888888) + 111111;
-		return Integer.toString(randomNum);
+	public static String getCertNum() throws NoSuchAlgorithmException {
+		Random rand = SecureRandom.getInstanceStrong();
+		int rValue = rand.nextInt(888888) + 111111;
+		return Integer.toString(rValue);
 	}
 
 }

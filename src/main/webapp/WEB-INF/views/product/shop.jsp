@@ -99,7 +99,7 @@
 										<c:forEach var="product" items="${likeProductList}">
 											<tr class="alert" role="alert">
 												<td><input hidden="hidden" type="text" id="prdtId" name="prdtId" value="<c:out value="${product.prdtId}"/>">
-													<div class="img" style="background-image: url(/productImages/${product.imageVO.fileName}); cursor:pointer;" title="클릭하면 상품으로 이동합니다." onclick="showProduct(this)"></div></td>
+													<div class="img" style="background-image: url(${s3URL}${product.imageVO.fileName}); cursor:pointer;" title="클릭하면 상품으로 이동합니다." onclick="showProduct(this)"></div></td>
 												<td>
 													<div class="email">
 														<c:out value="${product.prdtName }" />

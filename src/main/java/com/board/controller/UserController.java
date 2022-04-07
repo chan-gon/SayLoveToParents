@@ -1,5 +1,6 @@
 package com.board.controller;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 
 import org.apache.commons.mail.EmailException;
@@ -70,7 +71,7 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/help/pwd/email", produces = "application/text; charset=UTF-8")
-	public ResponseEntity<String> sendCertEmail(@RequestParam("userId") String userId, @RequestParam("userEmail") String userEmail) throws EmailException {
+	public ResponseEntity<String> sendCertEmail(@RequestParam("userId") String userId, @RequestParam("userEmail") String userEmail) throws EmailException, NoSuchAlgorithmException {
 		String certNum = EmailUtils.getCertNum();
 		try {
 			userService.isValidIdAndEmail(userId, userEmail);

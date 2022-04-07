@@ -12,10 +12,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.partWith
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
 
 import javax.servlet.ServletException;
 
@@ -91,7 +91,7 @@ public class ProductControllerTest {
 	}
 	
 	@Before
-	public void setUpUser() throws ParseException {
+	public void setUpUser() {
 		user = UserVO.builder()
 				.userId("changon")
 				.userPwd("changon1234")
@@ -117,7 +117,6 @@ public class ProductControllerTest {
 				.build();
 	}
 	
-	@Test
 	public void createUserOne() throws Exception {
 		String jsonStr = new Gson().toJson(user);
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/users")
@@ -126,7 +125,6 @@ public class ProductControllerTest {
 		.andExpect(status().isOk());
 	}
 	
-	@Test
 	public void createUserTwo() throws Exception {
 		user = UserVO.builder()
 				.userId("bang")
@@ -145,6 +143,7 @@ public class ProductControllerTest {
 	
 	@Test
 	public void createProduct() throws Exception {
+		// given
 		createUserOne();
 		
 		user = UserVO.builder()
@@ -156,11 +155,15 @@ public class ProductControllerTest {
 		MockMultipartFile imageFile = new MockMultipartFile("productImage", "CDPlayer.jpeg", "image/jpeg", "<<jpeg data>>".getBytes(StandardCharsets.UTF_8));
 		MockMultipartFile userFile = new MockMultipartFile("user", "user", "application/json", userJson.getBytes(StandardCharsets.UTF_8));
 		MockMultipartFile productFile = new MockMultipartFile("product", "product", "application/json", productJson.getBytes(StandardCharsets.UTF_8));
+		
+		// when
 		mockMvc.perform(MockMvcRequestBuilders.multipart("/products/new")
 				.file(imageFile)
 				.file(userFile)
 				.file(productFile)
 				)
+		.andDo(print())
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(
 				requestParts(
@@ -189,15 +192,18 @@ public class ProductControllerTest {
 	@Test
 	@WithMockUser(username = "bang", password = "bang1234", authorities = {"ROLE_USER"})
 	public void likeProduct() throws Exception {
-		// 사용자1 생성 및 상품 등록
+		// given
+		// 회원1(changon) 생성 및 상품 등록
 		createProduct();
-		// 사용자2 생성
+		// 회원2(bang) 생성
 		createUserTwo();
 		
 		// 등록한 상품 정보 호출
 		ProductVO insertProduct = productService.getProductIdByName(product.getPrdtName());
 		
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/products/like/{prdtId}", insertProduct.getPrdtId()))
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(pathParameters(
 				parameterWithName("prdtId").description("상품 아이디")
@@ -207,6 +213,7 @@ public class ProductControllerTest {
 	@Test
 	@WithMockUser(username = "bang", password = "bang1234", authorities = {"ROLE_USER"})
 	public void unlikeProduct() throws Exception {
+		// given
 		// 사용자1 생성 및 상품 등록
 		createProduct();
 		// 사용자2 생성
@@ -214,12 +221,14 @@ public class ProductControllerTest {
 		// 등록한 상품 정보 호출
 		ProductVO insertProduct = productService.getProductIdByName(product.getPrdtName());
 		
+		// when
 		// 상품 좋아요 카운트 +1
 		mockMvc.perform(post("/products/like/{prdtId}", insertProduct.getPrdtId()))
 		.andExpect(status().isOk());
 		
 		// 상품 좋아요 카운트 -1
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/products/unlike/{prdtId}", insertProduct.getPrdtId()))
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(pathParameters(
 				parameterWithName("prdtId").description("상품 아이디")
@@ -229,6 +238,7 @@ public class ProductControllerTest {
 	@Test
 	@WithMockUser(username = "changon", password = "changon1234", authorities = {"ROLE_USER"})
 	public void updateProduct() throws Exception {
+		// given
 		// 사용자1 생성 및 상품 등록
 		createProduct();
 		// 사용자2 생성
@@ -260,10 +270,13 @@ public class ProductControllerTest {
 		MockMultipartFile imageFile = new MockMultipartFile("productImage", "CDPlayer.jpeg", "image/jpeg", "<<jpeg data>>".getBytes(StandardCharsets.UTF_8));
 		MockMultipartFile productFile = new MockMultipartFile("product", "product", "application/json", productJson.getBytes(StandardCharsets.UTF_8));
 		
+		// when
 		mockMvc.perform(MockMvcRequestBuilders.multipart("/products/update/{prdtId}", insertProduct.getPrdtId())
 				.file(imageFile)
 				.file(productFile)
+				.characterEncoding("UTF-8")
 				)
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(
 				requestParts(
@@ -288,6 +301,7 @@ public class ProductControllerTest {
 	@Test
 	@WithMockUser(username = "bang", password = "bang1234", authorities = {"ROLE_USER"})
 	public void deleteProduct() throws Exception {
+		// given
 		// 사용자1 생성 및 상품 등록
 		createProduct();
 		// 사용자2 생성
@@ -295,7 +309,9 @@ public class ProductControllerTest {
 		// 등록한 상품 정보 호출
 		ProductVO insertProduct = productService.getProductIdByName(product.getPrdtName());
 		
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/products/delete/{prdtId}", insertProduct.getPrdtId()))
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(pathParameters(
 				parameterWithName("prdtId").description("상품 아이디")
