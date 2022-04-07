@@ -2,7 +2,6 @@ package com.board.service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -16,6 +15,7 @@ import com.board.domain.ImageVO;
 import com.board.domain.MessageVO;
 import com.board.domain.ProductVO;
 import com.board.domain.UserVO;
+import com.board.exception.file.ImageUploadFailException;
 import com.board.exception.product.ProductExceptionMessage;
 import com.board.exception.product.ProductNotFoundException;
 import com.board.mapper.ImageMapper;
@@ -47,6 +47,9 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	@Transactional
 	public void addNewProduct(String userId, ProductVO product, List<MultipartFile> productImage) {
+		if (productImage.isEmpty()) {
+			throw new ImageUploadFailException("업로드된 이미지가 없습니다.");
+		}
 		// 상품 등록
 		UserVO userInfo = userMapper.getUserById(userId);
 		String productId = UUID.randomUUID().toString().replace("-", "");
@@ -64,9 +67,6 @@ public class ProductServiceImpl implements ProductService {
 				.build();
 		productMapper.addNewProduct(newProduct);
 		
-		if (productImage.isEmpty()) {
-			throw new NoSuchElementException("업로드된 이미지가 없습니다.");
-		}
 		// 이미지 등록
 		for (MultipartFile image : productImage) {
 			try {
@@ -206,7 +206,6 @@ public class ProductServiceImpl implements ProductService {
 
 	/*
 	 * JUnit 테스트 전용
-	 * - ProductControllerTest.java에서 사용.
 	 */
 	@Override
 	public ProductVO getProductIdByName(String prdtName) {

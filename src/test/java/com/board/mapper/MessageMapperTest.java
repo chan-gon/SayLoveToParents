@@ -1,5 +1,10 @@
 package com.board.mapper;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -100,32 +105,47 @@ public class MessageMapperTest {
 	
 	@Test
 	public void insert_sendMessage() {
+		// given
 		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
 		message = MessageVO.builder()
 				.prdtId(insertProduct.getPrdtId())
 				.buyer(buyer.getUserId())
 				.seller(seller.getUserId())
-				.content(TEST_VALUE)
+				.content("메시지 전송")
 				.type("BUYER")
 				.build();
+		
+		// when
 		messageMapper.sendMessage(message);
+		
+		// then
+		List<MessageVO> receivedMsg = messageMapper.getReceivedMsgList(seller.getUserId(), buyer.getUserId());
+		assertThat(receivedMsg.get(0).getContent(), is("메시지 전송"));
 	}
 	
 	@Test
 	public void insert_sendResponse() {
+		// given
 		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
 		message = MessageVO.builder()
 				.prdtId(insertProduct.getPrdtId())
 				.buyer(buyer.getUserId())
 				.seller(seller.getUserId())
-				.content(TEST_VALUE)
+				.content("답장 전송")
 				.type("SELLER")
 				.build();
+		
+		// when
 		messageMapper.sendResponse(message);
+		
+		// then
+		List<MessageVO> sentMsg = messageMapper.getSentMsgList(buyer.getUserId(), seller.getUserId());
+		assertThat(sentMsg.get(0).getContent(), is("답장 전송"));
 	}
 	
 	@Test
 	public void select_getSentMsgList() {
+		// given
 		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
 		message = MessageVO.builder()
 				.prdtId(insertProduct.getPrdtId())
@@ -134,12 +154,18 @@ public class MessageMapperTest {
 				.content("Hello, I'm a buyer")
 				.type("BUYER")
 				.build();
+		
+		// when
 		messageMapper.sendMessage(message);
-		messageMapper.getSentMsgList(buyer.getUserId(), seller.getUserId());
+		List<MessageVO> sentMsg =  messageMapper.getSentMsgList(buyer.getUserId(), seller.getUserId());
+		
+		// then
+		assertThat(sentMsg.get(0).getContent(), is("Hello, I'm a buyer"));
 	}
 	
 	@Test
 	public void select_getReceivedMsgList() {
+		// given
 		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
 		message = MessageVO.builder()
 				.prdtId(insertProduct.getPrdtId())
@@ -148,12 +174,18 @@ public class MessageMapperTest {
 				.content("Hello, I'm a buyer")
 				.type("BUYER")
 				.build();
+		
+		// when
 		messageMapper.sendMessage(message);
-		messageMapper.getReceivedMsgList(seller.getUserId(), buyer.getUserId());
+		List<MessageVO> receivedMsg =  messageMapper.getReceivedMsgList(seller.getUserId(), buyer.getUserId());
+		
+		// then
+		assertThat(receivedMsg.get(0).getContent(), is("Hello, I'm a buyer"));
 	}
 	
 	@Test
 	public void select_getMessagesById() {
+		// given
 		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
 		for (int i = 1; i < 6; i++) {
 			message = MessageVO.builder()
@@ -165,11 +197,17 @@ public class MessageMapperTest {
 					.build();
 			messageMapper.sendMessage(message);
 		}
-		messageMapper.getMessagesById(product.getPrdtId());
+		
+		// when
+		List<MessageVO> msgList = messageMapper.getMessagesById(product.getPrdtId());
+		
+		// then
+		assertThat(msgList.size(), is(5));
 	}
 	
 	@Test
 	public void delete_deleteMessagesById() {
+		// given
 		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
 		for (int i = 1; i < 6; i++) {
 			message = MessageVO.builder()
@@ -181,11 +219,18 @@ public class MessageMapperTest {
 					.build();
 			messageMapper.sendMessage(message);
 		}
+		
+		// when
 		messageMapper.deleteMessagesById(product.getPrdtId());
+		
+		// then
+		List<MessageVO> msgList = messageMapper.getMessagesById(product.getPrdtId());
+		assertThat(msgList.size(), is(0));
 	}
 	
 	@Test
 	public void delete_deleteMessagesPermanent() {
+		// given
 		ProductVO insertProduct = productMapper.getProductById(product.getPrdtId());
 		for (int i = 1; i < 6; i++) {
 			message = MessageVO.builder()
@@ -197,7 +242,13 @@ public class MessageMapperTest {
 					.build();
 			messageMapper.sendMessage(message);
 		}
+		
+		// when
 		messageMapper.deleteMessagesPermanent(buyer.getUserId());
+		
+		// then
+		List<MessageVO> msgList = messageMapper.getMessagesById(product.getPrdtId());
+		assertThat(msgList.size(), is(0));
 	}
 
 }

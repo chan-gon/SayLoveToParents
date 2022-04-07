@@ -103,6 +103,7 @@ public class MessageControllerTest {
 	@Test
 	@WithMockUser(username = "bang", password = "bang1234", authorities = {"ROLE_USER"})
 	public void sendMessage() throws Exception {
+		// given
 		// 회원1(changon) 생성 및 상품 등록
 		createProduct();
 		// 회원2(bang) 생성
@@ -119,9 +120,12 @@ public class MessageControllerTest {
 				.build();
 		
 		String jsonStr = new Gson().toJson(message);
+		
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/messages")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonStr))
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(requestFields(
 				fieldWithPath("prdtId").type(JsonFieldType.STRING).description("판매중인 상품"),
@@ -135,6 +139,7 @@ public class MessageControllerTest {
 	@Test
 	@WithMockUser(username = "changon", password = "changon1234", authorities = {"ROLE_USER"})
 	public void sendResponse() throws Exception {
+		// given
 		// 회원1(changon) 생성 및 상품 등록
 		createProduct();
 		// 회원2(bang) 생성
@@ -151,10 +156,13 @@ public class MessageControllerTest {
 				.build();
 		
 		String jsonStr = new Gson().toJson(message);
+		
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/messages/response")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonStr))
 		.andDo(print())
+		// then
 		.andExpect(status().isOk())
 		.andDo(document.document(requestFields(
 				fieldWithPath("prdtId").type(JsonFieldType.STRING).description("판매중인 상품"),
@@ -166,6 +174,7 @@ public class MessageControllerTest {
 	}
 
 	public void createUserOne() throws Exception {
+		// given
 		UserVO user = UserVO.builder()
 				.userId("changon")
 				.userPwd("changon1234")
@@ -175,13 +184,17 @@ public class MessageControllerTest {
 				.userAddr("대구 광역시 동구")
 				.build();
 		String jsonStr = new Gson().toJson(user);
+		
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonStr))
+		// then
 		.andExpect(status().isOk());
 	}
 	
 	public void createUserTwo() throws Exception {
+		// given
 		UserVO user = UserVO.builder()
 				.userId("bang")
 				.userPwd("bang1234")
@@ -191,13 +204,17 @@ public class MessageControllerTest {
 				.userAddr("대구 로스 엔젤리너스")
 				.build();
 		String jsonStr = new Gson().toJson(user);
+		
+		// when
 		mockMvc.perform(RestDocumentationRequestBuilders.post("/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonStr))
+		// then
 		.andExpect(status().isOk());
 	}
 	
 	public void createProduct() throws Exception {
+		// given
 		createUserOne();
 		
 		UserVO user = UserVO.builder()
@@ -213,11 +230,14 @@ public class MessageControllerTest {
 		MockMultipartFile imageFile = new MockMultipartFile("productImage", "CDPlayer.jpeg", "image/jpeg", "<<jpeg data>>".getBytes(StandardCharsets.UTF_8));
 		MockMultipartFile userFile = new MockMultipartFile("user", "user", "application/json", userJson.getBytes(StandardCharsets.UTF_8));
 		MockMultipartFile productFile = new MockMultipartFile("product", "product", "application/json", productJson.getBytes(StandardCharsets.UTF_8));
+		
+		// when
 		mockMvc.perform(MockMvcRequestBuilders.multipart("/products/new")
 				.file(imageFile)
 				.file(userFile)
 				.file(productFile)
 				)
+		// then
 		.andExpect(status().isOk());
 	}
 }
